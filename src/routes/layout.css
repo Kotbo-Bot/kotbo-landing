@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Inter:wght@400..700&display=swap');
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-hand: 'Caveat', cursive;
+  
+  --color-board: #f8f9fa;
+  --color-postit-yellow: #fdfd96;
+  --color-postit-blue: #aec6cf;
+  --color-postit-pink: #ffb7b2;
+  --color-marker-red: #ff4d4d;
+  --color-marker-blue: #4d79ff;
+  
+  --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.05);
+  --shadow-postit: 2px 4px 6px rgba(0, 0, 0, 0.1), inset 0 -2px 5px rgba(0,0,0,0.05);
+}
+
+body {
+  background-color: var(--color-board);
+  background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: #1f2937;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Post-it tape effect */
+.postit-tape::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 60px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.hand-drawn-border {
+  border: 2px solid #374151;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
