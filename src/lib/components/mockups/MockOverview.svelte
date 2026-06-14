@@ -1,5 +1,6 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
+  import { base } from '$app/paths';
 
   let { onNavigate }: {
     onNavigate?: (tab: string) => void;
@@ -9,7 +10,7 @@
 <div class="flex h-full flex-col gap-3 font-body text-on-surface">
   <div class="flex items-center justify-between rounded-2xl border border-outline-variant/10 bg-surface-container-low/50 p-4">
     <div class="flex items-center gap-3">
-      <img src="/favicon.svg" alt="" class="size-10 rounded-xl shadow-sm"/>
+      <img src="{base}/favicon.svg" alt="" class="size-10 rounded-xl shadow-sm"/>
       <div>
         <h2 class="text-base font-black">Bonjour, Arka !</h2>
         <p class="text-[8px] font-bold text-on-surface-variant/50">Tout fonctionne à merveille sur Kotbo Community.</p>

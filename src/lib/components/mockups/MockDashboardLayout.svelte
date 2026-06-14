@@ -1,5 +1,6 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
+  import { base } from '$app/paths';
 
   let { children, activeTab = $bindable('overview'), onTabChange }: { 
     children?: import('svelte').Snippet, 
@@ -24,7 +25,7 @@
 <div class="relative flex h-[660px] w-full overflow-hidden rounded-[2rem] border border-outline-variant/20 bg-background font-body text-on-surface shadow-[0_30px_60px_rgba(0,0,0,0.15)]">
   <aside class="flex h-full w-16 md:w-[220px] shrink-0 flex-col border-r border-outline-variant/20 bg-surface-container-lowest transition-all duration-300">
     <div class="flex items-center gap-3 px-3 md:px-5 pb-4 pt-5 justify-center md:justify-start">
-      <img alt="" src="/favicon.svg" class="size-9 rounded-xl" />
+      <img alt="" src="{base}/favicon.svg" class="size-9 rounded-xl" />
       <div class="hidden md:block">
         <p class="text-sm font-black leading-none">Kotbo</p>
         <p class="mt-1 text-[8px] font-black uppercase tracking-widest text-on-surface-variant/40">Control center</p>

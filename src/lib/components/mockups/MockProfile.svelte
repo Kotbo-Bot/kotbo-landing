@@ -27,9 +27,15 @@
   let linkedAccountsList = $state<any[]>([]);
   let sanctionsList = $state<any[]>([]);
 
+  type DailyTrendPoint = {
+    dateKey: string;
+    messages: number;
+    voiceMinutes: number;
+  };
+
   // Daily Trend generator helper to generate realistic, seed-based mock trend lines
-  function getDailyTrend(seed: string, totalMessages: number, totalVoiceSeconds: number) {
-    const trend = [];
+  function getDailyTrend(seed: string, totalMessages: number, totalVoiceSeconds: number): DailyTrendPoint[] {
+    const trend: DailyTrendPoint[] = [];
     const totalVoiceMinutes = Math.round(totalVoiceSeconds / 60);
     const avgMsg = totalMessages / 30;
     const avgVoc = totalVoiceMinutes / 30;
@@ -63,7 +69,7 @@
   // Derived mock data depending on target username
   let caseData = $derived.by(() => {
     const u = user.toLowerCase();
-    let data;
+    let data: any;
     if (u === 'arka') {
       data = {
         profile: {
@@ -536,7 +542,7 @@
   }
 
   // Reactive SVG Line Chart calculations
-  let dailyTrend = $derived(caseData?.dailyTrend || []);
+  let dailyTrend: DailyTrendPoint[] = $derived(caseData?.dailyTrend || []);
   let maxMsg = $derived(Math.max(...dailyTrend.map(d => d.messages), 1));
   let maxVoc = $derived(Math.max(...dailyTrend.map(d => d.voiceMinutes), 1));
 
@@ -624,13 +630,13 @@
       </div>
       
       {#if caseData.profile?.userId}
-        <a
-          href="/profile/{caseData.profile.userId}"
+        <button
+          type="button"
           class="inline-flex items-center gap-1.5 rounded-lg bg-white/15 backdrop-blur-md px-3 py-1.5 text-[10px] font-black text-white/80 uppercase tracking-widest transition-all hover:bg-white/25 hover:text-white hover:scale-[1.02] active:scale-[0.98] shadow-sm md:ml-auto cursor-pointer"
         >
           <Papicon icon="external-link" size={12} />
           Profil
-        </a>
+        </button>
       {/if}
     </div>
   </div>
@@ -656,7 +662,7 @@
           <Papicon icon={tab.icon} size={14} />
           <span>{tab.label}</span>
           {#if tab.id === 'messages'}
-            {@const c = caseData.messagesByChannel.reduce((sum, c) => sum + c.count, 0)}
+            {@const c = caseData.messagesByChannel.reduce((sum: number, c: { count: number }) => sum + c.count, 0)}
             {#if c > 0}
               <span class="flex h-5 min-w-5 items-center justify-center rounded-full text-[10px] font-black {activeInnerTab === tab.id ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'}">{c}</span>
             {/if}
@@ -951,7 +957,7 @@
           <div class="grid gap-6 md:grid-cols-2">
             <div class="space-y-3">
                <p class="text-[10px] font-black uppercase tracking-[0.25em] text-primary px-1 mb-2">Derniers Messages</p>
-               {#each caseData.messagesByChannel.slice(0, 3).flatMap(c => c.recentMessages.slice(0, 1)) as msg}
+               {#each caseData.messagesByChannel.slice(0, 3).flatMap((c: { recentMessages: any[] }) => c.recentMessages.slice(0, 1)) as msg}
                  <div class="rounded-2xl bg-surface-container-low/60 p-4 border border-outline-variant/5 transition-all hover:border-primary/20">
                     <div class="flex items-center justify-between mb-1.5 text-[10px]">
                        <span class="font-bold text-primary">#{msg.channelName}</span>
@@ -1195,7 +1201,7 @@
           <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-8 px-2">Répartition par salon</p>
           <div class="space-y-6">
             {#each caseData.messagesByChannel || [] as channel}
-              {@const max = Math.max(...(caseData.messagesByChannel || []).map(c => c.count), 1)}
+              {@const max = Math.max(...(caseData.messagesByChannel || []).map((c: { count: number }) => c.count), 1)}
               <div class="space-y-2">
                 <div class="flex items-center justify-between px-1">
                   <span class="text-sm font-black text-on-surface">#{channel.channelName}</span>

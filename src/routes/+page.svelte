@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from "$app/paths";
   import PostIt from "$lib/components/ui/PostIt.svelte";
   import MarkerCircle from "$lib/components/ui/MarkerCircle.svelte";
   import HandDrawnArrow from "$lib/components/ui/HandDrawnArrow.svelte";
@@ -34,7 +35,7 @@
   <!-- Navigation -->
   <nav class="max-w-[90rem] mx-auto px-8 py-6 flex justify-between items-center relative z-10">
     <div class="flex items-center gap-3">
-      <img src="/favicon.svg" alt="Kotbo Logo" class="w-10 h-10 rounded-xl shadow-md" />
+      <img src="{base}/favicon.svg" alt="Kotbo Logo" class="w-10 h-10 rounded-xl shadow-md" />
       <span class="font-black text-2xl tracking-tight text-gray-900">Kotbo</span>
     </div>
     <div class="hidden md:flex gap-8 font-bold text-sm text-gray-600">
@@ -399,14 +400,14 @@
   <footer class="bg-white border-t border-gray-200 py-10 text-center text-gray-500 text-sm font-bold">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="flex items-center gap-3">
-        <img src="/favicon.svg" alt="Kotbo Logo" class="w-8 h-8 rounded-lg shadow-sm grayscale opacity-50" />
+        <img src="{base}/favicon.svg" alt="Kotbo Logo" class="w-8 h-8 rounded-lg shadow-sm grayscale opacity-50" />
         <span class="font-black text-lg text-gray-400">Kotbo</span>
       </div>
       <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
       <div class="flex gap-6 uppercase tracking-widest text-[10px] font-black">
-        <a href="/" class="hover:text-gray-900 transition-colors">Twitter</a>
-        <a href="/" class="hover:text-gray-900 transition-colors">Discord</a>
-        <a href="/" class="hover:text-gray-900 transition-colors">Documentation</a>
+        <a href="{base}/" class="hover:text-gray-900 transition-colors">Twitter</a>
+        <a href="{base}/" class="hover:text-gray-900 transition-colors">Discord</a>
+        <a href="{base}/" class="hover:text-gray-900 transition-colors">Documentation</a>
       </div>
     </div>
   </footer>
