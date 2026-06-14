@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { direction = "down-right", class: className = "", stroke = "#4b5563" } = $props();
+  let { direction = "down-right", class: className = "", stroke = "currentColor" } = $props();
   
   const paths: Record<string, string> = {
     "down-right": "M10,10 Q40,30 80,80 M65,80 L82,82 L75,65",

@@ -1,5 +1,12 @@
 <script lang="ts">
-  let { text = "", color = "yellow", rotation = 0, class: className = "", children } = $props();
+  let { text = "", color = "yellow", rotation = 0, class: className = "", textSize = "text-2xl", children }: {
+    text?: string;
+    color?: string;
+    rotation?: number;
+    class?: string;
+    textSize?: string;
+    children?: import('svelte').Snippet;
+  } = $props();
   
   const colors: Record<string, string> = {
     yellow: "bg-[var(--color-postit-yellow)]",
@@ -13,7 +20,7 @@
   style="transform: rotate({rotation}deg);"
 >
   {#if text}
-    <p class="font-hand text-2xl text-gray-800 leading-tight">
+    <p class="font-hand {textSize} text-gray-800 leading-tight">
       {text}
     </p>
   {/if}

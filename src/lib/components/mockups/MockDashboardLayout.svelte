@@ -1,95 +1,92 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
-  
-  let { children, activeTab = 'tickets' }: { children: import('svelte').Snippet, activeTab?: string } = $props();
+
+  let { children, activeTab = $bindable('overview'), onTabChange }: { 
+    children?: import('svelte').Snippet, 
+    activeTab?: string,
+    onTabChange?: (tab: string) => void
+  } = $props();
+
+  const groups = [
+    { label: 'Général', items: [['overview', 'home', 'Vue d’ensemble'], ['profile', 'user', 'Mon Profil']] },
+    { label: 'Modération', items: [['sanction', 'shieldwarning', 'Sanctions'], ['logs', 'scroll-text', 'Logs']] },
+    { label: 'Staff', items: [['tickets', 'message-square', 'Tickets'], ['staff', 'briefcase', 'Gestion du staff']] }
+  ];
+
+  function handleTabClick(tab: string) {
+    activeTab = tab;
+    if (onTabChange) {
+      onTabChange(tab);
+    }
+  }
 </script>
 
-<div class="relative w-full aspect-[16/10] bg-surface rounded-[2.5rem] shadow-[0_30px_60px_rgba(0,0,0,0.15)] border border-outline-variant/20 overflow-hidden flex font-body text-on-surface">
-  
-  <!-- Sidebar -->
-  <aside class="w-[260px] h-full bg-surface-container-low border-r border-outline-variant/10 flex flex-col shrink-0">
-    <!-- Header Logo -->
-    <div class="flex items-center gap-3 px-6 pt-8 pb-6">
-      <div class="relative w-10 h-10 shrink-0">
-        <div class="absolute inset-0 bg-primary/20 rounded-xl blur-md"></div>
-        <img alt="Logo" src="/favicon.svg" class="relative w-full h-full object-cover rounded-xl"/>
-      </div>
-      <div class="flex flex-col min-w-0">
-        <span class="text-[16px] font-black tracking-tight text-on-surface leading-none">Kotbo</span>
-        <span class="text-[11px] text-on-surface-variant/50 mt-0.5 font-bold uppercase tracking-widest">Dashboard</span>
+<div class="relative flex h-[660px] w-full overflow-hidden rounded-[2rem] border border-outline-variant/20 bg-background font-body text-on-surface shadow-[0_30px_60px_rgba(0,0,0,0.15)]">
+  <aside class="flex h-full w-16 md:w-[220px] shrink-0 flex-col border-r border-outline-variant/20 bg-surface-container-lowest transition-all duration-300">
+    <div class="flex items-center gap-3 px-3 md:px-5 pb-4 pt-5 justify-center md:justify-start">
+      <img alt="" src="/favicon.svg" class="size-9 rounded-xl" />
+      <div class="hidden md:block">
+        <p class="text-sm font-black leading-none">Kotbo</p>
+        <p class="mt-1 text-[8px] font-black uppercase tracking-widest text-on-surface-variant/40">Control center</p>
       </div>
     </div>
-    
-    <!-- Navigation -->
-    <nav class="flex-1 overflow-y-auto px-4 py-2 space-y-6">
-      <!-- Group 1 -->
-      <div>
-        <div class="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] mb-3 px-2">Général</div>
-        <div class="space-y-1">
-          <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container/50 cursor-pointer transition-colors">
-            <Papicon icon="activity" size={18} />
-            <span class="text-sm font-bold">Vue d'ensemble</span>
-          </div>
-          <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl {activeTab === 'profile' ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container/50'} cursor-pointer transition-colors">
-            <Papicon icon="user" size={18} />
-            <span class="text-sm font-bold">Mon Profil</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Group 2 -->
-      <div>
-        <div class="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] mb-3 px-2">Modération</div>
-        <div class="space-y-1">
-          <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl {activeTab === 'sanction' ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container/50'} cursor-pointer transition-colors">
-            <Papicon icon="shieldwarning" size={18} />
-            <span class="text-sm font-bold">Sanctions</span>
-          </div>
-          <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl {activeTab === 'tickets' ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container/50'} cursor-pointer transition-colors">
-            <Papicon icon="inbox" size={18} />
-            <span class="text-sm font-bold">Tickets</span>
+    <button 
+      type="button"
+      onclick={() => handleTabClick('overview')}
+      class="mx-2 md:mx-3 flex items-center justify-center md:justify-start gap-2 rounded-xl border border-outline-variant/20 bg-surface-container-low p-2 md:px-3 md:py-2 text-left hover:bg-surface-container-high transition-colors"
+    >
+      <div class="flex size-6 shrink-0 items-center justify-center rounded-lg bg-primary text-[9px] font-black text-white">K</div>
+      <span class="truncate text-[10px] font-black hidden md:block">Kotbo Community</span>
+      <Papicon icon="chevron-down" size={11} class="ml-auto text-on-surface-variant/50 hidden md:block" />
+    </button>
+    <nav class="flex-1 space-y-4 overflow-hidden px-2 md:px-3 py-4">
+      {#each groups as group}
+        <div>
+          <p class="mb-1.5 px-2 text-[8px] font-black uppercase tracking-[0.18em] text-on-surface-variant/35 hidden md:block">{group.label}</p>
+          <div class="space-y-0.5">
+            {#each group.items as item}
+              <button
+                type="button"
+                onclick={() => handleTabClick(item[0])}
+                class="w-full flex items-center justify-center md:justify-start gap-2.5 rounded-xl p-2 md:px-2.5 md:py-2 text-left transition-all duration-200 {activeTab === item[0] ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface-variant hover:bg-surface-container-low'}"
+                title={item[2]}
+              >
+                <Papicon icon={item[1]} size={14} class="shrink-0" />
+                <span class="text-[10px] font-bold hidden md:block">{item[2]}</span>
+              </button>
+            {/each}
           </div>
         </div>
-      </div>
-      
-      <!-- Group 3 -->
-      <div>
-        <div class="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] mb-3 px-2">Communauté</div>
-        <div class="space-y-1">
-          <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl {activeTab === 'staff' ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container/50'} cursor-pointer transition-colors">
-            <Papicon icon="usersfour" size={18} />
-            <span class="text-sm font-bold">Équipe</span>
-          </div>
-        </div>
-      </div>
+      {/each}
     </nav>
   </aside>
 
-  <!-- Main Content Area -->
-  <main class="flex-1 flex flex-col min-w-0 h-full bg-background relative z-10 overflow-hidden">
-    <!-- Navbar -->
-    <header class="h-20 border-b border-outline-variant/10 bg-surface/80 backdrop-blur-md flex items-center justify-between px-8 shrink-0">
-      <div class="flex items-center gap-4">
-        <div class="text-sm font-black text-on-surface-variant/60 uppercase tracking-widest">
-          {activeTab === 'profile' ? 'Mon Profil' : activeTab === 'tickets' ? 'Gestion des Tickets' : activeTab === 'staff' ? 'Équipe Staff' : 'Centre de modération'}
-        </div>
+  <main class="flex min-w-0 flex-1 flex-col">
+    <header class="flex h-16 shrink-0 items-center justify-between border-b border-outline-variant/20 bg-surface/80 px-4 md:px-6 backdrop-blur-md">
+      <div class="flex items-center gap-2 rounded-xl border border-outline-variant/20 bg-surface-container-low px-2 py-1.5 md:px-3 md:py-2">
+        <div class="size-5 rounded-md bg-primary/15 shrink-0"></div>
+        <span class="text-[10px] font-black hidden sm:block">Kotbo Community</span>
+        <Papicon icon="chevron-down" size={11} class="shrink-0" />
       </div>
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
-          <Papicon icon="bell" size={18} />
-        </div>
-        <div class="flex items-center gap-3 bg-surface-container-low pl-2 pr-4 py-1.5 rounded-full border border-outline-variant/20">
-          <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black text-xs">
-            A
+      <div class="flex items-center gap-3">
+        <div class="flex size-8 items-center justify-center rounded-xl border border-outline-variant/20 bg-surface-container-low hover:bg-surface-container-high transition-colors cursor-pointer"><Papicon icon="bell" size={14} /></div>
+        <button
+          type="button"
+          onclick={() => handleTabClick('profile')}
+          class="flex items-center gap-3 text-right hover:opacity-80 transition-opacity cursor-pointer focus:outline-none"
+        >
+          <div class="hidden sm:block">
+            <p class="text-[10px] font-black text-on-surface">Arka</p>
+            <p class="text-[7px] font-bold uppercase text-on-surface-variant/40">Gérant</p>
           </div>
-          <span class="text-xs font-bold">Arka</span>
-        </div>
+          <div class="flex size-8 items-center justify-center rounded-xl bg-primary text-[10px] font-black text-white shadow-sm shadow-primary/20 shrink-0">A</div>
+        </button>
       </div>
     </header>
-    
-    <!-- Page Content Scrollable -->
-    <div class="flex-1 overflow-y-auto p-8 no-scrollbar bg-background">
-      {@render children()}
+    <div class="flex-1 overflow-y-auto bg-background p-5">
+      {#if children}
+        {@render children()}
+      {/if}
     </div>
   </main>
 </div>
