@@ -1,10 +1,11 @@
 <script lang="ts">
-  let { 
-    color = "red", 
-    class: className = "", 
+  let {
+    color = "red",
+    class: className = "",
     children,
-    px = 10, // horizontal padding offset (how far the circle extends left/right)
-    py = 4   // vertical padding offset (how far the circle extends top/bottom)
+    px = 10,
+    py = 4,
+    animated = false
   } = $props();
   
   const strokeColor = $derived(color === "red" ? "var(--color-marker-red)" : "var(--color-marker-blue)");
@@ -116,13 +117,14 @@
       style="left: {-px}px; top: {-py}px; width: {width + 2*px}px; height: {height + 2*py}px;" 
       viewBox="{-px} {-py} {width + 2*px} {height + 2*py}"
     >
-      <path 
-        d={d} 
-        fill="none" 
-        stroke={strokeColor} 
-        stroke-width="3.5" 
+      <path
+        d={d}
+        fill="none"
+        stroke={strokeColor}
+        stroke-width="3.5"
         stroke-linecap="round"
-        class="opacity-75"
+        pathLength={animated ? 1 : undefined}
+        class="opacity-75 {animated ? 'marker-path-animated' : ''}"
       />
     </svg>
   {/if}

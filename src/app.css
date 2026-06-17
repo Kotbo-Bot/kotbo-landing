@@ -154,3 +154,65 @@
 .fade-in {
   animation-name: fade-in;
 }
+
+/* ── Scroll reveal ──────────────────────────────────────────── */
+.will-reveal {
+  opacity: 0;
+  transition:
+    opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1) var(--reveal-delay, 0ms),
+    transform 0.65s cubic-bezier(0.4, 0, 0.2, 1) var(--reveal-delay, 0ms);
+}
+.reveal-up    { transform: translateY(28px); }
+.reveal-left  { transform: translateX(-32px); }
+.reveal-right { transform: translateX(32px); }
+.reveal-none  { transform: translateY(0); }
+.will-reveal.revealed {
+  opacity: 1;
+  transform: none !important;
+}
+
+/* ── Hero page-load entrance ────────────────────────────────── */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-enter           { animation: hero-rise 0.65s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.hero-delay-1         { animation-delay: 80ms; }
+.hero-delay-2         { animation-delay: 220ms; }
+.hero-delay-3         { animation-delay: 380ms; }
+.hero-delay-4         { animation-delay: 560ms; }
+
+/* ── Float (hero mockup) ────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-7px); }
+}
+.float { animation: float 5.5s ease-in-out infinite; }
+
+/* ── Nav backdrop on scroll ─────────────────────────────────── */
+.nav-scrolled {
+  background: rgba(248, 249, 250, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ── Timeline line draw ─────────────────────────────────────── */
+.timeline-track {
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+#workflow.timeline-visible .timeline-track {
+  transform: scaleY(1);
+}
+
+/* ── MarkerCircle SVG draw ──────────────────────────────────── */
+.marker-path-animated {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-marker 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.45s both;
+}
+@keyframes draw-marker {
+  to { stroke-dashoffset: 0; }
+}
