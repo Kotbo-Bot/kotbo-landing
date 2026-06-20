@@ -421,6 +421,7 @@
         <a href="{base}/" class="hover:text-gray-900 transition-colors">Twitter</a>
         <a href="{base}/" class="hover:text-gray-900 transition-colors">Discord</a>
         <a href="{base}/" class="hover:text-gray-900 transition-colors">Documentation</a>
+        <a href="{base}/terms" class="text-indigo-500 hover:text-indigo-700 transition-colors">Confidentialité</a>
       </div>
     </div>
   </footer>
