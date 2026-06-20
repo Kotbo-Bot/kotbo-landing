@@ -55,12 +55,6 @@
   <!-- Hero de la page -->
   <header class="bg-white border-b border-gray-100 py-14">
     <div class="max-w-4xl mx-auto px-6 text-center">
-      <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.955 11.955 0 003 12c0 6.627 5.373 12 12 12s12-5.373 12-12c0-2.283-.638-4.42-1.748-6.243M6.95 5.975A12 12 0 0118 6c.34.07.674.154 1 .25" />
-        </svg>
-        <span class="text-indigo-700 font-bold text-xs uppercase tracking-widest">Conformité RGPD</span>
-      </div>
       <h1 class="text-4xl md:text-5xl font-black tracking-tight text-gray-900 mb-4 font-headline">
         Politique de Confidentialité
       </h1>
@@ -111,21 +105,23 @@
         <div class="section-badge">01</div>
         <h2>Responsable du traitement</h2>
         <p>
-          Le responsable du traitement des données personnelles collectées via le bot Discord <strong>Kotbo</strong> est
-          l'équipe de développement de Kotbo, joignable à l'adresse&nbsp;:
-          <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a>.
+          Le responsable du traitement des données collectées via le bot Discord <strong>Kotbo</strong> est&nbsp;:
         </p>
+        <ul>
+          <li><strong>Elouan Passereau</strong> — <a href="https://klaynight.fr/" target="_blank" rel="noopener noreferrer">klaynight.fr</a></li>
+          <li><strong>Nathan Rontey</strong> — <a href="https://nathaan.me/" target="_blank" rel="noopener noreferrer">nathaan.me</a></li>
+        </ul>
+        <p>Contact&nbsp;: <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a></p>
         <p>
-          Kotbo est un bot Discord conçu pour les communautés francophones. Il fournit des fonctionnalités de gestion
-          de staff, de modération, de tickets, de statistiques, de niveaux, d'événements, de candidatures et
-          d'organisation communautaire. Kotbo opère exclusivement au sein des serveurs Discord où il a été
-          explicitement invité par un administrateur.
+          Kotbo est un bot Discord pour les communautés francophones. Il couvre la gestion du staff, la modération,
+          les tickets, les statistiques, les niveaux, les événements, les candidatures et l'organisation générale d'un serveur.
+          Il n'opère que sur les serveurs où il a été explicitement invité.
         </p>
         <div class="info-box">
-          <strong>Rôles distincts :</strong>
+          <strong>Deux rôles de traitement distincts&nbsp;:</strong>
           <ul>
-            <li><strong>Kotbo (équipe de développement)</strong> — responsable de traitement pour les données techniques globales (journaux d'erreurs, statistiques d'utilisation agrégées, administration globale).</li>
-            <li><strong>L'administrateur du serveur Discord</strong> — responsable de traitement pour les données collectées dans le cadre de son serveur spécifique (profils membres, sanctions, candidatures, etc.).</li>
+            <li><strong>Elouan Passereau &amp; Nathan Rontey</strong> — responsables pour les données techniques globales (journaux d'erreurs, statistiques agrégées, administration globale).</li>
+            <li><strong>L'administrateur du serveur</strong> — responsable pour les données propres à son serveur (profils membres, sanctions, candidatures, etc.).</li>
           </ul>
         </div>
       </section>
@@ -454,10 +450,8 @@
         </table>
 
         <div class="info-box">
-          <strong>Suppression à la demande&nbsp;:</strong> Toute demande de suppression de vos données personnelles
-          adressée à <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> sera traitée dans un délai de
-          <strong>30 jours</strong>. Certaines données peuvent être conservées au-delà si elles sont nécessaires
-          au respect d'obligations légales ou à la défense de droits en justice.
+          Toute demande de suppression adressée à <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> sera traitée sous <strong>30 jours</strong>.
+          Certaines données peuvent être conservées si nécessaire au respect d'obligations légales ou à la défense de droits en justice.
         </div>
       </section>
 
@@ -498,53 +492,42 @@
 
         <div class="rights-grid">
           <div class="right-card">
-            <div class="right-icon">📋</div>
-            <h4>Droit d'accès <span class="text-gray-400 font-normal text-xs">(art. 15)</span></h4>
+            <h4>Accès <span class="art">(art. 15)</span></h4>
             <p>Obtenir la confirmation que des données vous concernant sont traitées et en recevoir une copie.</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">✏️</div>
-            <h4>Droit de rectification <span class="text-gray-400 font-normal text-xs">(art. 16)</span></h4>
-            <p>Faire corriger des données inexactes vous concernant. Note&nbsp;: les données de profil Discord sont gérées par Discord directement.</p>
+            <h4>Rectification <span class="art">(art. 16)</span></h4>
+            <p>Faire corriger des données inexactes. Les données de profil Discord sont gérées directement par Discord.</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">🗑️</div>
-            <h4>Droit à l'effacement <span class="text-gray-400 font-normal text-xs">(art. 17)</span></h4>
-            <p>Demander la suppression de vos données, dans les limites des obligations légales et des intérêts légitimes (ex. : données de sanction nécessaires à la sécurité du serveur).</p>
+            <h4>Effacement <span class="art">(art. 17)</span></h4>
+            <p>Demander la suppression de vos données, dans les limites des obligations légales (ex. : données de sanction nécessaires à la sécurité d'un serveur).</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">🔒</div>
-            <h4>Droit à la limitation <span class="text-gray-400 font-normal text-xs">(art. 18)</span></h4>
-            <p>Demander la suspension temporaire du traitement de vos données dans certaines situations.</p>
+            <h4>Limitation <span class="art">(art. 18)</span></h4>
+            <p>Demander la suspension temporaire du traitement dans certaines situations.</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">📦</div>
-            <h4>Droit à la portabilité <span class="text-gray-400 font-normal text-xs">(art. 20)</span></h4>
-            <p>Recevoir vos données dans un format structuré et lisible par machine (JSON), pour les données traitées sur la base de votre consentement ou d'un contrat.</p>
+            <h4>Portabilité <span class="art">(art. 20)</span></h4>
+            <p>Recevoir vos données dans un format structuré (JSON) pour les traitements basés sur votre consentement ou un contrat.</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">🚫</div>
-            <h4>Droit d'opposition <span class="text-gray-400 font-normal text-xs">(art. 21)</span></h4>
-            <p>Vous opposer au traitement fondé sur l'intérêt légitime, pour des raisons tenant à votre situation particulière.</p>
+            <h4>Opposition <span class="art">(art. 21)</span></h4>
+            <p>Vous opposer à un traitement fondé sur l'intérêt légitime, pour des raisons liées à votre situation particulière.</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">↩️</div>
-            <h4>Retrait du consentement <span class="text-gray-400 font-normal text-xs">(art. 7)</span></h4>
-            <p>Pour les traitements basés sur votre consentement (candidatures, participation aux événements), retirer votre consentement à tout moment sans que cela remette en cause la licéité des traitements antérieurs.</p>
+            <h4>Retrait du consentement <span class="art">(art. 7)</span></h4>
+            <p>Retirer votre consentement à tout moment sans remettre en cause la licéité des traitements antérieurs.</p>
           </div>
           <div class="right-card">
-            <div class="right-icon">🏛️</div>
-            <h4>Droit de réclamation <span class="text-gray-400 font-normal text-xs">(art. 77)</span></h4>
-            <p>Introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) — <strong>cnil.fr</strong> — si vous estimez que vos droits ne sont pas respectés.</p>
+            <h4>Réclamation <span class="art">(art. 77)</span></h4>
+            <p>Introduire une réclamation auprès de la CNIL si vous estimez que vos droits ne sont pas respectés.</p>
           </div>
         </div>
 
         <div class="info-box mt-6">
-          <strong>Comment exercer vos droits&nbsp;?</strong><br/>
-          Adressez votre demande par e-mail à <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> en précisant&nbsp;:
-          votre identifiant Discord (Snowflake), le nom du serveur concerné le cas échéant, et la nature
-          de votre demande. Nous vous répondrons dans un délai maximum de <strong>30 jours</strong>.
-          Pour les demandes complexes, ce délai peut être prolongé de 2 mois supplémentaires, avec notification préalable.
+          Adressez votre demande à <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> en précisant votre identifiant Discord, le serveur concerné et la nature de la demande.
+          Délai de réponse&nbsp;: <strong>30 jours</strong>, prolongeable de 2 mois pour les demandes complexes (avec notification préalable).
         </div>
       </section>
 
@@ -615,36 +598,24 @@
       <!-- Section 11 -->
       <section id="contact" class="policy-section">
         <div class="section-badge">11</div>
-        <h2>Contact & Délégué à la Protection des Données</h2>
-        <p>
-          Pour toute question relative à la présente politique de confidentialité ou pour exercer vos droits,
-          vous pouvez nous contacter&nbsp;:
-        </p>
+        <h2>Contact</h2>
+        <p>Pour toute question relative à cette politique ou pour exercer vos droits&nbsp;:</p>
         <div class="contact-card">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">E-mail</p>
-              <a href="mailto:privacy@kotbo.fr" class="font-black text-indigo-700 text-lg hover:underline">privacy@kotbo.fr</a>
-            </div>
-          </div>
-          <p class="text-sm text-gray-600 leading-relaxed">
-            Nous nous efforçons de répondre à toutes les demandes dans un délai de <strong>30 jours calendaires</strong>.
-            Merci d'indiquer dans votre e-mail&nbsp;: votre identifiant Discord, le ou les serveurs concernés,
-            et la nature précise de votre demande.
+          <p class="text-sm text-gray-500 font-bold uppercase tracking-widest mb-1">Données personnelles &amp; vie privée</p>
+          <a href="mailto:privacy@kotbo.fr" class="font-black text-indigo-700 text-lg hover:underline">privacy@kotbo.fr</a>
+          <p class="text-sm text-gray-600 mt-3 leading-relaxed">
+            Merci de préciser votre identifiant Discord, le ou les serveurs concernés et la nature de votre demande.
+            Nous répondons dans un délai maximum de <strong>30 jours</strong>.
           </p>
+          <hr class="my-4 border-gray-100" />
+          <p class="text-sm text-gray-500 font-bold uppercase tracking-widest mb-1">Contact général</p>
+          <a href="mailto:contact@kotbo.fr" class="font-black text-gray-700 text-lg hover:underline">contact@kotbo.fr</a>
         </div>
 
         <div class="info-box mt-6">
-          <strong>Autorité de contrôle&nbsp;:</strong> Si vous estimez que le traitement de vos données personnelles
-          constitue une violation du RGPD, vous avez le droit d'introduire une réclamation auprès de la
-          <strong>CNIL</strong> (Commission Nationale de l'Informatique et des Libertés)&nbsp;:
-          <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>
-          ou par courrier à CNIL, 3 Place de Fontenoy, TSA 80715, 75334 Paris Cedex 07.
+          <strong>Autorité de contrôle&nbsp;:</strong> Vous pouvez introduire une réclamation auprès de la
+          <strong>CNIL</strong>&nbsp;: <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>
+          — CNIL, 3 Place de Fontenoy, TSA 80715, 75334 Paris Cedex 07.
         </div>
       </section>
 
@@ -829,9 +800,10 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
     border-color: #c7d2fe;
   }
-  .right-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+  .art {
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #9ca3af;
   }
   .right-card h4 {
     margin-bottom: 0.4rem;
