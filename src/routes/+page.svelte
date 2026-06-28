@@ -13,7 +13,7 @@
   import MockProfile from "$lib/components/mockups/MockProfile.svelte";
   import MockDashboardLayout from "$lib/components/mockups/MockDashboardLayout.svelte";
 
-  import { Shield, FileText, CheckCircle2, User, ArrowLeft } from "@lucide/svelte";
+  import { Shield, FileText, CheckCircle2, User, ArrowLeft, Server, Users, ExternalLink } from "@lucide/svelte";
 
   let staffView = $state('list');
   let profileUser = $state('Lena');
@@ -27,7 +27,130 @@
 
   let scrolled = $state(false);
 
+  interface ServerStats {
+    name: string;
+    iconUrl: string;
+    memberCount: number;
+    description: string;
+    note: string;
+  }
+
+  interface StatsResponse {
+    totalGuilds: number;
+    totalUsers: number;
+    servers: ServerStats[];
+  }
+
+  let stats = $state<StatsResponse | null>(null);
+  let statsLoading = $state(true);
+  let statsError = $state<string | null>(null);
+
+  function formatCompact(n: number): string {
+    if (n >= 1000) {
+      const k = n / 1000;
+      return `+${k % 1 === 0 ? k.toFixed(0) : k.toFixed(1)}k`;
+    }
+    return `+${n}`;
+  }
+
+  async function fetchStats() {
+    try {
+      const res = await fetch('https://api.kotbo.fr/api/public/stats');
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data = await res.json();
+      
+      const noteMap: Record<string, string> = {
+        "Communauté Minecraft Fr": "Le temple des builders ! ⛏️",
+        "Jojo - Communauté": "Hyper accueillant, venez jouer ! 💬",
+        "Zenode": "Le QG du dev et de l'entraide ! 🚀",
+        "Les nerds": "Tech, dev, et beaucoup de café ! ☕"
+      };
+      
+      const descMap: Record<string, string> = {
+        "Communauté Minecraft Fr": "Le plus grand serveur communautaire Minecraft francophone. Survie, mini-jeux et entraide au quotidien.",
+        "Jojo - Communauté": "La communauté de Jojo est très accueillante ! Ici, vous pouvez discuter, échanger des idées ou même jouer ensemble.",
+        "Zenode": "Zenode - Serveur de Développement De Bots et Serveurs Discord, entraide autour de Discord.",
+        "Les nerds": "Espace d'échange et d'entraide pour passionnés d'informatique, de programmation et de technologies."
+      };
+
+      if (data && data.bots) {
+        // Map API response to our schema if it has bots format and filter >= 1000 members
+        stats = {
+          totalGuilds: data.totalGuilds,
+          totalUsers: data.totalUsers,
+          servers: data.bots
+            .map((b: any) => ({
+              name: b.botName,
+              iconUrl: b.botAvatarUrl,
+              memberCount: b.userCount,
+              description: descMap[b.botName] || "Communauté active gérée et modérée par Kotbo ! ✨",
+              note: noteMap[b.botName] || "Le staff adore Kotbo !"
+            }))
+            .filter((s: any) => s.memberCount >= 1000)
+        };
+      } else if (data && data.servers) {
+        stats = {
+          totalGuilds: data.totalGuilds,
+          totalUsers: data.totalUsers,
+          servers: data.servers
+            .map((s: any) => ({
+              name: s.name,
+              iconUrl: s.iconUrl,
+              memberCount: s.memberCount,
+              description: descMap[s.name] || s.description || "Communauté active gérée et modérée par Kotbo ! ✨",
+              note: noteMap[s.name] || s.note || "Le staff adore Kotbo !"
+            }))
+            .filter((s: any) => s.memberCount >= 1000)
+        };
+      } else {
+        throw new Error("Invalid API response format");
+      }
+    } catch (err: any) {
+      console.warn("Failed to fetch bot stats, using real data fallback:", err);
+      statsError = err.message || "Failed to fetch stats";
+      // Fallback to real production data (only >= 1000 members)
+      stats = {
+        totalGuilds: 10,
+        totalUsers: 17183,
+        servers: [
+          {
+            name: "Communauté Minecraft Fr",
+            iconUrl: "https://cdn.discordapp.com/icons/506029988680695818/6fbbb2b172d8677d849cee9c80485cf8.webp?size=128",
+            memberCount: 7690,
+            description: "Le plus grand serveur communautaire Minecraft francophone. Survie, mini-jeux et entraide au quotidien.",
+            note: "Le temple des builders ! ⛏️"
+          },
+          {
+            name: "Jojo - Communauté",
+            iconUrl: "https://cdn.discordapp.com/icons/913791560615854120/051ac19a35c8692f2ae8889ffa1fe7bf.webp?size=128",
+            memberCount: 4375,
+            description: "La communauté de Jojo est très accueillante ! Ici, vous pouvez discuter, échanger des idées ou même jouer ensemble.",
+            note: "Hyper accueillant, venez jouer ! 💬"
+          },
+          {
+            name: "Zenode",
+            iconUrl: "https://cdn.discordapp.com/icons/1386848639732809759/e3e252b02264eb99b526afb1c8d93eb0.webp?size=128",
+            memberCount: 1846,
+            description: "Zenode - Serveur de Développement De Bots et Serveurs Discord, entraide autour de Discord.",
+            note: "Le QG du dev et de l'entraide ! 🚀"
+          },
+          {
+            name: "Les nerds",
+            iconUrl: "https://cdn.discordapp.com/icons/1477350874740424986/61bd3237903270c5db2581a313f6a701.webp?size=128",
+            memberCount: 1109,
+            description: "Espace d'échange et d'entraide pour passionnés d'informatique, de programmation et de technologies.",
+            note: "Tech, dev, et beaucoup de café ! ☕"
+          }
+        ]
+      };
+    } finally {
+      statsLoading = false;
+    }
+  }
+
   onMount(() => {
+    fetchStats();
+
     const handleScroll = () => { scrolled = window.scrollY > 30; };
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -111,7 +234,7 @@
         <div class="absolute -top-5 right-6 w-28 h-6 bg-yellow-100/70 border-x border-dashed border-yellow-300/30 rotate-[8deg] shadow-xs backdrop-blur-xs z-25 pointer-events-none"></div>
 
         <!-- Interactive Mock Profile Window -->
-        <div class="relative w-full h-[750px] md:h-[840px] rounded-2xl shadow-[0_35px_80px_rgba(0,0,0,0.16)] flex flex-col overflow-hidden bg-white border border-gray-200/80 z-10">
+        <div class="relative w-full h-[820px] md:h-[920px] rounded-2xl shadow-[0_35px_80px_rgba(0,0,0,0.16)] flex flex-col overflow-hidden bg-white border border-gray-200/80 z-10">
           <div class="flex items-center gap-2 px-5 py-3.5 bg-gray-50/80 border-b border-gray-200/60 select-none shrink-0">
             <div class="flex gap-1.5 shrink-0">
               <span class="w-3 h-3 rounded-full bg-red-400 border border-red-500/20"></span>
@@ -179,7 +302,7 @@
       </div>
 
       <!-- Feature 1: Staff — mockup slide depuis la gauche, texte depuis la droite -->
-      <div class="grid lg:grid-cols-[1.35fr_0.65fr] gap-12 xl:gap-16 items-center">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-12 xl:gap-16 items-center">
         <div use:reveal={{ direction: 'left' }} class="order-2 lg:order-1 relative group">
           <div class="w-full transform -rotate-2 shadow-[0_25px_50px_rgba(0,0,0,0.08)] rounded-[2rem] border border-outline-variant/10 bg-white p-6 transition-transform duration-500 group-hover:rotate-0 flex flex-col h-[580px] overflow-hidden">
             {#if staffView === 'list'}
@@ -223,7 +346,7 @@
       </div>
 
       <!-- Feature 2: Sanctions — texte depuis la gauche, mockup depuis la droite -->
-      <div class="grid lg:grid-cols-[0.65fr_1.35fr] gap-12 xl:gap-16 items-center mt-40">
+      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 xl:gap-16 items-center mt-40">
         <div use:reveal={{ direction: 'left' }} class="pr-0 lg:pr-10">
           <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6">
             <FileText size={28} />
@@ -248,9 +371,9 @@
       </div>
 
       <!-- Feature 3: Profil — mockup depuis la gauche, texte depuis la droite -->
-      <div class="grid lg:grid-cols-[1.35fr_0.65fr] gap-12 xl:gap-16 items-center mt-40">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-12 xl:gap-16 items-center mt-40">
         <div use:reveal={{ direction: 'left' }} class="order-2 lg:order-1 relative group">
-          <div class="w-full transform -rotate-2 transition-transform duration-500 group-hover:rotate-0 flex flex-col h-[720px] pointer-events-auto shadow-[0_35px_75px_rgba(0,0,0,0.14)] rounded-2xl overflow-hidden bg-white border border-gray-200/80">
+          <div class="w-full transform -rotate-2 transition-transform duration-500 group-hover:rotate-0 flex flex-col h-[820px] pointer-events-auto shadow-[0_35px_75px_rgba(0,0,0,0.14)] rounded-2xl overflow-hidden bg-white border border-gray-200/80">
             <div class="flex items-center gap-2 px-5 py-3.5 bg-gray-50/80 border-b border-gray-200/60 select-none shrink-0">
               <div class="flex gap-1.5 shrink-0">
                 <span class="w-3 h-3 rounded-full bg-red-400 border border-red-500/20"></span>
@@ -381,6 +504,147 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Ils nous font confiance (Statistiques) -->
+  <section id="trust" class="py-32 bg-gray-50 border-t border-b border-gray-200 relative overflow-hidden">
+    <!-- Subtle hand-drawn background element/accent -->
+    <div class="absolute inset-0 pointer-events-none opacity-5" style="background-image: radial-gradient(circle at 20% 30%, var(--color-primary) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    
+    <div class="max-w-[85rem] mx-auto px-8 relative z-10">
+      <div use:reveal={{ direction: 'up' }} class="text-center mb-20">
+        <div class="inline-block border-2 border-indigo-600 rounded-2xl px-6 py-2 mb-6 bg-white shadow-sm">
+          <p class="text-xs font-black text-indigo-600 uppercase tracking-widest">Des chiffres qui parlent d'eux-mêmes</p>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-black tracking-tight text-gray-900 font-headline mb-6">
+          Ils nous font <MarkerCircle color="blue" class="text-indigo-600" animated>confiance</MarkerCircle> au quotidien
+        </h2>
+        <p class="text-lg text-gray-500 font-bold max-w-xl mx-auto">
+          Kotbo propulse la gestion et la modération des plus grandes communautés Discord au quotidien.
+        </p>
+      </div>
+
+      <!-- Global Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-20">
+        <!-- Servers card -->
+        <div use:reveal={{ direction: 'left', delay: 100 }} class="relative group bg-white border border-gray-200/80 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Server size={120} class="text-indigo-600" />
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
+              <Server size={32} />
+            </div>
+            <div>
+              <p class="text-xs font-black uppercase tracking-wider text-gray-400">Communautés gérées</p>
+              {#if statsLoading}
+                <div class="h-12 w-28 bg-gray-200 animate-pulse rounded-lg mt-1"></div>
+              {:else}
+                <p class="text-4xl md:text-5xl font-black text-gray-900 mt-1 font-headline tracking-tight">
+                  {stats ? stats.totalGuilds : 0}
+                </p>
+              {/if}
+            </div>
+          </div>
+        </div>
+
+        <!-- Users card -->
+        <div use:reveal={{ direction: 'right', delay: 100 }} class="relative group bg-white border border-gray-200/80 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Users size={120} class="text-indigo-600" />
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
+              <Users size={32} />
+            </div>
+            <div>
+              <p class="text-xs font-black uppercase tracking-wider text-gray-400">Membres</p>
+              {#if statsLoading}
+                <div class="h-12 w-36 bg-gray-200 animate-pulse rounded-lg mt-1"></div>
+              {:else}
+                <p class="text-4xl md:text-5xl font-black text-gray-900 mt-1 font-headline tracking-tight">
+                  {stats ? formatCompact(stats.totalUsers) : '0'}
+                </p>
+              {/if}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Individual servers heading -->
+      <div use:reveal={{ direction: 'up', delay: 150 }} class="text-center mb-12">
+        <h3 class="text-2xl font-black text-gray-900 font-headline">Quelques communautés équipées</h3>
+        <p class="text-sm text-gray-500 font-bold mt-1">Des serveurs Discord de toutes tailles qui font confiance à Kotbo.</p>
+      </div>
+
+      <!-- Servers Grid (2x2 Centered) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto px-4 md:px-0">
+        {#if statsLoading}
+          {#each Array(4) as _}
+            <div class="bg-white border border-gray-200/60 rounded-3xl p-6 flex flex-col justify-between h-56 shadow-sm">
+              <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gray-200 animate-pulse shrink-0"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-4 w-2/3 bg-gray-200 animate-pulse rounded"></div>
+                  <div class="h-3 w-1/3 bg-gray-200 animate-pulse rounded"></div>
+                </div>
+              </div>
+              <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
+                <div class="h-4 w-20 bg-gray-200 animate-pulse rounded"></div>
+                <div class="h-6 w-24 bg-gray-200 animate-pulse rounded-full"></div>
+              </div>
+            </div>
+          {/each}
+        {:else if stats && stats.servers}
+          {#each stats.servers as server, idx}
+            <div 
+              use:reveal={{ direction: 'up', delay: 80 * idx }}
+              class="relative bg-[#fefdfa] border-2 border-gray-200/60 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[17.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 group"
+              style="transform: rotate({[ -1.2, 0.8, -0.6, 1.4 ][idx % 4]}deg);"
+            >
+              <!-- Masking Tape Effect -->
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-amber-50/70 border-l border-r border-black/5 backdrop-blur-xs transform rotate-[-2deg] opacity-80 pointer-events-none" style="box-shadow: inset 0 0 4px rgba(0,0,0,0.03);"></div>
+
+              <div>
+                <div class="flex items-center gap-4 relative z-10">
+                  <!-- Server Icon -->
+                  {#if server.iconUrl}
+                    <img 
+                      src={server.iconUrl} 
+                      alt="{server.name} icon" 
+                      class="w-14 h-14 rounded-2xl border-2 border-white shadow-md object-cover bg-gray-50 shrink-0"
+                      onerror={(e) => {
+                        e.currentTarget.src = `${base}/favicon.svg`;
+                      }}
+                    />
+                  {:else}
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center border-2 border-white font-black text-xl shadow-md uppercase shrink-0">
+                      {server.name.substring(0, 2)}
+                    </div>
+                  {/if}
+                  
+                  <div class="min-w-0 flex-1">
+                    <h4 class="font-black text-gray-900 text-lg leading-tight group-hover:text-indigo-600 transition-colors">{server.name}</h4>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <p class="text-sm text-gray-500 font-medium leading-relaxed mt-4">
+                  {server.description}
+                </p>
+
+              </div>
+
+              <!-- Metrics -->
+              <div class="border-t border-dashed border-gray-200/80 pt-4 flex justify-between items-center mt-6 relative z-10">
+                <span class="text-xs font-black uppercase tracking-wider text-gray-400">Membres</span>
+                <span class="text-sm font-black text-gray-800 bg-gray-100/80 px-3 py-1 rounded-xl border border-gray-200/50">{server.memberCount.toLocaleString('fr-FR')}</span>
+              </div>
+            </div>
+          {/each}
+        {/if}
       </div>
     </div>
   </section>
