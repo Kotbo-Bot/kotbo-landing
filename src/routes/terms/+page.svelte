@@ -632,8 +632,8 @@
       <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
       <div class="flex gap-6 uppercase tracking-widest text-[10px] font-black">
         <a href="{base}/terms" class="text-indigo-600 hover:text-indigo-800 transition-colors">Confidentialité</a>
-        <a href="{base}/" class="hover:text-gray-900 transition-colors">Discord</a>
-        <a href="{base}/" class="hover:text-gray-900 transition-colors">Documentation</a>
+        <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
+        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
       </div>
     </div>
   </footer>

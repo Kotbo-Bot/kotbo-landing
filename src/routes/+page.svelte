@@ -159,8 +159,34 @@
 </script>
 
 <svelte:head>
-  <title>Kotbo | Le centre de contrôle de ta communauté Discord</title>
-  <meta name="description" content="Modération, staff, tickets, candidatures. Kotbo remplace tes tableurs et centralise l'organisation de ton serveur Discord." />
+  <title>Kotbo — ERP et bot de gestion pour serveur Discord</title>
+  <meta name="description" content="Kotbo est l'ERP Discord qui centralise la gestion de ton serveur : modération, staff, tickets, candidatures et statistiques dans un bot Discord tout-en-un." />
+  <meta name="keywords" content="ERP Discord, bot Discord, bot de gestion Discord, bot modération Discord, gestion serveur Discord, dashboard Discord" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://kotbo.fr/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Kotbo" />
+  <meta property="og:title" content="Kotbo — ERP et bot de gestion pour serveur Discord" />
+  <meta property="og:description" content="Centralise la modération, le staff, les tickets, les candidatures et les statistiques de ton serveur avec un ERP Discord tout-en-un." />
+  <meta property="og:url" content="https://kotbo.fr/" />
+
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Kotbo',
+    url: 'https://kotbo.fr/',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Discord, Web',
+    inLanguage: 'fr-FR',
+    description: "ERP et bot Discord tout-en-un pour la gestion des communautés, du staff, de la modération, des tickets et des candidatures.",
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/LimitedAvailability',
+      url: 'mailto:contact@kotbo.fr'
+    }
+  })}</script>`}
 </svelte:head>
 
 <div class="min-h-screen relative overflow-hidden text-gray-800 font-sans">
@@ -177,9 +203,9 @@
         <a href="#trust" class="hover:text-indigo-600 transition-colors">Communautés</a>
         <a href="#workflow" class="hover:text-indigo-600 transition-colors">Flow</a>
       </div>
-      <button class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
-        Ajouter Kotbo
-      </button>
+      <a href="mailto:contact@kotbo.fr" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+        Contacte-nous
+      </a>
     </nav>
   </div>
 
@@ -196,7 +222,7 @@
       </h1>
       <p class="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto font-bold hero-enter hero-delay-2">
         Modération, staff, tickets, candidatures, statistiques.
-        Kotbo remplace tes tableurs et centralise toute l'organisation de ton serveur Discord.
+        Kotbo est l'ERP et bot Discord tout-en-un qui remplace tes tableurs et centralise l'organisation de ton serveur.
       </p>
       <div class="flex flex-wrap justify-center gap-4 hero-enter hero-delay-3">
         <a href="mailto:contact@kotbo.fr" class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
@@ -1067,9 +1093,8 @@
       </div>
       <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
       <div class="flex gap-6 uppercase tracking-widest text-[10px] font-black">
-        <a href="{base}/" class="hover:text-gray-900 transition-colors">Twitter</a>
-        <a href="{base}/" class="hover:text-gray-900 transition-colors">Discord</a>
-        <a href="{base}/" class="hover:text-gray-900 transition-colors">Documentation</a>
+        <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
+        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
         <a href="{base}/terms" class="text-indigo-500 hover:text-indigo-700 transition-colors">Confidentialité</a>
       </div>
     </div>
