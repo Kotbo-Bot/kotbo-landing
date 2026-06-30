@@ -203,8 +203,8 @@
         <a href="#trust" class="hover:text-indigo-600 transition-colors">Communautés</a>
         <a href="#workflow" class="hover:text-indigo-600 transition-colors">Flow</a>
       </div>
-      <a href="mailto:contact@kotbo.fr" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
-        Contacte-nous
+      <a href="https://dash.kotbo.fr" target="_blank" rel="noopener noreferrer" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+        Aller au dashboard
       </a>
     </nav>
   </div>
