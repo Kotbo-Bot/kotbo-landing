@@ -189,6 +189,17 @@
 }
 .float { animation: float 5.5s ease-in-out infinite; }
 
+/* ── Float chips hero (translateY uniquement, sans écraser parallaxe) ── */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.chip-float-a { animation: float-y 4.2s ease-in-out infinite; }
+.chip-float-b { animation: float-y 5.1s ease-in-out infinite; animation-delay: 0.85s; }
+.chip-float-c { animation: float-y 3.8s ease-in-out infinite; animation-delay: 1.55s; }
+.chip-float-d { animation: float-y 4.7s ease-in-out infinite; animation-delay: 0.4s; }
+.chip-float-e { animation: float-y 5.5s ease-in-out infinite; animation-delay: 1.15s; }
+
 /* ── Nav backdrop on scroll ─────────────────────────────────── */
 .nav-scrolled {
   background: rgba(248, 249, 250, 0.92);

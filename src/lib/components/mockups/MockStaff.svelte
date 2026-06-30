@@ -1,84 +1,138 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
-  
-  let { onSelectMember }: {
-    onSelectMember?: (name: string, role: string, avatarSeed: string) => void;
-  } = $props();
 
-  const staff = [
-    ['Zenox','Administrateur','452','Zenox','bg-emerald-500'],
-    ['Lena','Responsable Staff','310','Lena','bg-rose-500'],
-    ['Aiden','Modérateur','124','Aiden','bg-emerald-500']
+  let activeTab = $state('Membres');
+  const tabs = [
+    { id: 'Membres',      icon: 'users'          },
+    { id: 'Rôles',        icon: 'shield'         },
+    { id: 'Organigramme', icon: 'git-branch'     },
+    { id: 'Avert.',       icon: 'alert-triangle' },
+    { id: 'Sondages',     icon: 'check-square'   },
+    { id: 'Leadership',   icon: 'bar-chart'      },
+  ];
+
+  const members = [
+    {
+      name: 'Lena', handle: 'lena_adm', seed: 'Lena',
+      grade: 'Responsable', gradeStyle: 'border-rose-200 bg-rose-50 text-rose-600',
+      hierarchy: { name: 'Direction', grade: 'Cheffe', color: '#e11d48' },
+      warns: 0, tutor: false, online: true,
+    },
+    {
+      name: 'Zenox', handle: 'zenox', seed: 'Zenox',
+      grade: 'Administrateur', gradeStyle: 'border-indigo-200 bg-indigo-50 text-indigo-600',
+      hierarchy: { name: 'Direction', grade: 'Admin', color: '#6366f1' },
+      warns: 0, tutor: false, online: true,
+    },
+    {
+      name: 'Aiden', handle: 'aiden_mod', seed: 'Aiden',
+      grade: 'Modérateur', gradeStyle: 'border-emerald-200 bg-emerald-50 text-emerald-600',
+      hierarchy: null, warns: 1, tutor: true, online: true,
+    },
+    {
+      name: 'Kylian', handle: 'kylian_h', seed: 'Kylian',
+      grade: 'Helper', gradeStyle: 'border-amber-200 bg-amber-50 text-amber-600',
+      hierarchy: null, warns: 0, tutor: true, online: false,
+    },
+    {
+      name: 'Nora', handle: 'nora_test', seed: 'Nora',
+      grade: 'Helper Test', gradeStyle: 'border-slate-200 bg-slate-50 text-slate-500',
+      hierarchy: null, warns: 0, tutor: false, online: true,
+    },
   ];
 </script>
 
-<div class="flex h-full flex-col gap-3 font-body text-on-surface">
-  <div class="flex items-end justify-between">
-    <div>
-      <h2 class="text-xl font-black">Gestion du Staff</h2>
-      <p class="text-[9px] font-bold text-on-surface-variant/50">Supervisez votre équipe, les permissions et les périodes de test.</p>
+<div class="flex h-full flex-col font-body text-on-surface overflow-hidden">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b border-outline-variant/10 bg-linear-to-r from-surface-container/80 to-surface-container-low/50 px-5 py-3.5 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <Papicon icon="users" size={16} />
+      </div>
+      <div>
+        <p class="text-sm font-black leading-tight">Gestion du Personnel</p>
+        <p class="text-[9px] text-on-surface-variant/60">Supervisez votre équipe de modération</p>
+      </div>
     </div>
-    <button class="rounded-xl bg-primary px-3 py-2 text-[8px] font-black uppercase text-white hover:bg-primary/95 transition-colors">Ajouter un membre</button>
+    <button class="rounded-lg border border-primary/20 bg-primary/8 px-3 py-2 text-[9px] font-black uppercase tracking-widest text-primary">
+      + Ajouter un membre
+    </button>
   </div>
-  
-  <div class="grid grid-cols-3 gap-2">
-    {#each [['Membres','18','users'],['Grades','6','badge'],['Avertissements','2','alert-triangle']] as stat}
-      <div class="flex items-center gap-2 rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-3 shadow-inner">
-        <div class="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <Papicon icon={stat[2]} size={13}/>
+
+  <!-- List header -->
+  <div class="flex items-center justify-between border-b border-outline-variant/10 bg-surface-container-low/30 px-5 py-3 shrink-0">
+    <div>
+      <p class="text-sm font-black">Membres du Personnel</p>
+      <p class="text-[9px] text-on-surface-variant/50">Gérez l'équipe et leurs grades actuels.</p>
+    </div>
+    <span class="rounded-lg bg-surface-container px-2.5 py-1.5 text-[9px] font-bold text-on-surface-variant/60">
+      {members.length} membres
+    </span>
+  </div>
+
+  <!-- Member rows -->
+  <div class="flex-1 divide-y divide-outline-variant/8 overflow-y-auto">
+    {#each members as m}
+      <div class="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-primary/[0.04]">
+
+        <!-- Avatar + présence -->
+        <div class="relative shrink-0">
+          <div class="h-10 w-10 overflow-hidden rounded-full border border-outline-variant/20 bg-surface-container-high shadow-sm">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={m.seed}" alt="" class="h-full w-full object-cover" />
+          </div>
+          <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white {m.online ? 'bg-emerald-400' : 'bg-gray-400'}"></span>
         </div>
-        <div>
-          <p class="text-[7px] font-black uppercase text-on-surface-variant/40">{stat[0]}</p>
-          <p class="text-base font-black leading-none">{stat[1]}</p>
+
+        <!-- Info + badges -->
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-1.5 mb-1">
+            <span class="text-sm font-black text-on-surface">{m.name}</span>
+
+            <!-- Grade coloré -->
+            <span class="rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wide shrink-0 {m.gradeStyle}">
+              {m.grade}
+            </span>
+
+            <!-- Hiérarchie -->
+            {#if m.hierarchy}
+              <span
+                class="rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wide shrink-0"
+                style="border-color:{m.hierarchy.color}40;background:{m.hierarchy.color}18;color:{m.hierarchy.color}"
+              >
+                {m.hierarchy.name} · {m.hierarchy.grade}
+              </span>
+            {/if}
+
+            <!-- Avertissements -->
+            {#if m.warns}
+              <span class="rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-[9px] font-black text-amber-700 shrink-0">
+                {m.warns} AVERT.
+              </span>
+            {/if}
+
+            <!-- Tutorat -->
+            {#if m.tutor}
+              <span class="rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[9px] font-black text-violet-600 shrink-0">
+                TUTORAT
+              </span>
+            {/if}
+          </div>
+          <p class="text-[10px] text-on-surface-variant/50">@{m.handle}</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex shrink-0 gap-1.5">
+          {#each [['user','Profil'],['chevrons-up','Promo'],['chevrons-down','Démo'],['more-horizontal','Plus']] as [icon, label]}
+            <button
+              title={label}
+              class="flex h-8 w-8 items-center justify-center rounded-lg border border-outline-variant/20 bg-surface text-on-surface-variant/60 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+            >
+              <Papicon {icon} size={13} />
+            </button>
+          {/each}
         </div>
       </div>
     {/each}
-  </div>
-
-  <div class="flex-1 rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-3 overflow-hidden flex flex-col">
-    <div class="mb-2 flex items-center justify-between">
-      <div>
-        <p class="text-[10px] font-black">Membres du staff</p>
-        <p class="text-[7px] text-on-surface-variant/40">Gérez l’équipe et leurs grades actuels.</p>
-      </div>
-      <span class="rounded-lg bg-surface-container px-2 py-1 text-[7px] font-bold">Équipe active</span>
-    </div>
-
-    <div class="space-y-1.5 flex-1 overflow-y-auto pr-0.5">
-      {#each staff as member}
-        <div class="grid grid-cols-[1.5fr_1.3fr_.8fr] sm:grid-cols-[1.5fr_1.3fr_.7fr_.8fr] items-center gap-2 rounded-xl border border-outline-variant/10 bg-surface-container-low/40 px-3 py-2 hover:bg-surface-container-low/80 transition-colors">
-          <div class="flex items-center gap-2">
-            <div class="relative flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary text-[8px] font-black text-white overflow-hidden shadow-inner">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={member[3]}" alt="" class="w-full h-full object-cover" />
-              <span class="absolute -bottom-0.5 -right-0.5 size-2 rounded-full border border-white {member[4]}"></span>
-            </div>
-            <div class="min-w-0">
-              <p class="text-[8px] font-black truncate">{member[0]}</p>
-              <p class="text-[6px] text-on-surface-variant/40 truncate">@{member[0].toLowerCase()}</p>
-            </div>
-          </div>
-          
-          <span class="w-fit rounded-lg bg-primary/10 px-2 py-1 text-[6px] font-black uppercase text-primary truncate">
-            {member[1]}
-          </span>
-          
-          <span class="flex items-center gap-1 text-[7px] font-bold shrink-0 hidden sm:flex">
-            <Papicon icon="activity" size={10} />
-            {member[2]}
-          </span>
-          
-          <div class="flex justify-end gap-1.5 shrink-0">
-            <button 
-              type="button"
-              onclick={() => onSelectMember && onSelectMember(member[0], member[1], member[3])}
-              class="rounded-lg bg-surface-container hover:bg-surface-container-high px-1.5 py-1 text-[6px] font-black cursor-pointer transition-colors"
-            >
-              Profil
-            </button>
-            <span class="rounded-lg bg-surface-container px-1.5 py-1 text-[6px] font-black">•••</span>
-          </div>
-        </div>
-      {/each}
-    </div>
   </div>
 </div>
