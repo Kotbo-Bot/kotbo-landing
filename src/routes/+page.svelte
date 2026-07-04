@@ -119,7 +119,7 @@
       stats = {
         totalGuilds: data.totalGuilds ?? 15,
         totalUsers: data.totalUsers ?? 17486,
-        servers: featuredServers,
+        servers: data.servers ?? featuredServers,
       };
     } catch (err: any) {
       console.warn("Failed to fetch bot stats, using fallback:", err);
