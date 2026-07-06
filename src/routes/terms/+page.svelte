@@ -10,7 +10,7 @@
     return () => window.removeEventListener("scroll", handleScroll);
   });
 
-  const lastUpdate = "20 juin 2026";
+  const lastUpdate = "6 juillet 2026";
   const sections = [
     { id: "responsable",   label: "Responsable du traitement" },
     { id: "collecte",      label: "Données collectées" },
@@ -93,9 +93,9 @@
         <div>
           <p class="font-bold text-amber-800 text-sm mb-1">À destination des administrateurs de serveur Discord</p>
           <p class="text-amber-700 text-sm leading-relaxed">
-            En ajoutant Kotbo à votre serveur, vous agissez en tant que <strong>responsable de traitement conjoint</strong>.
-            Vous êtes tenus d'informer vos membres de l'utilisation du bot et de la présente politique de confidentialité,
-            conformément à l'article 13 du RGPD.
+            L'administrateur détermine les modules activés et agit comme <strong>responsable du traitement</strong>
+            pour les données propres à son serveur. Kotbo traite ces données comme <strong>sous-traitant</strong>,
+            sur instruction de l'administrateur. Celui-ci doit informer ses membres conformément aux articles 13 et 14 du RGPD.
           </p>
         </div>
       </div>
@@ -118,10 +118,10 @@
           Il n'opère que sur les serveurs où il a été explicitement invité.
         </p>
         <div class="info-box">
-          <strong>Deux rôles de traitement distincts&nbsp;:</strong>
+          <strong>Deux rôles distincts&nbsp;:</strong>
           <ul>
-            <li><strong>Elouan Passereau &amp; Nathan Rontey</strong> — responsables pour les données techniques globales (journaux d'erreurs, statistiques agrégées, administration globale).</li>
-            <li><strong>L'administrateur du serveur</strong> — responsable pour les données propres à son serveur (profils membres, sanctions, candidatures, etc.).</li>
+            <li><strong>Kotbo</strong> agit comme sous-traitant pour les profils membres, sanctions, candidatures, tickets et autres données traitées selon la configuration du serveur. Les conditions applicables sont publiées dans notre <a href="{base}/dpa">accord de sous-traitance</a>.</li>
+            <li><strong>Elouan Passereau &amp; Nathan Rontey</strong> restent responsables des traitements nécessaires au compte administrateur, à la sécurité, à la prévention des abus, aux journaux techniques et à l'administration globale du service.</li>
           </ul>
         </div>
       </section>
@@ -132,8 +132,10 @@
         <h2>Données collectées</h2>
         <p>
           Kotbo collecte uniquement les données nécessaires au fonctionnement des modules activés sur chaque serveur.
-          Les données sont rattachées à l'identifiant de serveur Discord (<em>Guild ID</em>) concerné et
-          supprimées en cascade si le serveur retire Kotbo. Voici le détail exhaustif par catégorie&nbsp;:
+          Les données sont rattachées à l'identifiant de serveur Discord (<em>Guild ID</em>) concerné.
+          Leur suppression est effectuée sur instruction de l'administrateur ou à la suite d'une demande recevable ;
+          le retrait du bot ne doit pas être considéré, à lui seul, comme la confirmation d'une purge immédiate.
+          Voici le détail par catégorie&nbsp;:
         </p>
 
         <h3>2.1 Données de profil Discord</h3>
@@ -253,8 +255,10 @@
 
         <h3>2.12 Données d'authentification au Dashboard</h3>
         <p>
-          L'accès au dashboard Kotbo utilise OAuth2 Discord. Le token d'accès n'est pas stocké en base de données ;
-          l'authentification génère un JWT de session côté client. Les actions effectuées sur le dashboard sont
+          L'accès au dashboard Kotbo utilise OAuth2 Discord avec le flux Authorization Code. Les jetons Discord sont
+          chiffrés dans une session serveur temporaire et ne sont jamais exposés au stockage JavaScript du navigateur.
+          Le navigateur reçoit uniquement un identifiant de session aléatoire dans un cookie sécurisé et inaccessible à JavaScript.
+          Les actions effectuées sur le dashboard sont
           enregistrées dans un journal d'audit contenant&nbsp;: l'identifiant utilisateur, l'action effectuée, le
           module concerné et l'horodatage.
         </p>
@@ -264,6 +268,8 @@
           <li><strong>Journaux d'erreurs (<em>BotErrorLog</em>)&nbsp;:</strong> message d'erreur, stack trace, source (commande ou événement déclencheur).</li>
           <li><strong>Statistiques de modules&nbsp;:</strong> compteurs d'activation, d'utilisation et de performances (temps d'exécution, taux d'erreur) — données agrégées, sans identifiant personnel direct.</li>
           <li><strong>Blacklist globale&nbsp;:</strong> identifiants Discord d'utilisateurs bannis de l'utilisation de Kotbo à l'échelle globale, avec motif.</li>
+          <li><strong>Vérification de sécurité&nbsp;:</strong> adresse IP, identifiants Discord comparés, résultat et éléments techniques de détection des comptes multiples.</li>
+          <li><strong>Navigation&nbsp;:</strong> cookies de sécurité et préférences stockées localement, détaillés dans la <a href="{base}/cookies">politique cookies et stockage local</a>.</li>
         </ul>
       </section>
 
@@ -296,7 +302,7 @@
             </tr>
             <tr>
               <td>Traitement des candidatures au staff</td>
-              <td>Consentement explicite via la soumission du formulaire de candidature (art. 6.1.a)</td>
+              <td>Intérêt légitime du serveur à examiner une candidature volontaire (art. 6.1.f). Un consentement distinct est demandé pour une conservation optionnelle au-delà du recrutement en cours.</td>
             </tr>
             <tr>
               <td>Détection de multi-comptes et sécurité</td>
@@ -308,7 +314,7 @@
             </tr>
             <tr>
               <td>Événements, quiz et CTF</td>
-              <td>Consentement implicite via la participation à un événement optionnel (art. 6.1.a)</td>
+              <td>Intérêt légitime à organiser l'événement auquel la personne choisit de participer (art. 6.1.f)</td>
             </tr>
             <tr>
               <td>Sauvegardes de serveur</td>
@@ -380,6 +386,16 @@
               <td>Surveillance et journalisation des erreurs</td>
               <td>Stack traces et contexte d'erreur (peut contenir des métadonnées)</td>
             </tr>
+            <tr>
+              <td><strong>Cloudflare</strong></td>
+              <td>Protection réseau, cache et prévention des abus.</td>
+              <td>Adresse IP, en-têtes HTTP et événements de sécurité.</td>
+            </tr>
+            <tr>
+              <td><strong>jsDelivr / GitHub</strong></td>
+              <td>Chargement à la demande des moteurs de l'éditeur de code.</td>
+              <td>Adresse IP et en-têtes techniques, uniquement lors de l'ouverture de l'IDE concerné.</td>
+            </tr>
           </tbody>
         </table>
 
@@ -400,7 +416,7 @@
           <tbody>
             <tr>
               <td>Données de profil membre (MemberProfile)</td>
-              <td>Conservées tant que le serveur est actif sur Kotbo. En cas de désinstallation du bot, suppression en cascade.</td>
+              <td>Conservées pendant l'utilisation du service, puis jusqu'à leur suppression sur instruction ou demande recevable.</td>
             </tr>
             <tr>
               <td>Statistiques d'activité journalières</td>
@@ -416,11 +432,11 @@
             </tr>
             <tr>
               <td>Candidatures au staff</td>
-              <td>Conservées jusqu'à suppression par l'administrateur, ou au plus 24 mois après la décision finale.</td>
+              <td>Jusqu'à suppression par l'administrateur. Celui-ci doit définir une durée adaptée au recrutement ; toute conservation dans un vivier nécessite une justification distincte.</td>
             </tr>
             <tr>
               <td>Tickets et transcripts</td>
-              <td>Conservés jusqu'à suppression manuelle par l'administrateur ou à la désinstallation du bot.</td>
+              <td>Conservés jusqu'à suppression par l'administrateur ou traitement d'une demande recevable.</td>
             </tr>
             <tr>
               <td>Données d'événements (quiz, CTF)</td>
@@ -432,11 +448,11 @@
             </tr>
             <tr>
               <td>Journaux d'audit du Dashboard</td>
-              <td>90 jours glissants par défaut (configurable par l'administrateur).</td>
+              <td>Conservés selon la configuration et les besoins de sécurité du serveur ; aucune purge automatique à 90 jours n'est garantie à ce jour.</td>
             </tr>
             <tr>
               <td>Journaux d'erreurs techniques (BotErrorLog)</td>
-              <td>30 jours maximum, puis suppression automatique.</td>
+              <td>Conservés pendant la durée nécessaire au diagnostic et à la sécurité ; aucune purge automatique à 30 jours n'est garantie à ce jour.</td>
             </tr>
             <tr>
               <td>Sauvegardes de serveur</td>
@@ -450,7 +466,9 @@
         </table>
 
         <div class="info-box">
-          Toute demande de suppression adressée à <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> sera traitée sous <strong>30 jours</strong>.
+          Les administrateurs doivent définir et appliquer des durées proportionnées aux modules qu'ils activent. L'automatisation
+          complète des purges et de la suppression au retrait d'un serveur est encore en cours de définition. Toute demande adressée
+          à <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> reçoit une réponse dans le délai RGPD applicable, en principe <strong>un mois</strong>.
           Certaines données peuvent être conservées si nécessaire au respect d'obligations légales ou à la défense de droits en justice.
         </div>
       </section>
@@ -477,6 +495,14 @@
           <li>
             <strong>YouTube Data API / Twitch API</strong>&nbsp;: aucune donnée personnelle d'utilisateurs n'est
             transmise à ces services dans le cadre des modules de suivi de contenu.
+          </li>
+          <li>
+            <strong>Cloudflare</strong>&nbsp;: les requêtes peuvent être traitées par son réseau mondial pour la
+            sécurité et la distribution du service, selon les garanties contractuelles applicables.
+          </li>
+          <li>
+            <strong>jsDelivr / GitHub</strong>&nbsp;: certains moteurs de l'IDE sont chargés uniquement à la demande.
+            Les polices utilisées par la landing et le dashboard sont, quant à elles, auto-hébergées.
           </li>
         </ul>
       </section>
@@ -541,8 +567,8 @@
         <ul>
           <li><strong>Chiffrement en transit</strong>&nbsp;: toutes les communications entre le bot, le Dashboard et la base de données utilisent le protocole TLS/HTTPS.</li>
           <li><strong>Isolation par serveur</strong>&nbsp;: les données de chaque serveur Discord sont strictement séparées. Un administrateur d'un serveur A ne peut pas accéder aux données d'un serveur B.</li>
-          <li><strong>Authentification robuste</strong>&nbsp;: le Dashboard utilise OAuth2 Discord avec JWT signés. Les clés API sont stockées sous forme de hash SHA-256 — jamais en clair.</li>
-          <li><strong>Suppression en cascade</strong>&nbsp;: la désinstallation de Kotbo d'un serveur déclenche automatiquement la suppression de toutes les données associées en base.</li>
+          <li><strong>Authentification robuste</strong>&nbsp;: le Dashboard utilise OAuth2 Discord Authorization Code, des sessions serveur révocables et un cookie <em>HttpOnly</em>. Les jetons Discord sont chiffrés côté serveur et les clés API sont stockées sous forme de hash SHA-256.</li>
+          <li><strong>Gestion des suppressions</strong>&nbsp;: les demandes recevables sont traitées sur instruction du responsable du serveur ou directement par Kotbo pour ses traitements propres. Le retrait du bot ne vaut pas confirmation automatique de suppression.</li>
           <li><strong>Contrôle d'accès granulaire</strong>&nbsp;: le système de permissions du Dashboard permet à chaque administrateur de définir précisément quels membres de son staff peuvent accéder à quelles fonctionnalités et données.</li>
           <li><strong>Journaux d'audit</strong>&nbsp;: toutes les actions administratives sur le Dashboard sont enregistrées avec l'identité de l'auteur, l'horodatage et le détail de l'action.</li>
           <li><strong>Sauvegardes sécurisées</strong>&nbsp;: les données font l'objet de sauvegardes régulières avec contrôle d'intégrité.</li>
@@ -589,9 +615,9 @@
           <li>En mettant à jour la date de «&nbsp;Dernière mise à jour&nbsp;» en haut de cette page.</li>
         </ul>
         <p>
-          La poursuite de l'utilisation de Kotbo après la publication des modifications constitue votre
-          acceptation de la politique révisée. Si vous n'acceptez pas les nouvelles conditions, vous devez
-          cesser d'utiliser Kotbo et nous contacter pour demander la suppression de vos données.
+          Une politique de confidentialité est un document d'information et sa mise à jour ne vaut pas recueil
+          de consentement. Lorsqu'une modification nécessite un nouveau consentement, celui-ci est demandé
+          séparément par un acte positif clair avant le traitement concerné.
         </p>
       </section>
 
@@ -632,6 +658,8 @@
       <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
       <div class="flex gap-6 uppercase tracking-widest text-[10px] font-black">
         <a href="{base}/terms" class="text-indigo-600 hover:text-indigo-800 transition-colors">Confidentialité</a>
+        <a href="{base}/cookies" class="hover:text-gray-900 transition-colors">Cookies</a>
+        <a href="{base}/dpa" class="hover:text-gray-900 transition-colors">DPA</a>
         <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
         <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
       </div>

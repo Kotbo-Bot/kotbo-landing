@@ -1,5 +1,6 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
+  import { mockAvatar } from '$lib/mockMedia';
 
   let activeTab = $state('Membres');
   const tabs = [
@@ -79,7 +80,7 @@
         <!-- Avatar + présence -->
         <div class="relative shrink-0">
           <div class="h-10 w-10 overflow-hidden rounded-full border border-outline-variant/20 bg-surface-container-high shadow-sm">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={m.seed}" alt="" class="h-full w-full object-cover" />
+            <img src={mockAvatar(m.seed)} alt="" class="h-full w-full object-cover" />
           </div>
           <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white {m.online ? 'bg-emerald-400' : 'bg-gray-400'}"></span>
         </div>

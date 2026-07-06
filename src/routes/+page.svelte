@@ -5,6 +5,7 @@
   import MarkerCircle from "$lib/components/ui/MarkerCircle.svelte";
   import HandDrawnArrow from "$lib/components/ui/HandDrawnArrow.svelte";
   import { reveal } from '$lib/actions/reveal';
+  import { mockAvatar } from '$lib/mockMedia';
 
   import MockSanction from "$lib/components/mockups/MockSanction.svelte";
   import MockStaff from "$lib/components/mockups/MockStaff.svelte";
@@ -63,7 +64,7 @@
     iconUrl: string;
     memberCount: number;
     description: string;
-    note: string;
+    note?: string;
   }
 
   interface StatsResponse {
@@ -263,7 +264,7 @@
                 </div>
                 <p class="text-[12px] font-black text-gray-900 leading-snug mb-2.5">Joueur toxique en vocal</p>
                 <div class="flex items-center gap-2">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maxou" alt="" class="w-5 h-5 rounded-full bg-gray-100 shrink-0" />
+                  <img src={mockAvatar('Maxou')} alt="" class="w-5 h-5 rounded-full bg-gray-100 shrink-0" />
                   <p class="text-[9px] text-gray-400 font-semibold">@Maxou · il y a 2 min</p>
                 </div>
               </div>
@@ -293,9 +294,9 @@
           <div style="transform: translate({mx * 88 + rC.rx}px, {my * 60 + rC.ry}px); opacity: {rC.op}; transition: transform 0.09s cubic-bezier(0.22, 0.1, 0.36, 1), opacity 0.22s ease;">
             <div class="bg-gray-950 rounded-2xl px-4 py-3 flex items-center gap-3 rotate-[1deg]" style="box-shadow: 0 20px 60px rgba(0,0,0,0.28);">
               <div class="flex -space-x-2 shrink-0">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lena" alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Zenox" alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aiden" alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
+                <img src={mockAvatar('Lena')} alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
+                <img src={mockAvatar('Zenox')} alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
+                <img src={mockAvatar('Aiden')} alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
               </div>
               <div>
                 <p class="text-[11px] font-black text-white leading-tight">3 modérateurs</p>
@@ -587,13 +588,13 @@
                   <p class="text-[10px] font-black text-amber-400 mb-1">Compte lié détecté</p>
                   <div class="space-y-1 mb-2">
                     <div class="flex items-center gap-2">
-                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=xX_alt" alt="" class="w-4 h-4 rounded-full bg-gray-600" />
+                      <img src={mockAvatar('xX_alt')} alt="" class="w-4 h-4 rounded-full bg-gray-600" />
                       <span class="text-[8px] text-white font-bold">@xX_hacker2</span>
                       <span class="text-[7px] text-[#b9bbbe]">vient d'arriver</span>
                     </div>
                     <div class="flex items-center gap-1.5 ml-5">
                       <div class="w-px h-3 bg-[#4e5058]"></div>
-                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=xX_hacker" alt="" class="w-4 h-4 rounded-full bg-gray-600" />
+                      <img src={mockAvatar('xX_hacker')} alt="" class="w-4 h-4 rounded-full bg-gray-600" />
                       <span class="text-[8px] text-amber-300 font-bold">@xX_hacker</span>
                       <span class="text-[7px] text-rose-400 font-bold">BANNI</span>
                     </div>
@@ -1029,7 +1030,7 @@
                       alt="{server.name} icon"
                       class="w-14 h-14 rounded-2xl border-2 border-white shadow-md object-cover bg-gray-50 shrink-0"
                       onerror={(e) => {
-                        e.currentTarget.src = `${base}/favicon.svg`;
+                        (e.currentTarget as HTMLImageElement).src = `${base}/favicon.svg`;
                       }}
                     />
                   {:else}
@@ -1096,6 +1097,8 @@
         <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
         <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
         <a href="{base}/terms" class="text-indigo-500 hover:text-indigo-700 transition-colors">Confidentialité</a>
+        <a href="{base}/cookies" class="hover:text-gray-900 transition-colors">Cookies</a>
+        <a href="{base}/dpa" class="hover:text-gray-900 transition-colors">DPA</a>
       </div>
     </div>
   </footer>

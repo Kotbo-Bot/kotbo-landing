@@ -1,5 +1,6 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
+  import { mockAvatar, mockBanner } from '$lib/mockMedia';
 
   let { user = 'Arka', role = 'Fondateur', avatar = 'Arka' }: {
     user?: string;
@@ -78,8 +79,8 @@
           username: 'arka_boss',
           globalName: 'Arka',
           displayName: 'Arka',
-          avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arka',
-          bannerUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=60',
+          avatarUrl: mockAvatar('Arka'),
+          bannerUrl: mockBanner('Arka'),
           locale: 'fr',
           isBot: false,
           accountCreatedAt: '2023-03-12T14:23:00.000Z',
@@ -100,7 +101,7 @@
           code: 'KOTBO',
           inviterId: 'lena',
           inviterTag: 'Lena',
-          inviterAvatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lena',
+          inviterAvatarUrl: mockAvatar('Lena'),
           joinedAt: '2024-05-04T09:15:00.000Z'
         },
         roles: [
@@ -171,8 +172,8 @@
           username: 'zenox_admin',
           globalName: 'Zenox',
           displayName: 'Zenox',
-          avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zenox',
-          bannerUrl: 'https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=800&auto=format&fit=crop&q=60',
+          avatarUrl: mockAvatar('Zenox'),
+          bannerUrl: mockBanner('Zenox'),
           locale: 'fr',
           isBot: false,
           accountCreatedAt: '2024-01-15T10:11:00.000Z',
@@ -193,7 +194,7 @@
           code: 'ZEN',
           inviterId: 'arka',
           inviterTag: 'Arka',
-          inviterAvatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arka',
+          inviterAvatarUrl: mockAvatar('Arka'),
           joinedAt: '2025-02-10T11:20:00.000Z'
         },
         roles: [
@@ -254,8 +255,8 @@
           username: 'admin_lena',
           globalName: 'Lena',
           displayName: 'Lena',
-          avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lena',
-          bannerUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&auto=format&fit=crop&q=60',
+          avatarUrl: mockAvatar('Lena'),
+          bannerUrl: mockBanner('Lena'),
           locale: 'fr',
           isBot: false,
           accountCreatedAt: '2022-08-20T17:40:00.000Z',
@@ -276,7 +277,7 @@
           code: 'STAFF',
           inviterId: 'arka',
           inviterTag: 'Arka',
-          inviterAvatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arka',
+          inviterAvatarUrl: mockAvatar('Arka'),
           joinedAt: '2023-10-10T12:00:00.000Z'
         },
         roles: [
@@ -341,8 +342,8 @@
           username: 'aiden_mod',
           globalName: 'Aiden',
           displayName: 'Aiden',
-          avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aiden',
-          bannerUrl: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&auto=format&fit=crop&q=60',
+          avatarUrl: mockAvatar('Aiden'),
+          bannerUrl: mockBanner('Aiden'),
           locale: 'fr',
           isBot: false,
           accountCreatedAt: '2024-06-10T08:30:00.000Z',
@@ -363,7 +364,7 @@
           code: 'A10',
           inviterId: 'lena',
           inviterTag: 'Lena',
-          inviterAvatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lena',
+          inviterAvatarUrl: mockAvatar('Lena'),
           joinedAt: '2025-03-01T14:40:00.000Z'
         },
         roles: [

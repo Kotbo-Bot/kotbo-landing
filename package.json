@@ -13,6 +13,9 @@
 		"gen": "wrangler types"
 	},
 	"devDependencies": {
+		"@fontsource/caveat": "^5.2.8",
+		"@fontsource/inter": "^5.2.8",
+		"@fontsource/manrope": "^5.2.8",
 		"@lucide/svelte": "^1.18.0",
 		"@sveltejs/adapter-cloudflare": "^7.2.8",
 		"@sveltejs/adapter-static": "^3.0.10",
