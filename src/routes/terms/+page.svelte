@@ -50,7 +50,7 @@
       service est édité et opéré par <strong>Elouan Passereau</strong> et <strong>Nathan Rontey</strong>
       (« Kotbo », « nous »). Les coordonnées complètes figurent sur la page <a href="{base}/mentions-legales">Mentions légales</a>.
     </p>
-    <p>Le service est fourni gratuitement, sauf indication contraire pour d'éventuelles options payantes qui seraient présentées séparément.</p>
+    <p>L'accès à Kotbo est payant. Le paiement s'effectue actuellement via un lien de paiement sécurisé. Les modalités tarifaires (offres, prix, conditions) sont présentées séparément au moment de la souscription.</p>
   </section>
 
   <section id="acces" class="policy-section">
@@ -121,9 +121,9 @@
     <h2>Limitation de responsabilité</h2>
     <p>
       Dans les limites permises par la loi, Kotbo ne saurait être tenu responsable des dommages indirects, de la perte de
-      données, de la perte d'exploitation ou d'un usage non conforme du service par un administrateur ou un membre. Le
-      service étant fourni à titre gratuit, notre responsabilité est limitée aux dommages directs résultant d'une faute
-      qui nous serait imputable. Rien dans les présentes ne limite une responsabilité qui ne peut légalement l'être.
+      données, de la perte d'exploitation ou d'un usage non conforme du service par un administrateur ou un membre. Notre
+      responsabilité est limitée aux dommages directs et prévisibles résultant d'une faute qui nous serait imputable.
+      Rien dans les présentes ne limite une responsabilité qui ne peut légalement l'être.
     </p>
   </section>
 
