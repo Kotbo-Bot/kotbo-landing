@@ -14,7 +14,7 @@
     title: string;
     subtitle: string;
     sections: SectionLink[];
-    activePage: 'terms' | 'cookies' | 'dpa';
+    activePage: 'privacy' | 'terms' | 'cookies' | 'dpa' | 'legal';
     children: Snippet;
   } = $props();
 
@@ -80,9 +80,11 @@
       </div>
       <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
       <div class="flex flex-wrap justify-center gap-6 uppercase tracking-widest text-[10px] font-black">
-        <a href="{base}/terms" class:text-indigo-600={activePage === 'terms'} class="hover:text-gray-900 transition-colors">Confidentialité</a>
+        <a href="{base}/privacy" class:text-indigo-600={activePage === 'privacy'} class="hover:text-gray-900 transition-colors">Confidentialité</a>
+        <a href="{base}/terms" class:text-indigo-600={activePage === 'terms'} class="hover:text-gray-900 transition-colors">CGU</a>
         <a href="{base}/cookies" class:text-indigo-600={activePage === 'cookies'} class="hover:text-gray-900 transition-colors">Cookies</a>
         <a href="{base}/dpa" class:text-indigo-600={activePage === 'dpa'} class="hover:text-gray-900 transition-colors">DPA</a>
+        <a href="{base}/mentions-legales" class:text-indigo-600={activePage === 'legal'} class="hover:text-gray-900 transition-colors">Mentions légales</a>
         <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
         <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
       </div>
@@ -212,5 +214,63 @@
     border-radius: 0.35rem;
     font-size: 0.82em;
     font-weight: 700;
+  }
+
+  /* ── Info box variants ───────────────────────────────── */
+  .prose-policy :global(.info-box.warn) {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+  }
+  .prose-policy :global(.info-box.warn a) { color: #b45309; }
+  .prose-policy :global(.info-box.danger) {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+  }
+  .prose-policy :global(.info-box.danger a) { color: #b91c1c; }
+
+  /* ── Rights grid ─────────────────────────────────────── */
+  .prose-policy :global(.rights-grid) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .prose-policy :global(.right-card) {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1.1rem 1.25rem;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .prose-policy :global(.right-card:hover) {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    border-color: #c7d2fe;
+  }
+  .prose-policy :global(.right-card h4) {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 0.4rem;
+  }
+  .prose-policy :global(.right-card p) {
+    font-size: 0.8375rem;
+    color: #6b7280;
+    margin: 0;
+  }
+  .prose-policy :global(.art) {
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #9ca3af;
+  }
+
+  /* ── Contact card ────────────────────────────────────── */
+  .prose-policy :global(.contact-card) {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 1rem;
   }
 </style>

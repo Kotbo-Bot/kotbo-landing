@@ -19,11 +19,11 @@
         [rôles autorisés] et conservées pendant [durées].</p>
       <p>Vous pouvez demander l'accès, la rectification, la limitation, l'opposition ou l'effacement de vos données auprès de
         [contact du serveur]. Vous pouvez également contacter privacy@kotbo.fr ou saisir la CNIL.</p>
-      <p>Politique complète : https://kotbo.fr/terms</p>
+      <p>Politique complète : https://kotbo.fr/privacy</p>
     </div>
     <h2>Points à compléter obligatoirement</h2>
     <ul><li>identité et contact du responsable du serveur ;</li><li>finalités, modules et bases légales ;</li><li>destinataires et durées ;</li><li>modalités concrètes d'exercice des droits.</li></ul>
-    <footer><a href="{base}/terms">Confidentialité</a><a href="{base}/dpa">DPA</a></footer>
+    <footer><a href="{base}/privacy">Confidentialité</a><a href="{base}/terms">CGU</a><a href="{base}/dpa">DPA</a><a href="{base}/mentions-legales">Mentions légales</a></footer>
   </article>
 </main>
 

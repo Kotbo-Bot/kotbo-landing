@@ -86,7 +86,7 @@
       permettant d'accepter ou de refuser avec la même facilité sera alors présenté avant son activation.
     </p>
     <div class="info-box">
-      Les traitements de données personnelles sont détaillés dans la <a href="{base}/terms">politique de confidentialité</a> et les relations avec les administrateurs dans l'<a href="{base}/dpa">accord de sous-traitance</a>.
+      Les traitements de données personnelles sont détaillés dans la <a href="{base}/privacy">politique de confidentialité</a> et les relations avec les administrateurs dans l'<a href="{base}/dpa">accord de sous-traitance</a>.
     </div>
   </section>
 </LegalPageLayout>

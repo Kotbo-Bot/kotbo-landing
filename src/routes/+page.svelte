@@ -1093,13 +1093,15 @@
         <span class="font-black text-lg text-gray-400">Kotbo</span>
       </div>
       <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
-      <div class="flex gap-6 uppercase tracking-widest text-[10px] font-black">
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 uppercase tracking-widest text-[10px] font-black">
         <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
         <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
         <a href="https://status.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Services Status</a>
-        <a href="{base}/terms" class="text-indigo-500 hover:text-indigo-700 transition-colors">Confidentialité</a>
+        <a href="{base}/privacy" class="text-indigo-500 hover:text-indigo-700 transition-colors">Confidentialité</a>
+        <a href="{base}/terms" class="hover:text-gray-900 transition-colors">CGU</a>
         <a href="{base}/cookies" class="hover:text-gray-900 transition-colors">Cookies</a>
         <a href="{base}/dpa" class="hover:text-gray-900 transition-colors">DPA</a>
+        <a href="{base}/mentions-legales" class="hover:text-gray-900 transition-colors">Mentions légales</a>
       </div>
     </div>
   </footer>
