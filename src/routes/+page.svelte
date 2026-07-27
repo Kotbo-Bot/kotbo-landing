@@ -13,6 +13,9 @@
 
   import { Shield, FileText, CheckCircle2, User, Server, Users } from "@lucide/svelte";
 
+  const demoUrl = 'https://pros.kotbo.fr/rdv';
+  const contactEmail = 'contact@kotbo.fr';
+
   let scrolled = $state(false);
   let mx = $state(0);
   let my = $state(0);
@@ -185,7 +188,7 @@
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/LimitedAvailability',
-      url: 'mailto:contact@kotbo.fr'
+      url: demoUrl
     }
   })}</script>`}
 </svelte:head>
@@ -226,13 +229,16 @@
         Kotbo est l'ERP et bot Discord tout-en-un qui remplace tes tableurs et centralise l'organisation de ton serveur.
       </p>
       <div class="flex flex-wrap justify-center gap-4 hero-enter hero-delay-3">
-        <a href="mailto:contact@kotbo.fr" class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
+        <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
           Demander une démo
         </a>
         <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:border-gray-300 hover:bg-gray-50 transition-all">
           Documentation
         </a>
       </div>
+      <a href={`mailto:${contactEmail}`} class="mt-4 inline-block text-sm text-gray-500 font-bold hover:text-indigo-600 transition-colors hero-enter hero-delay-3">
+        {contactEmail}
+      </a>
       <p class="mt-5 text-sm text-gray-400 font-bold hero-enter hero-delay-3">Bot privé · accès sur devis uniquement</p>
     </div>
 
@@ -1072,13 +1078,16 @@
       <p class="text-base text-gray-400 font-bold mb-12">Contacte-nous pour une démo personnalisée ou consulte la documentation pour en savoir plus.</p>
 
       <div class="flex flex-col sm:flex-row justify-center gap-6">
-        <a href="mailto:contact@kotbo.fr" class="bg-indigo-600 text-white px-10 py-5 rounded-xl font-black text-lg uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
+        <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-indigo-600 text-white px-10 py-5 rounded-xl font-black text-lg uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
           Demander une démo
         </a>
         <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="bg-white border-2 border-gray-200 text-gray-900 px-10 py-5 rounded-xl font-black text-lg uppercase tracking-widest hover:border-gray-300 transition-colors flex items-center justify-center gap-2">
           Documentation
         </a>
       </div>
+      <a href={`mailto:${contactEmail}`} class="mt-5 inline-block text-base text-gray-500 font-bold hover:text-indigo-600 transition-colors">
+        {contactEmail}
+      </a>
     </div>
 
     <MarkerCircle color="blue" class="absolute bottom-10 left-10 w-40 h-40 opacity-20"><div class="w-full h-full"></div></MarkerCircle>
