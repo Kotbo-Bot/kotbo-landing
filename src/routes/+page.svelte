@@ -11,10 +11,26 @@
   import MockStaff from "$lib/components/mockups/MockStaff.svelte";
   import MockProfile from "$lib/components/mockups/MockProfile.svelte";
 
+  import Comparison from "$lib/components/Comparison.svelte";
+  import Pricing from "$lib/components/Pricing.svelte";
+  import TrialCta from "$lib/components/TrialCta.svelte";
+  import Emph from "$lib/components/ui/Emph.svelte";
+
   import { Shield, FileText, CheckCircle2, User, Server, Users } from "@lucide/svelte";
 
   const demoUrl = 'https://pros.kotbo.fr/rdv';
   const contactEmail = 'contact@kotbo.fr';
+
+  /**
+   * Entree du tunnel d'acquisition. Passe par le dashboard plutot que par
+   * l'URL d'invitation Discord en direct : le `client_id` reste cote serveur,
+   * et le detour donne le point de mesure qui manquait - sans lui, on ne sait
+   * pas combien de visiteurs cliquent sans jamais finir l'installation.
+   *
+   * Un seul endroit a changer si le parcours bouge : tous les boutons de la
+   * page lisent cette constante.
+   */
+  const inviteUrl = 'https://dash.kotbo.fr/invite?utm_source=landing&utm_medium=cta';
 
   let scrolled = $state(false);
   let mx = $state(0);
@@ -206,9 +222,11 @@
         <a href="#features" class="hover:text-indigo-600 transition-colors">Modules</a>
         <a href="#trust" class="hover:text-indigo-600 transition-colors">Communautés</a>
         <a href="#workflow" class="hover:text-indigo-600 transition-colors">Flow</a>
+        <a href="#comparatif" class="hover:text-indigo-600 transition-colors">Comparatif</a>
+        <a href="#pricing" class="hover:text-indigo-600 transition-colors">Tarifs</a>
       </div>
-      <a href="https://dash.kotbo.fr" target="_blank" rel="noopener noreferrer" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
-        Aller au dashboard
+      <a href={inviteUrl} class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+        Ajouter le bot
       </a>
     </nav>
   </div>
@@ -229,17 +247,17 @@
         Kotbo est l'ERP et bot Discord tout-en-un qui remplace tes tableurs et centralise l'organisation de ton serveur.
       </p>
       <div class="flex flex-wrap justify-center gap-4 hero-enter hero-delay-3">
-        <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
-          Demander une démo
+        <a href={inviteUrl} class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
+          Ajouter le bot à mon serveur
         </a>
-        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:border-gray-300 hover:bg-gray-50 transition-all">
-          Documentation
+        <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:border-gray-300 hover:bg-gray-50 transition-all">
+          Demander une démo
         </a>
       </div>
       <a href={`mailto:${contactEmail}`} class="mt-4 inline-block text-sm text-gray-500 font-bold hover:text-indigo-600 transition-colors hero-enter hero-delay-3">
         {contactEmail}
       </a>
-      <p class="mt-5 text-sm text-gray-400 font-bold hero-enter hero-delay-3">Bot privé · accès sur devis uniquement</p>
+      <p class="mt-5 text-sm text-gray-400 font-bold hero-enter hero-delay-3">Installation guidée · 15 jours d'essai · sans carte pour commencer</p>
     </div>
 
     <!-- Hero mockup — parallaxe souris multicouche -->
@@ -1066,35 +1084,14 @@
     </div>
   </section>
 
-  <!-- Credibility & CTA -->
-  <section class="py-32 relative overflow-hidden bg-white">
-    <div use:reveal={{ direction: 'up' }} class="max-w-4xl mx-auto px-6 text-center relative z-10">
-      <div class="inline-block border-4 border-gray-900 rounded-2xl px-10 py-5 mb-12 transform -rotate-2 hand-drawn-border bg-white shadow-2xl">
-        <p class="text-xl font-black text-gray-900 uppercase tracking-widest">Pensé pour les staffs de 20+ membres</p>
-      </div>
+  <!-- Comparatif, tarifs, dernier appel : dans cet ordre. On montre ce que
+       Kotbo remplace, puis ce que ca coute, puis on propose de commencer. -->
+  <Comparison {inviteUrl} />
 
-      <h2 class="text-5xl font-black tracking-tight mb-8 text-gray-900 font-headline">Prêt à professionnaliser <br/>ta communauté ?</h2>
-      <p class="text-2xl text-gray-600 mb-4 font-bold">Kotbo est un bot privé — l'accès se fait sur devis.</p>
-      <p class="text-base text-gray-400 font-bold mb-12">Contacte-nous pour une démo personnalisée ou consulte la documentation pour en savoir plus.</p>
+  <Pricing {inviteUrl} salesUrl={demoUrl} />
 
-      <div class="flex flex-col sm:flex-row justify-center gap-6">
-        <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-indigo-600 text-white px-10 py-5 rounded-xl font-black text-lg uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
-          Demander une démo
-        </a>
-        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="bg-white border-2 border-gray-200 text-gray-900 px-10 py-5 rounded-xl font-black text-lg uppercase tracking-widest hover:border-gray-300 transition-colors flex items-center justify-center gap-2">
-          Documentation
-        </a>
-      </div>
-      <a href={`mailto:${contactEmail}`} class="mt-5 inline-block text-base text-gray-500 font-bold hover:text-indigo-600 transition-colors">
-        {contactEmail}
-      </a>
-    </div>
+  <TrialCta {inviteUrl} salesUrl={demoUrl} />
 
-    <MarkerCircle color="blue" class="absolute bottom-10 left-10 w-40 h-40 opacity-20"><div class="w-full h-full"></div></MarkerCircle>
-    <MarkerCircle color="red" class="absolute top-20 right-20 w-56 h-56 opacity-20"><div class="w-full h-full"></div></MarkerCircle>
-  </section>
-
-  <!-- Footer -->
   <footer class="bg-white border-t border-gray-200 py-10 text-center text-gray-500 text-sm font-bold">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="flex items-center gap-3">
