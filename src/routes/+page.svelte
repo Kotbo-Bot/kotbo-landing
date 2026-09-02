@@ -88,9 +88,28 @@
     note?: string;
   }
 
+  /**
+   * Une instance du bot, telle qu'elle se declare a l'API.
+   *
+   * Kotbo ne tourne pas en un seul exemplaire : il y a l'instance publique, et
+   * les bots personnalises que des serveurs font tourner sous leur propre nom.
+   * `/api/public/stats` les renvoie tous dans `bots[]` - c'est de leur somme
+   * que sortent `totalGuilds` et `totalUsers`.
+   */
+  interface BotStats {
+    botName: string;
+    botAvatarUrl: string | null;
+    dashboardUrl: string | null;
+    guildCount: number;
+    userCount: number;
+    isSelfHosted: boolean;
+  }
+
   interface StatsResponse {
     totalGuilds: number;
     totalUsers: number;
+    /** Manquait ici : la flotte etait renvoyee par l'API et jetee a l'arrivee. */
+    bots: BotStats[];
     servers: ServerStats[];
   }
 
@@ -106,51 +125,36 @@
     return `+${n}`;
   }
 
-  const featuredServers = [
-    {
-      name: "Communauté Minecraft Fr",
-      iconUrl: "https://cdn.discordapp.com/icons/506029988680695818/6fbbb2b172d8677d849cee9c80485cf8.webp?size=128",
-      memberCount: 7690,
-      description: "Le plus grand serveur communautaire Minecraft francophone. Survie, mini-jeux et entraide au quotidien.",
-    },
-    {
-      name: "Jojo - Communauté",
-      iconUrl: "https://cdn.discordapp.com/icons/913791560615854120/051ac19a35c8692f2ae8889ffa1fe7bf.webp?size=128",
-      memberCount: 4375,
-      description: "La communauté de Jojo est très accueillante ! Ici, vous pouvez discuter, échanger des idées ou même jouer ensemble.",
-    },
-    {
-      name: "Zenode",
-      iconUrl: "https://cdn.discordapp.com/icons/1386848639732809759/e3e252b02264eb99b526afb1c8d93eb0.webp?size=128",
-      memberCount: 1846,
-      description: "Zenode - Serveur de Développement De Bots et Serveurs Discord, entraide autour de Discord.",
-    },
-    {
-      name: "Les nerds",
-      iconUrl: "https://cdn.discordapp.com/icons/1477350874740424986/61bd3237903270c5db2581a313f6a701.webp?size=128",
-      memberCount: 1109,
-      description: "Espace d'échange et d'entraide pour passionnés d'informatique, de programmation et de technologies.",
-    },
-  ];
-
+  /**
+   * Chiffres de la section « Ils nous font confiance ».
+   *
+   * Il y avait ici une copie en dur des serveurs mis en avant - noms,
+   * descriptions, icones, et surtout des nombres de membres figes - doublant
+   * les valeurs de repli que l'API porte deja (`GUILD_FALLBACKS` dans
+   * `routes/public/stats.ts`). Deux sources pour la meme donnee : celle du
+   * site ne bougeait jamais, et affichait donc des effectifs faux des que les
+   * serveurs grandissaient.
+   *
+   * Le repli est desormais l'absence : si l'API ne repond pas, la section se
+   * masque au lieu d'afficher des totaux inventes. Une preuve sociale fausse
+   * coute plus cher que pas de preuve sociale du tout - et un visiteur qui
+   * compte 15 serveurs pendant six mois finit par le remarquer.
+   */
   async function fetchStats() {
     try {
       const res = await fetch('https://api.kotbo.fr/api/public/stats');
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       stats = {
-        totalGuilds: data.totalGuilds ?? 15,
-        totalUsers: data.totalUsers ?? 17486,
-        servers: data.servers ?? featuredServers,
+        totalGuilds: data.totalGuilds ?? 0,
+        totalUsers: data.totalUsers ?? 0,
+        bots: Array.isArray(data.bots) ? data.bots : [],
+        servers: Array.isArray(data.servers) ? data.servers : [],
       };
     } catch (err: any) {
-      console.warn("Failed to fetch bot stats, using fallback:", err);
-      statsError = err.message || "Failed to fetch stats";
-      stats = {
-        totalGuilds: 15,
-        totalUsers: 17486,
-        servers: featuredServers,
-      };
+      console.warn('Failed to fetch bot stats:', err);
+      statsError = err?.message || 'Failed to fetch stats';
+      stats = null;
     } finally {
       statsLoading = false;
     }
@@ -555,6 +559,10 @@
   </section>
 
   <!-- Section: Ils nous font confiance (Statistiques) -->
+  <!-- Toute la section depend de l'API : sans chiffres, elle n'a rien a
+       prouver. Elle disparait donc au lieu d'annoncer « 0 communaute geree »,
+       ce qui prouverait surtout le contraire. -->
+  {#if statsLoading || stats}
   <section id="trust" class="py-24 bg-gray-50 border-t border-b border-gray-200 relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none opacity-5" style="background-image: radial-gradient(circle at 20% 30%, var(--color-primary) 1px, transparent 1px); background-size: 24px 24px;"></div>
 
@@ -687,8 +695,54 @@
           {/each}
         {/if}
       </div>
+
+      <!-- La flotte. L'API renvoyait deja `bots[]` - toutes les instances qui
+           se declarent, y compris les bots personnalises tournant sous le nom
+           d'un serveur - et la page les jetait. Ce sont pourtant elles qui
+           font les deux totaux affiches plus haut : les montrer, c'est
+           montrer d'ou sortent les chiffres. -->
+      {#if !statsLoading && stats && stats.bots.length > 0}
+        <div use:reveal={{ direction: 'up', delay: 150 }} class="max-w-4xl mx-auto mt-16">
+          <div class="text-center mb-8">
+            <h3 class="text-xl font-black text-gray-900 font-headline">
+              {stats.bots.length === 1 ? 'L\'instance en service' : `Les ${stats.bots.length} instances en service`}
+            </h3>
+            <p class="text-sm text-gray-500 font-bold mt-1">
+              L'instance publique et les bots personnalisés que les serveurs font tourner sous leur propre nom.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {#each stats.bots as bot (bot.botName + bot.guildCount)}
+              <div class="flex items-center gap-3 bg-white border border-gray-200/80 rounded-2xl px-4 py-3.5 shadow-sm">
+                {#if bot.botAvatarUrl}
+                  <img src={bot.botAvatarUrl} alt="" class="w-10 h-10 rounded-full shrink-0 bg-gray-100" />
+                {:else}
+                  <div class="w-10 h-10 rounded-full shrink-0 bg-indigo-50 text-indigo-600 flex items-center justify-center font-black">
+                    {bot.botName.slice(0, 1).toUpperCase()}
+                  </div>
+                {/if}
+                <div class="min-w-0">
+                  <p class="text-sm font-black text-gray-900 truncate flex items-center gap-1.5">
+                    {bot.botName}
+                    {#if bot.isSelfHosted}
+                      <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 border border-gray-200 rounded px-1 py-px shrink-0">
+                        auto-hébergé
+                      </span>
+                    {/if}
+                  </p>
+                  <p class="text-xs font-bold text-gray-400 tabular-nums">
+                    {bot.guildCount} serveur{bot.guildCount > 1 ? 's' : ''} · {formatCompact(bot.userCount).replace('+', '')} membres
+                  </p>
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/if}
     </div>
   </section>
+  {/if}
 
   <!-- Fin de parcours, dans l'ordre ou les objections tombent : ce que Kotbo
        remplace, ce que ca coute, les questions qui restent - et seulement
