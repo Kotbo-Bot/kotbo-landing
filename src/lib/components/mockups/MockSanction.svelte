@@ -19,13 +19,13 @@
     },
     {
       type: 'WARN',    typeStyle: 'text-orange-500 bg-orange-50 border-orange-200',
-      target: 'Kylian',     mod: 'Lena',  dur: '—',
+      target: 'Kylian',     mod: 'Lena',  dur: '',
       reason: 'Publicité non autorisée',
       status: 'ACTIF',    statusStyle: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     },
     {
       type: 'KICK',    typeStyle: 'text-violet-600 bg-violet-50 border-violet-200',
-      target: 'xX_hacker',  mod: 'Aiden', dur: '—',
+      target: 'xX_hacker',  mod: 'Aiden', dur: '',
       reason: 'Tentative de raid',
       status: 'RÉSOLU',   statusStyle: 'bg-blue-100 text-blue-600 border-blue-200',
     },

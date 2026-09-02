@@ -14,7 +14,7 @@
     { id: 'violations', label: 'Violations & notification' },
     { id: 'restitution', label: 'Restitution & suppression' },
     { id: 'audits', label: 'Audits' },
-    { id: 'toms', label: 'Annexe — Mesures (TOMs)' },
+    { id: 'toms', label: 'Annexe  Mesures (TOMs)' },
     { id: 'contact', label: 'Contact et droits' },
   ];
 </script>
@@ -50,7 +50,7 @@
       <table>
         <thead><tr><th>Partie</th><th>Identité</th></tr></thead>
         <tbody>
-          <tr><td>Sous-traitant</td><td>Kotbo — Elouan Passereau &amp; Nathan Rontey · particuliers, édition à titre non professionnel · contact <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a></td></tr>
+          <tr><td>Sous-traitant</td><td>Kotbo  Elouan Passereau &amp; Nathan Rontey · particuliers, édition à titre non professionnel · contact <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a></td></tr>
           <tr><td>Responsable</td><td>L'administrateur du serveur Discord ayant invité et configuré Kotbo, identifié par son compte Discord et l'identifiant de serveur (Guild ID) concerné.</td></tr>
         </tbody>
       </table>
@@ -146,10 +146,10 @@
         <thead><tr><th>Prestataire</th><th>Fonction</th><th>Pays / zone</th></tr></thead>
         <tbody>
           <tr><td>Contabo GmbH</td><td>Hébergement de la base et de l'infrastructure, sauvegardes</td><td>Allemagne (Union européenne)</td></tr>
-          <tr><td>Cloudflare, Inc.</td><td>Réseau, cache et sécurité (WAF, anti-abus)</td><td>États-Unis / réseau mondial — clauses contractuelles types</td></tr>
-          <tr><td>Discord Inc.</td><td>Plateforme source et destination des données</td><td>États-Unis — garanties annoncées par Discord</td></tr>
+          <tr><td>Cloudflare, Inc.</td><td>Réseau, cache et sécurité (WAF, anti-abus)</td><td>États-Unis / réseau mondial  clauses contractuelles types</td></tr>
+          <tr><td>Discord Inc.</td><td>Plateforme source et destination des données</td><td>États-Unis  garanties annoncées par Discord</td></tr>
           <tr><td>Sentry (Functional Software, Inc.)</td><td>Diagnostic d'erreurs (si activé)</td><td>Selon la région et le contrat configurés</td></tr>
-          <tr><td>LibreTranslate, YouTube, Twitch</td><td>Modules optionnels</td><td>Selon le service activé — pas de données personnelles de membres pour YouTube/Twitch</td></tr>
+          <tr><td>LibreTranslate, YouTube, Twitch</td><td>Modules optionnels</td><td>Selon le service activé  pas de données personnelles de membres pour YouTube/Twitch</td></tr>
         </tbody>
       </table>
     </div>
@@ -201,7 +201,7 @@
 
   <section id="toms" class="policy-section">
     <div class="section-badge">12</div>
-    <h2>Annexe — Mesures techniques et organisationnelles (TOMs)</h2>
+    <h2>Annexe  Mesures techniques et organisationnelles (TOMs)</h2>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Domaine</th><th>Mesures</th></tr></thead>

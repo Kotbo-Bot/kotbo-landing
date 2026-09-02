@@ -39,7 +39,7 @@
       L'administrateur détermine les modules activés et agit comme <strong>responsable du traitement</strong>
       pour les données propres à son serveur. Kotbo traite ces données comme <strong>sous-traitant</strong>, sur
       instruction de l'administrateur (voir <a href="{base}/dpa">accord de sous-traitance</a>). Celui-ci doit informer
-      ses membres conformément aux articles 13 et 14 du RGPD — un <a href="{base}/admin-notice">modèle d'information</a>
+      ses membres conformément aux articles 13 et 14 du RGPD  un <a href="{base}/admin-notice">modèle d'information</a>
       est fourni. Certains traitements (blacklist globale, sécurité, journaux techniques) relèvent en revanche de la
       responsabilité directe de Kotbo (voir tableau §1).
     </p>
@@ -51,8 +51,8 @@
     <h2>Responsable du traitement & répartition des rôles</h2>
     <p>Le service Kotbo est édité et opéré par&nbsp;:</p>
     <ul>
-      <li><strong>Elouan Passereau</strong> — <a href="https://klaynight.fr/" target="_blank" rel="noopener noreferrer">klaynight.fr</a></li>
-      <li><strong>Nathan Rontey</strong> — <a href="https://nathaan.me/" target="_blank" rel="noopener noreferrer">nathaan.me</a></li>
+      <li><strong>Elouan Passereau</strong>  <a href="https://klaynight.fr/" target="_blank" rel="noopener noreferrer">klaynight.fr</a></li>
+      <li><strong>Nathan Rontey</strong>  <a href="https://nathaan.me/" target="_blank" rel="noopener noreferrer">nathaan.me</a></li>
     </ul>
     <p>Contact vie privée&nbsp;: <a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a> · Coordonnées complètes sur la page <a href="{base}/mentions-legales">Mentions légales</a>.</p>
     <p>
@@ -154,7 +154,7 @@
     </div>
     <div class="info-box">
       Chaque utilisateur peut obtenir la liste exacte de <strong>toutes</strong> les données stockées à son sujet, tous
-      serveurs confondus, via une demande d'export RGPD (voir §7) — l'outil interne parcourt l'intégralité des tables
+      serveurs confondus, via une demande d'export RGPD (voir §7)  l'outil interne parcourt l'intégralité des tables
       listées ci-dessus.
     </div>
 
@@ -167,7 +167,7 @@
       <table>
         <thead><tr><th>Donnée</th><th>Table</th><th>Finalité</th></tr></thead>
         <tbody>
-          <tr><td>Nombre de messages envoyés (par jour, par salon) — <strong>compteurs uniquement, sans le contenu</strong></td><td><code>MemberDailyStat</code></td><td>Statistiques serveur, niveaux/XP</td></tr>
+          <tr><td>Nombre de messages envoyés (par jour, par salon)  <strong>compteurs uniquement, sans le contenu</strong></td><td><code>MemberDailyStat</code></td><td>Statistiques serveur, niveaux/XP</td></tr>
           <tr><td>Temps passé en vocal (minutes)</td><td><code>MemberDailyStat</code>, <code>StaffVoiceSession</code></td><td>Statistiques, niveaux, activité staff</td></tr>
           <tr><td>Réactions, threads créés, réponses</td><td><code>MemberDailyStat</code></td><td>Statistiques détaillées</td></tr>
           <tr><td>Points XP, niveau, instantanés de saison</td><td><code>MemberLevel</code>, <code>SeasonSnapshot</code></td><td>Système de niveaux par serveur</td></tr>
@@ -198,7 +198,7 @@
     <h3>2.6 Contributions, événements & économie</h3>
     <ul>
       <li><strong>Candidatures</strong> (recrutement, partenariat)&nbsp;: identité Discord, e-mail si le formulaire le demande, réponses au formulaire (JSON), notes internes du staff, résultat, motif de refus, cooldown de re-candidature.</li>
-      <li><strong>Tickets</strong>&nbsp;: identité, raison, description et transcript HTML complet — peut contenir tout message échangé avec le staff.</li>
+      <li><strong>Tickets</strong>&nbsp;: identité, raison, description et transcript HTML complet  peut contenir tout message échangé avec le staff.</li>
       <li><strong>Événements (quiz, CTF)</strong>&nbsp;: identité, score, réponses/résolutions, horodatages.</li>
       <li><strong>Suggestions, réputation, formulaires, Daily Algo, articles</strong>&nbsp;: contenu fourni et identifiants des votants le cas échéant.</li>
       <li><strong>Économie / RPG / marketplace</strong>&nbsp;: profils de jeu, combats, pêche, guildes, annonces et transactions.</li>
@@ -220,7 +220,7 @@
     <h3>2.9 Données techniques globales</h3>
     <ul>
       <li><strong>Journaux d'erreurs</strong> (<code>BotErrorLog</code>)&nbsp;: message d'erreur, stack trace, source. Peuvent incidemment contenir des identifiants.</li>
-      <li><strong>Métriques de modules</strong>&nbsp;: compteurs d'activation, d'utilisation et de performance — agrégés, sans identifiant personnel direct.</li>
+      <li><strong>Métriques de modules</strong>&nbsp;: compteurs d'activation, d'utilisation et de performance  agrégés, sans identifiant personnel direct.</li>
     </ul>
   </section>
 
@@ -353,7 +353,7 @@
     <h2>Destinataires des données</h2>
     <h3>6.1 Au sein de chaque serveur</h3>
     <ul>
-      <li>Les <strong>administrateurs et modérateurs</strong> — via le dashboard — accèdent aux données de leur serveur (modération, profils, statistiques, tickets, candidatures, staff, logs de messages si activés).</li>
+      <li>Les <strong>administrateurs et modérateurs</strong>  via le dashboard  accèdent aux données de leur serveur (modération, profils, statistiques, tickets, candidatures, staff, logs de messages si activés).</li>
       <li>Le <strong>staff</strong> accède à tout ou partie de ces données selon les permissions configurées.</li>
       <li>Les <strong>membres</strong> accèdent à leurs propres données (niveau, profil public, résultats d'événements).</li>
     </ul>
@@ -365,11 +365,11 @@
         <thead><tr><th>Service</th><th>Rôle</th><th>Données transmises</th></tr></thead>
         <tbody>
           <tr><td><strong>Discord Inc.</strong></td><td>Plateforme hôte et source des données</td><td>Données de profil Discord (selon les CGU Discord)</td></tr>
-          <tr><td><strong>Hébergeur PostgreSQL / infrastructure</strong></td><td>Stockage et sauvegardes</td><td>Ensemble des données en base — voir <a href="{base}/dpa">DPA</a></td></tr>
+          <tr><td><strong>Hébergeur PostgreSQL / infrastructure</strong></td><td>Stockage et sauvegardes</td><td>Ensemble des données en base  voir <a href="{base}/dpa">DPA</a></td></tr>
           <tr><td><strong>Cloudflare</strong></td><td>Réseau, cache, prévention des abus</td><td>Adresse IP, en-têtes HTTP, événements de sécurité</td></tr>
           <tr><td><strong>Sentry</strong> (optionnel)</td><td>Surveillance des erreurs</td><td>Stack traces et contexte (peut contenir des métadonnées)</td></tr>
-          <tr><td><strong>YouTube Data API / Twitch API</strong></td><td>Suivi de contenu (modules)</td><td>Identifiants de chaînes / streamers uniquement — pas de données personnelles de membres</td></tr>
-          <tr><td><strong>LibreTranslate</strong></td><td>Traduction (module)</td><td>Contenu à traduire — auto-hébergé par défaut</td></tr>
+          <tr><td><strong>YouTube Data API / Twitch API</strong></td><td>Suivi de contenu (modules)</td><td>Identifiants de chaînes / streamers uniquement  pas de données personnelles de membres</td></tr>
+          <tr><td><strong>LibreTranslate</strong></td><td>Traduction (module)</td><td>Contenu à traduire  auto-hébergé par défaut</td></tr>
           <tr><td><strong>jsDelivr / GitHub</strong></td><td>Chargement à la demande des moteurs de l'éditeur de code</td><td>IP et en-têtes techniques, à l'ouverture de l'IDE uniquement</td></tr>
         </tbody>
       </table>
@@ -399,7 +399,7 @@
           <tr><td>Journaux d'erreurs techniques</td><td>30 à 90 jours</td><td>Automatique</td><td>Expiration courte</td></tr>
           <tr><td>Profil membre, niveaux, statistiques</td><td>Durée de vie du serveur sur Kotbo</td><td>Purge au départ du bot ou sur demande</td><td>Expiration selon cycle</td></tr>
           <tr><td>Sanctions & données de modération</td><td>Durée de vie du serveur (nécessaire à la sécurité)</td><td>Archivage / suppression sur instruction</td><td>Expiration selon cycle</td></tr>
-          <tr><td>Sauvegardes de serveur</td><td>Jusqu'à suppression manuelle (quota)</td><td>Sur instruction admin</td><td>—</td></tr>
+          <tr><td>Sauvegardes de serveur</td><td>Jusqu'à suppression manuelle (quota)</td><td>Sur instruction admin</td><td></td></tr>
         </tbody>
       </table>
     </div>
@@ -520,7 +520,7 @@
       <a href="mailto:contact@kotbo.fr" class="font-black text-gray-700 text-lg hover:underline">contact@kotbo.fr</a>
     </div>
     <div class="info-box mt-6">
-      <strong>Autorité de contrôle&nbsp;:</strong> vous pouvez saisir la <strong>CNIL</strong> —
+      <strong>Autorité de contrôle&nbsp;:</strong> vous pouvez saisir la <strong>CNIL</strong> 
       <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>, 3 Place de Fontenoy,
       TSA 80715, 75334 Paris Cedex 07. Voir aussi les <a href="{base}/mentions-legales">Mentions légales</a>, les
       <a href="{base}/terms">CGU</a>, la <a href="{base}/cookies">politique cookies</a> et le <a href="{base}/dpa">DPA</a>.

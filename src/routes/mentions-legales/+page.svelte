@@ -36,14 +36,14 @@
     <h2>Éditeur du site et du service</h2>
     <p>Le service Kotbo (bot Discord, dashboard et site) est édité conjointement par&nbsp;:</p>
     <ul>
-      <li><strong>Elouan Passereau</strong> — <a href="https://klaynight.fr/" target="_blank" rel="noopener noreferrer">klaynight.fr</a></li>
-      <li><strong>Nathan Rontey</strong> — <a href="https://nathaan.me/" target="_blank" rel="noopener noreferrer">nathaan.me</a></li>
+      <li><strong>Elouan Passereau</strong>  <a href="https://klaynight.fr/" target="_blank" rel="noopener noreferrer">klaynight.fr</a></li>
+      <li><strong>Nathan Rontey</strong>  <a href="https://nathaan.me/" target="_blank" rel="noopener noreferrer">nathaan.me</a></li>
     </ul>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Information</th><th>Valeur</th></tr></thead>
         <tbody>
-          <tr><td>Statut</td><td>Particuliers — édition à titre non professionnel</td></tr>
+          <tr><td>Statut</td><td>Particuliers  édition à titre non professionnel</td></tr>
           <tr><td>Adresse</td><td>Non publiée (option LCEN art. 6 III 2)&nbsp;; identité communiquée à l'hébergeur. Contact par e-mail.</td></tr>
           <tr><td>SIREN / SIRET</td><td>Non applicable (activité non professionnelle)</td></tr>
           <tr><td>E-mail</td><td><a href="mailto:contact@kotbo.fr">contact@kotbo.fr</a></td></tr>
@@ -70,8 +70,8 @@
       <table>
         <thead><tr><th>Rôle</th><th>Prestataire</th></tr></thead>
         <tbody>
-          <tr><td>Distribution du site / CDN &amp; sécurité</td><td>Cloudflare, Inc. — 101 Townsend St, San Francisco, CA 94107, États-Unis</td></tr>
-          <tr><td>Hébergement de la base de données et de l'infrastructure applicative</td><td>Contabo GmbH — Aschauer Straße 32a, 81549 Munich, Allemagne (Union européenne) · <a href="https://contabo.com" target="_blank" rel="noopener noreferrer">contabo.com</a></td></tr>
+          <tr><td>Distribution du site / CDN &amp; sécurité</td><td>Cloudflare, Inc.  101 Townsend St, San Francisco, CA 94107, États-Unis</td></tr>
+          <tr><td>Hébergement de la base de données et de l'infrastructure applicative</td><td>Contabo GmbH  Aschauer Straße 32a, 81549 Munich, Allemagne (Union européenne) · <a href="https://contabo.com" target="_blank" rel="noopener noreferrer">contabo.com</a></td></tr>
         </tbody>
       </table>
     </div>

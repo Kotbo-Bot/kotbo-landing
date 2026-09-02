@@ -102,29 +102,29 @@
   ];
 </script>
 
-<section id="pricing" class="py-28 lg:py-36 relative bg-gray-50 border-y border-gray-200/70">
+<section id="pricing" class="py-20 lg:py-24 relative bg-gray-50 border-y border-gray-200/70">
   <div class="max-w-[90rem] mx-auto px-8">
 
     <!-- ── Titre ──────────────────────────────────────────────────────── -->
     <div use:reveal={{ direction: 'up' }} class="text-center max-w-3xl mx-auto mb-12">
       <p class="text-xs font-black uppercase tracking-[0.2em] text-indigo-600 mb-5">Tarifs</p>
-      <h2 class="text-4xl md:text-6xl font-black tracking-tight text-gray-900 mb-6 font-headline leading-[1.08]">
+      <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-6 font-headline leading-[1.08]">
         Un seul produit.<br />Le prix suit la <Emph>taille</Emph> du serveur.
       </h2>
-      <p class="text-lg lg:text-xl text-gray-500 font-bold leading-relaxed">
+      <p class="text-base lg:text-lg text-gray-500 font-bold leading-relaxed">
         Toutes les offres contiennent tout Kotbo. Aucun module en option,
         aucune fonctionnalité réservée au palier au-dessus.
       </p>
     </div>
 
     <!-- ── Curseur : votre taille, votre prix ─────────────────────────── -->
-    <div use:reveal={{ direction: 'up', delay: 60 }} class="max-w-2xl mx-auto mb-14">
+    <div use:reveal={{ direction: 'up', delay: 60 }} class="max-w-2xl mx-auto mb-10">
       <div class="bg-white rounded-2xl border border-gray-200 shadow-sm px-7 py-6">
         <div class="flex items-baseline justify-between mb-5 gap-4">
           <label for="member-slider" class="text-sm font-black uppercase tracking-widest text-gray-500">
             Votre serveur
           </label>
-          <p class="text-2xl font-black tracking-tighter text-gray-900 tabular-nums">
+          <p class="text-xl font-black tracking-tighter text-gray-900 tabular-nums">
             {formatMembers(memberCount)} <span class="text-sm font-black text-gray-400">membres</span>
           </p>
         </div>
@@ -196,10 +196,10 @@
           {/if}
 
           <p class="text-[11px] font-black uppercase tracking-[0.18em] text-gray-400 mb-2">{tier.range}</p>
-          <h3 class="text-2xl font-black tracking-tight text-gray-900 mb-6">{tier.name}</h3>
+          <h3 class="text-xl font-black tracking-tight text-gray-900 mb-6">{tier.name}</h3>
 
           <div class="mb-2 flex items-end gap-1.5">
-            <span class="text-5xl font-black tracking-tighter text-gray-900 tabular-nums">
+            <span class="text-4xl font-black tracking-tighter text-gray-900 tabular-nums">
               {yearly ? perMonth(tier.yearCents) : euros(tier.monthCents)} €
             </span>
             <span class="text-sm font-black text-gray-400 pb-2">/ mois</span>
@@ -243,10 +243,10 @@
         {/if}
 
         <p class="text-[11px] font-black uppercase tracking-[0.18em] text-white/40 mb-2">Au-delà de 100 000 membres</p>
-        <h3 class="text-2xl font-black tracking-tight mb-6">Sur mesure</h3>
+        <h3 class="text-xl font-black tracking-tight mb-6">Sur mesure</h3>
 
         <div class="mb-2">
-          <span class="text-5xl font-black tracking-tighter">On en parle</span>
+          <span class="text-4xl font-black tracking-tighter">On en parle</span>
         </div>
 
         <p class="text-sm font-bold text-white/50 mb-7 min-h-[2.75rem] leading-snug">
@@ -275,7 +275,7 @@
         <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-4">
           {#each included as item}
             <li class="flex items-start gap-2.5">
-              <Check class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" strokeWidth={3} />
+              <Check class="w-4 undefined text-indigo-600 shrink-0 mt-0.5" strokeWidth={3} />
               <span class="text-sm font-bold text-gray-600 leading-snug">{item}</span>
             </li>
           {/each}
