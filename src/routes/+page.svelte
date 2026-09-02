@@ -22,15 +22,16 @@
   const contactEmail = 'contact@kotbo.fr';
 
   /**
-   * Entree du tunnel d'acquisition. Passe par le dashboard plutot que par
-   * l'URL d'invitation Discord en direct : le `client_id` reste cote serveur,
-   * et le detour donne le point de mesure qui manquait - sans lui, on ne sait
-   * pas combien de visiteurs cliquent sans jamais finir l'installation.
+   * Entree du tunnel d'acquisition. Passe par l'API du bot plutot que par une
+   * URL Discord ecrite ici : ce site est statique et n'a ni le `client_id` ni
+   * le jeu de permissions, que les recopier ferait diverger au premier ajout.
+   * Le detour donne aussi le seul point ou l'on voit passer *tous* ceux qui
+   * cliquent, y compris ceux qui renoncent devant l'ecran d'autorisation.
    *
    * Un seul endroit a changer si le parcours bouge : tous les boutons de la
    * page lisent cette constante.
    */
-  const inviteUrl = 'https://dash.kotbo.fr/invite?utm_source=landing&utm_medium=cta';
+  const inviteUrl = 'https://api.kotbo.fr/api/public/invite?utm_source=landing';
 
   let scrolled = $state(false);
   let mx = $state(0);
