@@ -22,7 +22,7 @@
   import { Check, Minus, ChevronDown, X } from '@lucide/svelte';
   import { slide } from 'svelte/transition';
   import { reveal } from '$lib/actions/reveal';
-  import { mockAvatar } from '$lib/mockMedia';
+  import { base } from '$app/paths';
   import Emph from '$lib/components/ui/Emph.svelte';
   import PostIt from '$lib/components/ui/PostIt.svelte';
   import HandDrawnArrow from '$lib/components/ui/HandDrawnArrow.svelte';
@@ -113,85 +113,103 @@
     { key: 'dashboard', label: 'Dashboard complet en français' },
   ];
 
-  type BotOption = { key: string; name: string; price: number; free?: boolean; covers: FeatureKey[] };
+  /**
+   * `icon` : nom de fichier dans `static/bots/`. Ce sont les vraies icônes des
+   * bots, copiées localement plutôt que chargées depuis le CDN de Discord -
+   * un hotlink ferait fuiter l'IP des visiteurs vers un tiers, ce que la page
+   * de confidentialité promet justement de ne pas faire. Les deux entrées
+   * natives Discord (AutoMod, Insights) partagent la marque Discord.
+   */
+  type BotOption = {
+    key: string;
+    name: string;
+    price: number;
+    free?: boolean;
+    icon: string;
+    covers: FeatureKey[];
+  };
+
+  function botIcon(bot: BotOption): string {
+    return `${base}/bots/${bot.icon}`;
+  }
 
   const CATEGORIES: { key: string; label: string; options: BotOption[] }[] = [
     {
       key: 'ticket',
       label: 'Tickets',
       options: [
-        { key: 'tickettool', name: 'Ticket Tool', price: 7, covers: ['tickets'] },
-        { key: 'ticketsbot', name: 'Tickets Bot', price: 5, covers: ['tickets'] },
-        { key: 'openticket', name: 'Open Ticket', price: 0, free: true, covers: ['tickets'] },
+        { key: 'tickettool', name: 'Ticket Tool', price: 7, icon: 'tickettool.png', covers: ['tickets'] },
+        { key: 'ticketsbot', name: 'Tickets Bot', price: 5, icon: 'ticketsbot.png', covers: ['tickets'] },
+        { key: 'openticket', name: 'Open Ticket', price: 0, free: true, icon: 'openticket.png', covers: ['tickets'] },
       ],
     },
     {
       key: 'moderation',
       label: 'Modération',
       options: [
-        { key: 'dyno', name: 'Dyno', price: 5, covers: ['moderation', 'automod'] },
-        { key: 'carlbot', name: 'Carl-bot', price: 4, covers: ['moderation', 'automod'] },
-        { key: 'modmail', name: 'Modmail', price: 0, free: true, covers: ['moderation'] },
+        { key: 'dyno', name: 'Dyno', price: 5, icon: 'dyno.png', covers: ['moderation', 'automod'] },
+        { key: 'carlbot', name: 'Carl-bot', price: 4, icon: 'carlbot.png', covers: ['moderation', 'automod'] },
+        { key: 'modmail', name: 'Modmail', price: 0, free: true, icon: 'modmail.png', covers: ['moderation'] },
       ],
     },
     {
       key: 'multibot',
       label: 'Multibot (tout-en-un)',
       options: [
-        { key: 'draftbot', name: 'DraftBot', price: 3.99, covers: ['leveling', 'economy', 'moderation'] },
-        { key: 'probot', name: 'ProBot', price: 3, covers: ['moderation', 'leveling', 'giveaways'] },
-        { key: 'mee6', name: 'MEE6', price: 12, covers: ['leveling', 'moderation', 'tickets'] },
+        { key: 'draftbot', name: 'DraftBot', price: 3.99, icon: 'draftbot.png', covers: ['leveling', 'economy', 'moderation'] },
+        { key: 'probot', name: 'ProBot', price: 3, icon: 'probot.png', covers: ['moderation', 'leveling', 'giveaways'] },
+        { key: 'mee6', name: 'MEE6', price: 12, icon: 'mee6.png', covers: ['leveling', 'moderation', 'tickets'] },
       ],
     },
     {
       key: 'giveaway',
       label: 'Giveaways',
       options: [
-        { key: 'giveawaybot', name: 'GiveawayBot', price: 3, covers: ['giveaways'] },
+        { key: 'giveawaybot', name: 'GiveawayBot', price: 3, icon: 'giveawaybot.png', covers: ['giveaways'] },
       ],
     },
     {
       key: 'leveling',
       label: 'Niveaux (XP)',
       options: [
-        { key: 'arcane', name: 'Arcane', price: 5, covers: ['leveling'] },
-        { key: 'lurkr', name: 'Lurkr', price: 5, covers: ['leveling', 'automod'] },
-        { key: 'polaris', name: 'Polaris', price: 0, free: true, covers: ['leveling'] },
+        { key: 'arcane', name: 'Arcane', price: 5, icon: 'arcane.png', covers: ['leveling'] },
+        { key: 'lurkr', name: 'Lurkr', price: 5, icon: 'lurkr.png', covers: ['leveling', 'automod'] },
+        { key: 'polaris', name: 'Polaris', price: 0, free: true, icon: 'polaris.png', covers: ['leveling'] },
       ],
     },
     {
       key: 'automod',
       label: 'Automod',
       options: [
-        { key: 'discordautomod', name: 'AutoMod Discord', price: 0, free: true, covers: ['automod'] },
-        { key: 'crosslink', name: 'Crosslink', price: 0, free: true, covers: ['automod'] },
+        { key: 'discordautomod', name: 'AutoMod Discord', price: 0, free: true, icon: 'discord.svg', covers: ['automod'] },
+        { key: 'crosslink', name: 'Crosslink', price: 0, free: true, icon: 'crosslink.png', covers: ['automod'] },
       ],
     },
     {
       key: 'antiraid',
       label: 'Anti-raid',
       options: [
-        { key: 'beemo', name: 'Beemo', price: 5, covers: ['antiraid'] },
-        { key: 'wick', name: 'Wick', price: 5, covers: ['antiraid'] },
-        { key: 'securitybot', name: 'SecurityBot', price: 3, covers: ['antiraid'] },
+        { key: 'beemo', name: 'Beemo', price: 5, icon: 'beemo.png', covers: ['antiraid'] },
+        { key: 'wick', name: 'Wick', price: 5, icon: 'wick.png', covers: ['antiraid'] },
+        { key: 'securitybot', name: 'SecurityBot', price: 3, icon: 'securitybot.png', covers: ['antiraid'] },
       ],
     },
     {
       key: 'analytics',
       label: 'Statistiques',
       options: [
-        { key: 'statbot', name: 'Statbot', price: 5, covers: ['stats'] },
-        { key: 'serverstats', name: 'ServerStats', price: 3, covers: ['stats'] },
-        { key: 'discordinsights', name: 'Discord Insights', price: 0, free: true, covers: ['stats'] },
+        { key: 'statbot', name: 'Statbot', price: 5, icon: 'statbot.png', covers: ['stats'] },
+        { key: 'serverstats', name: 'ServerStats', price: 3, icon: 'serverstats.png', covers: ['stats'] },
+        { key: 'discordinsights', name: 'Discord Insights', price: 0, free: true, icon: 'discord.svg', covers: ['stats'] },
       ],
     },
     {
       key: 'economy',
       label: 'Économie',
       options: [
-        { key: 'unbelievaboat', name: 'UnbelievaBoat', price: 4, covers: ['economy'] },
-        { key: 'dankmemer', name: 'Dank Memer', price: 2, covers: ['economy'] },
-        { key: 'tatsu', name: 'Tatsu', price: 5, covers: ['economy', 'leveling', 'giveaways'] },
+        { key: 'unbelievaboat', name: 'UnbelievaBoat', price: 4, icon: 'unbelievaboat.png', covers: ['economy'] },
+        { key: 'dankmemer', name: 'Dank Memer', price: 2, icon: 'dankmemer.png', covers: ['economy'] },
+        { key: 'tatsu', name: 'Tatsu', price: 5, icon: 'tatsu.png', covers: ['economy', 'leveling', 'giveaways'] },
       ],
     },
   ];
@@ -365,9 +383,13 @@
                                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'}"
                     >
                       <img
-                        src={mockAvatar(bot.name)}
+                        src={botIcon(bot)}
                         alt=""
-                        class="w-5 undefined rounded-full shrink-0 {selection[category.key] === bot.key ? '' : 'opacity-80'}"
+                        width="20"
+                        height="20"
+                        loading="lazy"
+                        decoding="async"
+                        class="w-5 h-5 rounded-full object-cover shrink-0 {selection[category.key] === bot.key ? '' : 'opacity-80'}"
                       />
                       <span class="leading-none">{bot.name}</span>
                       {#if bot.free}
@@ -398,7 +420,7 @@
                     </th>
                     {#each selectedOptions as bot (bot.key)}
                       <th class="pb-3 px-2 align-bottom">
-                        <img src={mockAvatar(bot.name)} alt="" class="w-6 h-6 rounded-full mx-auto mb-1.5" />
+                        <img src={botIcon(bot)} alt="" width="24" height="24" loading="lazy" decoding="async" class="w-6 h-6 rounded-full object-cover mx-auto mb-1.5" />
                         <span class="block text-[10px] font-black uppercase tracking-wider text-gray-400 leading-tight">
                           {bot.name}
                         </span>
