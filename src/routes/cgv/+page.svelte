@@ -94,12 +94,10 @@
     <div class="info-box danger mb-6">
       <p class="font-bold mb-1">À compléter avant publication</p>
       <p class="mb-0">
-        Les champs marqués <code>[À COMPLÉTER]</code> ci-dessous doivent être renseignés avec les informations
-        d'immatriculation réelles. Ces mentions sont obligatoires (art. L221-5 et R123-237 du code de la consommation et
-        du code de commerce) et la page ne doit pas être mise en ligne tant qu'elles sont incomplètes. La page
-        <a href="{base}/mentions-legales">Mentions légales</a> doit être mise à jour en même temps&nbsp;: elle indique
-        aujourd'hui une édition «&nbsp;à titre non professionnel&nbsp;» sans SIREN, ce qui contredit la vente
-        d'abonnements décrite ici.
+        Deux mentions obligatoires restent marquées <code>[À COMPLÉTER]</code> ci-dessous&nbsp;: la dénomination exacte
+        et l'adresse professionnelle (art. L221-5 du code de la consommation). La page ne doit pas être mise en ligne
+        tant qu'elles manquent. Le numéro de TVA indiqué est celui qui découle du SIREN&nbsp;: il doit être vérifié sur
+        l'attestation d'assujettissement avant publication.
       </p>
     </div>
 
@@ -107,11 +105,12 @@
       <table>
         <thead><tr><th>Information</th><th>Valeur</th></tr></thead>
         <tbody>
-          <tr><td>Dénomination</td><td><code>[À COMPLÉTER : nom commercial / nom de l'entrepreneur individuel]</code></td></tr>
+          <tr><td>Dénomination</td><td><code>[À COMPLÉTER : nom de l'entrepreneur individuel]</code></td></tr>
           <tr><td>Forme</td><td>Entreprise individuelle sous le régime de la micro-entreprise</td></tr>
-          <tr><td>SIRET</td><td><code>[À COMPLÉTER]</code></td></tr>
+          <tr><td>SIREN</td><td>101&nbsp;303&nbsp;535</td></tr>
+          <tr><td>SIRET (siège)</td><td>101&nbsp;303&nbsp;535&nbsp;00021</td></tr>
           <tr><td>Adresse professionnelle</td><td><code>[À COMPLÉTER]</code></td></tr>
-          <tr><td>N° de TVA intracommunautaire</td><td><code>[À COMPLÉTER : FR…]</code></td></tr>
+          <tr><td>N° de TVA intracommunautaire</td><td>FR&nbsp;14&nbsp;101303535</td></tr>
           <tr><td>Directeur de la publication</td><td>Elouan Passereau et Nathan Rontey</td></tr>
           <tr><td>Contact commercial</td><td><a href="mailto:contact@kotbo.fr">contact@kotbo.fr</a></td></tr>
           <tr><td>Contact données personnelles</td><td><a href="mailto:privacy@kotbo.fr">privacy@kotbo.fr</a></td></tr>
