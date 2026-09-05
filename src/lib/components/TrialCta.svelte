@@ -20,6 +20,7 @@
    * plutôt que sur un dégradé de plus.
    */
   import { reveal } from '$lib/actions/reveal';
+  import { track } from '$lib/funnel';
   import PostIt from '$lib/components/ui/PostIt.svelte';
   import MarkerCircle from '$lib/components/ui/MarkerCircle.svelte';
   import HandDrawnArrow from '$lib/components/ui/HandDrawnArrow.svelte';
@@ -139,6 +140,7 @@
 
       <a
         href={salesUrl}
+        onclick={() => track('sales_clicked', { content: 'trial-cta' })}
         target="_blank"
         rel="noopener noreferrer"
         class="mt-6 text-sm font-black uppercase tracking-widest text-gray-400 hover:text-gray-700 transition-colors"

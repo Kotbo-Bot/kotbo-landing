@@ -13,6 +13,7 @@
   import { ChevronDown } from '@lucide/svelte';
   import { slide } from 'svelte/transition';
   import { reveal } from '$lib/actions/reveal';
+  import { track } from '$lib/funnel';
 
   const items = [
     {
@@ -45,8 +46,15 @@
 
   function toggleItem(i: number) {
     const next = new Set(openItems);
-    if (next.has(i)) next.delete(i);
-    else next.add(i);
+    if (next.has(i)) {
+      next.delete(i);
+    } else {
+      next.add(i);
+      // Une question ouverte volontairement est un signal d'hesitation : c'est
+      // ce que le visiteur voulait savoir avant de decider. Seule l'ouverture
+      // compte, pas la fermeture, et la premiere question est deja depliee.
+      track('faq_opened', { content: `q${i}` });
+    }
     openItems = next;
   }
 </script>

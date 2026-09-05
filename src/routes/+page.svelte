@@ -30,9 +30,26 @@
    * cliquent, y compris ceux qui renoncent devant l'ecran d'autorisation.
    *
    * Un seul endroit a changer si le parcours bouge : tous les boutons de la
-   * page lisent cette constante.
+   * page passent par `inviteUrl`.
+   *
+   * Cette fonction remplace la constante unique que les cinq boutons se
+   * partageaient. On savait qu'un clic venait de la landing, jamais lequel des
+   * cinq l'avait produit - c'est-a-dire jamais ce qui convainc reellement. Elle
+   * y joint aussi l'identifiant de visite, seul moyen de relier ce clic au
+   * serveur qui en sortira peut-etre : le dashboard est sur un autre domaine,
+   * rien de ce que stocke ce site ne lui est lisible.
    */
-  const inviteUrl = 'https://api.kotbo.fr/api/public/invite?utm_source=landing';
+  import { inviteUrl as buildInviteUrl, track, trackOnView } from '$lib/funnel';
+
+  /**
+   * Enregistre le clic puis laisse le navigateur suivre le lien.
+   *
+   * `sendBeacon` survit a la navigation sortante : rien n'est retarde, et rien
+   * n'est perdu quand l'onglet part vers Discord dans la milliseconde.
+   */
+  function invite(content: string): string {
+    return buildInviteUrl(content);
+  }
 
   let scrolled = $state(false);
   let mx = $state(0);
@@ -163,6 +180,10 @@
   onMount(() => {
     fetchStats();
 
+    // Entree du tunnel. Le referent n'est classe qu'ici : des la deuxieme page
+    // d'une navigation interne il ne dit plus rien de la provenance reelle.
+    track('site_visit', { path: location.pathname });
+
     const handleScroll = () => { scrolled = window.scrollY > 30; };
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -234,7 +255,7 @@
         <a href="#comparatif" class="hover:text-indigo-600 transition-colors">Comparatif</a>
         <a href="#pricing" class="hover:text-indigo-600 transition-colors">Tarifs</a>
       </div>
-      <a href={inviteUrl} class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+      <a href={invite('header')} onclick={() => track('invite_clicked', { content: 'header' })} class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
         Ajouter le bot
       </a>
     </nav>
@@ -256,7 +277,7 @@
         Kotbo est l'ERP et bot Discord tout-en-un qui remplace tes tableurs et centralise l'organisation de ton serveur.
       </p>
       <div class="flex flex-wrap justify-center gap-4 hero-enter hero-delay-3">
-        <a href={inviteUrl} class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
+        <a href={invite('hero')} onclick={() => track('invite_clicked', { content: 'hero' })} class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
           Ajouter le bot à mon serveur
         </a>
         <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:border-gray-300 hover:bg-gray-50 transition-all">
@@ -498,7 +519,7 @@
 
   <!-- Le catalogue complet, juste apres les deux modules montres en detail :
        la profondeur d'abord, la largeur ensuite. -->
-  <Modules {inviteUrl} />
+  <Modules inviteUrl={invite('modules')} />
 
   <!-- Dans la vraie vie (Workflow)  timeline se dessine au scroll -->
   <section id="workflow" class="py-24 bg-gray-900 text-white relative">
@@ -748,13 +769,17 @@
        remplace, ce que ca coute, les questions qui restent - et seulement
        ensuite le dernier appel. La FAQ est apres les tarifs a dessein :
        c'est la qu'on doute, pas avant. -->
-  <Comparison {inviteUrl} />
+  <div use:trackOnView={'comparison_viewed'}>
+    <Comparison inviteUrl={invite('comparison')} />
+  </div>
 
-  <Pricing {inviteUrl} salesUrl={demoUrl} />
+  <div use:trackOnView={'pricing_viewed'}>
+    <Pricing inviteUrl={invite('pricing')} salesUrl={demoUrl} />
+  </div>
 
   <ComparisonFaq />
 
-  <TrialCta {inviteUrl} salesUrl={demoUrl} />
+  <TrialCta inviteUrl={invite('trial-cta')} salesUrl={demoUrl} />
 
   <footer class="bg-white border-t border-gray-200 py-10 text-center text-gray-500 text-sm font-bold">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">

@@ -16,6 +16,7 @@
    */
   import { Check } from '@lucide/svelte';
   import { reveal } from '$lib/actions/reveal';
+  import { track } from '$lib/funnel';
   import Emph from '$lib/components/ui/Emph.svelte';
 
   interface Props {
@@ -255,6 +256,7 @@
 
         <a
           href={salesUrl}
+          onclick={() => track('sales_clicked', { content: 'pricing' })}
           target="_blank"
           rel="noopener noreferrer"
           class="block text-center bg-white text-gray-900 px-6 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-50 transition-colors mb-5"
