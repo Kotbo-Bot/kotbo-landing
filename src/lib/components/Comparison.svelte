@@ -215,7 +215,14 @@
   ];
 
   const ALL_BOTS = CATEGORIES.flatMap((c) => c.options);
-  const kotboPrice = 4.17;
+
+  /**
+   * Entrée de gamme Kotbo ramenée au mois : l'offre Starter à 30 € l'an, soit
+   * 2,50 € par mois. C'est le prix le plus bas que quelqu'un puisse payer, donc
+   * le seul honnête à opposer à des « ≈ » de concurrents - annoncer le tarif
+   * d'un palier supérieur gonflerait artificiellement la comparaison.
+   */
+  const kotboPrice = 2.5;
 
   /** Clef de catégorie -> clef de bot choisi ('' ou absent = aucun). */
   let selection = $state<Record<string, string>>({});
@@ -319,7 +326,7 @@
               </td>
             {/each}
             <td class="pt-6 px-3 text-center">
-              <span class="text-lg font-black tracking-tighter text-indigo-600 tabular-nums">dès 4,17 €</span>
+              <span class="text-lg font-black tracking-tighter text-indigo-600 tabular-nums">dès 2,50 €</span>
             </td>
           </tr>
         </tbody>

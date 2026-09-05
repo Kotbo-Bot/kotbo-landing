@@ -41,7 +41,7 @@
   /** Durée de l'essai, alignée sur `TRIAL_DAYS` (@kotbo/contracts). */
   const TRIAL_DAYS = 15;
   /** Date de la grille tarifaire reproduite ci-dessous. */
-  const PRICING_DATE = '5 septembre 2026';
+  const PRICING_DATE = '6 septembre 2026';
 </script>
 
 <svelte:head>
@@ -137,7 +137,8 @@
         <thead><tr><th>Offre</th><th>Taille du serveur</th><th>Contenu</th><th>Souscription</th></tr></thead>
         <tbody>
           <tr><td><strong>Gratuit</strong></td><td>—</td><td>Aucun module actif. Seules les pages de configuration, de gestion des modules et de facturation restent accessibles.</td><td>État par défaut, sans commande</td></tr>
-          <tr><td><strong>Pro</strong></td><td>Jusqu'à 10&nbsp;000 membres</td><td>Tout le catalogue</td><td>En ligne, libre-service</td></tr>
+          <tr><td><strong>Starter</strong></td><td>Jusqu'à 1&nbsp;000 membres</td><td>Tout le catalogue</td><td>En ligne, libre-service</td></tr>
+          <tr><td><strong>Pro</strong></td><td>De 1&nbsp;001 à 10&nbsp;000 membres</td><td>Tout le catalogue</td><td>En ligne, libre-service</td></tr>
           <tr><td><strong>Ultimate</strong></td><td>De 10&nbsp;001 à 100&nbsp;000 membres</td><td>Tout le catalogue</td><td>En ligne, libre-service</td></tr>
           <tr><td><strong>Sur mesure</strong></td><td>Au-delà de 100&nbsp;000 membres</td><td>Tout le catalogue, conditions convenues au cas par cas</td><td>Sur devis, après <a href="https://pros.kotbo.fr/rdv" target="_blank" rel="noopener noreferrer">rendez-vous</a></td></tr>
         </tbody>
@@ -167,6 +168,7 @@
       <table>
         <thead><tr><th>Offre</th><th>Mensuel</th><th>Annuel</th></tr></thead>
         <tbody>
+          <tr><td>Starter</td><td>5,00&nbsp;€ TTC / mois</td><td>30,00&nbsp;€ TTC / an</td></tr>
           <tr><td>Pro</td><td>9,99&nbsp;€ TTC / mois</td><td>49,99&nbsp;€ TTC / an</td></tr>
           <tr><td>Ultimate</td><td>25,00&nbsp;€ TTC / mois</td><td>149,99&nbsp;€ TTC / an</td></tr>
           <tr><td>Sur mesure</td><td colspan="2">Sur devis</td></tr>
@@ -211,7 +213,7 @@
     <h2>Essai gratuit</h2>
     <p>
       Un essai gratuit de <strong>{TRIAL_DAYS} jours</strong> est proposé à la première souscription d'une offre vendue
-      en libre-service (Pro et Ultimate). Il ouvre l'intégralité des modules de l'offre choisie.
+      en libre-service (Starter, Pro et Ultimate). Il ouvre l'intégralité des modules de l'offre choisie.
     </p>
     <ul>
       <li><strong>Un essai par personne et par serveur.</strong> Ni un même compte Discord ni un même serveur ne peuvent en bénéficier deux fois, y compris en changeant d'administrateur ou en recréant un serveur.</li>

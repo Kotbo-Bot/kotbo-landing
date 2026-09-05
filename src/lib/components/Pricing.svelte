@@ -44,7 +44,13 @@
   const memberCount = $derived(Math.round(100 * Math.pow(10_000, slider / 100)));
 
   const activeKey = $derived(
-    memberCount > 100_000 ? 'CUSTOM' : memberCount > 10_000 ? 'ULTIMATE' : 'PRO',
+    memberCount > 100_000
+      ? 'CUSTOM'
+      : memberCount > 10_000
+        ? 'ULTIMATE'
+        : memberCount > 1_000
+          ? 'PRO'
+          : 'STARTER',
   );
   const customActive = $derived(activeKey === 'CUSTOM');
 
@@ -56,12 +62,20 @@
    */
   const tiers = [
     {
+      key: 'STARTER',
+      name: 'Starter',
+      range: "Jusqu'à 1 000 membres",
+      monthCents: 500,
+      yearCents: 3_000,
+      note: 'La très grande majorité des serveurs Discord.',
+    },
+    {
       key: 'PRO',
       name: 'Pro',
-      range: "Jusqu'à 10 000 membres",
+      range: 'De 1 001 à 10 000 membres',
       monthCents: 999,
       yearCents: 4_999,
-      note: 'La très grande majorité des serveurs.',
+      note: 'Les communautés déjà installées.',
     },
     {
       key: 'ULTIMATE',
@@ -72,6 +86,9 @@
       note: 'Mêmes fonctionnalités, dimensionnées au volume.',
     },
   ];
+
+  /** Nom de l'offre désignée par le curseur, hors sur mesure qui a sa propre carte. */
+  const activeName = $derived(tiers.find((t) => t.key === activeKey)?.name ?? '');
 
   const euros = (cents: number) =>
     (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -144,7 +161,7 @@
           {#if activeKey === 'CUSTOM'}
             Au-delà de 100 000 membres, l'offre se construit avec vous.
           {:else}
-            Votre offre : <span class="text-indigo-600">{activeKey === 'PRO' ? 'Pro' : 'Ultimate'}</span>.
+            Votre offre : <span class="text-indigo-600">{activeName}</span>.
             C'est la seule que ce serveur puisse souscrire - le catalogue étant le même partout,
             payer plus n'ouvrirait rien de plus.
           {/if}
@@ -180,7 +197,7 @@
     </div>
 
     <!-- ── Cartes ─────────────────────────────────────────────────────── -->
-    <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-stretch">
 
       {#each tiers as tier, i (tier.key)}
         {@const active = activeKey === tier.key}
@@ -232,7 +249,7 @@
       <!-- Sur mesure : aucun prix affiché, parce qu'il n'y en a pas. Une
            fourchette inventée ici se ferait démentir au rendez-vous. -->
       <div
-        use:reveal={{ direction: 'up', delay: 300 }}
+        use:reveal={{ direction: 'up', delay: 390 }}
         class="relative flex flex-col bg-gray-900 text-white rounded-2xl p-8 lg:p-10 transition-all duration-300 {customActive
           ? 'ring-2 ring-indigo-400 shadow-2xl md:-translate-y-1'
           : 'shadow-xl'}"

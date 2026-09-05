@@ -34,7 +34,7 @@
     },
     {
       q: 'Combien coûte Kotbo comparé à MEE6, Dyno ou Ticket Tool ?',
-      a: "Kotbo démarre à 4,17 €/mois, contre environ 12 € pour MEE6, 15 € pour Dyno, ou 5 à 12 € pour Ticket Tool en formule payante. Le calculateur plus haut fait le total avec les bots que tu as vraiment sur ton serveur.",
+      a: "Kotbo démarre à 2,50 €/mois, contre environ 12 € pour MEE6, 15 € pour Dyno, ou 5 à 12 € pour Ticket Tool en formule payante. Le calculateur plus haut fait le total avec les bots que tu as vraiment sur ton serveur.",
     },
     {
       q: 'Kotbo est-il un bot français ?',
