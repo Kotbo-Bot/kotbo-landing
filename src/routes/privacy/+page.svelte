@@ -49,7 +49,12 @@
   <section id="responsable" class="policy-section">
     <div class="section-badge">01</div>
     <h2>Responsable du traitement & répartition des rôles</h2>
-    <p>Le service Kotbo est édité et opéré par&nbsp;:</p>
+    <p>
+      Le service Kotbo est édité et exploité par <code>[À COMPLÉTER : nom de l'entrepreneur individuel]</code>, entreprise individuelle
+      immatriculée sous le SIREN 101&nbsp;303&nbsp;535, qui est à ce titre le responsable du traitement pour les
+      traitements décrits au présent paragraphe.
+    </p>
+    <p>Le service est conçu et développé par&nbsp;:</p>
     <ul>
       <li><strong>Elouan Passereau</strong>  <a href="https://klaynight.fr/" target="_blank" rel="noopener noreferrer">klaynight.fr</a></li>
       <li><strong>Nathan Rontey</strong>  <a href="https://nathaan.me/" target="_blank" rel="noopener noreferrer">nathaan.me</a></li>

@@ -47,8 +47,9 @@
     <p>
       Kotbo est un bot Discord et un tableau de bord web destinés aux communautés francophones (gestion du staff,
       modération, tickets, statistiques, niveaux, événements, candidatures, économie et organisation de serveur). Le
-      service est édité et opéré par <strong>Elouan Passereau</strong> et <strong>Nathan Rontey</strong>
-      (« Kotbo », « nous »). Les coordonnées complètes figurent sur la page <a href="{base}/mentions-legales">Mentions légales</a>.
+      service est édité et exploité par une entreprise individuelle immatriculée sous le SIREN 101&nbsp;303&nbsp;535
+      (« Kotbo », « nous »), et développé par <strong>Elouan Passereau</strong> et <strong>Nathan Rontey</strong>.
+      Les coordonnées complètes figurent sur la page <a href="{base}/mentions-legales">Mentions légales</a>.
     </p>
     <p>
       L'accès à Kotbo est payant. Les modalités commerciales — offres, prix, TVA, essai gratuit, reconduction,
