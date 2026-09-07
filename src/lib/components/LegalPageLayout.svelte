@@ -14,7 +14,7 @@
     title: string;
     subtitle: string;
     sections: SectionLink[];
-    activePage: 'privacy' | 'terms' | 'cookies' | 'dpa' | 'legal';
+    activePage: 'privacy' | 'terms' | 'cgv' | 'cookies' | 'dpa' | 'legal';
     children: Snippet;
   } = $props();
 
@@ -82,6 +82,7 @@
       <div class="flex flex-wrap justify-center gap-6 uppercase tracking-widest text-[10px] font-black">
         <a href="{base}/privacy" class:text-indigo-600={activePage === 'privacy'} class="hover:text-gray-900 transition-colors">Confidentialité</a>
         <a href="{base}/terms" class:text-indigo-600={activePage === 'terms'} class="hover:text-gray-900 transition-colors">CGU</a>
+        <a href="{base}/cgv" class:text-indigo-600={activePage === 'cgv'} class="hover:text-gray-900 transition-colors">CGV</a>
         <a href="{base}/cookies" class:text-indigo-600={activePage === 'cookies'} class="hover:text-gray-900 transition-colors">Cookies</a>
         <a href="{base}/dpa" class:text-indigo-600={activePage === 'dpa'} class="hover:text-gray-900 transition-colors">DPA</a>
         <a href="{base}/mentions-legales" class:text-indigo-600={activePage === 'legal'} class="hover:text-gray-900 transition-colors">Mentions légales</a>
