@@ -24,6 +24,7 @@
   import PostIt from '$lib/components/ui/PostIt.svelte';
   import MarkerCircle from '$lib/components/ui/MarkerCircle.svelte';
   import HandDrawnArrow from '$lib/components/ui/HandDrawnArrow.svelte';
+  import { getLocale } from '$lib/i18n/state.svelte';
 
   interface Props {
     inviteUrl: string;
@@ -34,34 +35,82 @@
 
   const TRIAL_DAYS = 15;
 
-  /**
-   * Trois post-it, trois objections. L'ordre est celui du parcours réel
-   * (ajouter, configurer, décider) et non celui de l'argumentaire : c'est ce
-   * qui rend la promesse « payez ensuite » vérifiable plutôt que jolie.
-   */
-  const steps = [
-    {
-      n: '1',
-      color: 'yellow',
-      rotation: -4,
-      title: 'On ajoute le bot',
-      body: "Aucune carte bancaire. Le dashboard s'ouvre dès que Kotbo rejoint le serveur.",
+  const TEXT = {
+    fr: {
+      titleLine1: 'Installez Kotbo,',
+      titleLine2Prefix: 'payez',
+      titleEmph: 'ensuite',
+      intro: 'Le serveur se monte en entier avant qu\'on vous demande quoi que ce soit.',
+      cta: 'Ajouter le bot à mon serveur',
+      cardNoteLine1: 'et pas de carte',
+      cardNoteLine2: 'bancaire',
+      demoLink: 'ou demander une démo',
+      /**
+       * Trois post-it, trois objections. L'ordre est celui du parcours réel
+       * (ajouter, configurer, décider) et non celui de l'argumentaire : c'est ce
+       * qui rend la promesse « payez ensuite » vérifiable plutôt que jolie.
+       */
+      steps: [
+        {
+          n: '1',
+          color: 'yellow',
+          rotation: -4,
+          title: 'On ajoute le bot',
+          body: "Aucune carte bancaire. Le dashboard s'ouvre dès que Kotbo rejoint le serveur.",
+        },
+        {
+          n: '2',
+          color: 'blue',
+          rotation: 3,
+          title: 'On configure tout',
+          body: "Modules, staff, tickets, niveaux : le serveur se met en place entièrement, sans qu'on vous demande quoi que ce soit.",
+        },
+        {
+          n: '3',
+          color: 'pink',
+          rotation: -2,
+          title: 'On décide après',
+          body: `Vous choisissez une offre quand le serveur tourne. ${TRIAL_DAYS} jours d'essai à ce moment-là, et rien à refaire.`,
+        },
+      ],
     },
-    {
-      n: '2',
-      color: 'blue',
-      rotation: 3,
-      title: 'On configure tout',
-      body: "Modules, staff, tickets, niveaux : le serveur se met en place entièrement, sans qu'on vous demande quoi que ce soit.",
+    en: {
+      titleLine1: 'Install Kotbo,',
+      titleLine2Prefix: 'pay',
+      titleEmph: 'later',
+      intro: 'The server is fully set up before we ask you for anything.',
+      cta: 'Add the bot to my server',
+      cardNoteLine1: 'and no credit',
+      cardNoteLine2: 'card needed',
+      demoLink: 'or request a demo',
+      steps: [
+        {
+          n: '1',
+          color: 'yellow',
+          rotation: -4,
+          title: 'We add the bot',
+          body: 'No credit card. The dashboard opens as soon as Kotbo joins the server.',
+        },
+        {
+          n: '2',
+          color: 'blue',
+          rotation: 3,
+          title: 'We set everything up',
+          body: 'Modules, staff, tickets, levels: the server is fully configured, without you having to lift a finger.',
+        },
+        {
+          n: '3',
+          color: 'pink',
+          rotation: -2,
+          title: 'You decide later',
+          body: `You choose a plan once the server is running. ${TRIAL_DAYS} days free trial at that point, and nothing to redo.`,
+        },
+      ],
     },
-    {
-      n: '3',
-      color: 'pink',
-      rotation: -2,
-      title: 'On décide après',
-      body: `Vous choisissez une offre quand le serveur tourne. ${TRIAL_DAYS} jours d'essai à ce moment-là, et rien à refaire.`,
-    },
-  ];
+  };
+
+  const t = $derived(TEXT[getLocale()]);
+  const steps = $derived(t.steps);
 </script>
 
 <section class="py-20 lg:py-28 relative overflow-hidden">
@@ -69,11 +118,11 @@
 
     <div use:reveal={{ direction: 'up' }} class="text-center max-w-2xl mx-auto mb-20">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-6 font-headline leading-[1.12]">
-        Installez Kotbo,<br />payez
-        <MarkerCircle color="red" class="text-gray-900" animated>ensuite</MarkerCircle>.
+        {t.titleLine1}<br />{t.titleLine2Prefix}
+        <MarkerCircle color="red" class="text-gray-900" animated>{t.titleEmph}</MarkerCircle>.
       </h2>
       <p class="text-base lg:text-lg text-gray-500 font-bold leading-relaxed">
-        Le serveur se monte en entier avant qu'on vous demande quoi que ce soit.
+        {t.intro}
       </p>
     </div>
 
@@ -121,7 +170,7 @@
           class="hand-drawn-border inline-block bg-gray-900 text-white px-10 py-5 font-black uppercase
                  tracking-widest text-sm hover:bg-indigo-600 transition-colors shadow-xl"
         >
-          Ajouter le bot à mon serveur
+          {t.cta}
         </a>
 
         <!-- Le mot qui leve la derniere hesitation, ecrit a la main a cote du
@@ -133,7 +182,7 @@
             class="absolute -left-10 top-4 w-14 h-14 -scale-x-100 opacity-80"
           />
           <p class="font-hand text-2xl text-gray-500 rotate-[6deg] leading-tight">
-            et pas de carte<br />bancaire
+            {t.cardNoteLine1}<br />{t.cardNoteLine2}
           </p>
         </div>
       </div>
@@ -145,7 +194,7 @@
         rel="noopener noreferrer"
         class="mt-6 text-sm font-black uppercase tracking-widest text-gray-400 hover:text-gray-700 transition-colors"
       >
-        ou demander une démo
+        {t.demoLink}
       </a>
     </div>
   </div>

@@ -1,29 +1,85 @@
 <script lang="ts">
   import { base } from '$app/paths';
+  import { getLocale } from '$lib/i18n/state.svelte';
+
+  const TEXT = {
+    fr: {
+      pageTitle: "Modèle d'information des membres | Kotbo",
+      back: '← Retour à Kotbo',
+      h1: "Modèle d'information des membres",
+      intro: "Ce modèle doit être adapté aux modules réellement activés, aux durées retenues par le serveur et à l'identité de son administrateur.",
+      template: {
+        h2: 'Utilisation du bot Kotbo',
+        p1: '[Nom du serveur / responsable] utilise Kotbo pour : [modules et finalités activés].',
+        p2a: 'Selon ces modules, Kotbo peut traiter votre identifiant et profil Discord, votre activité sur le serveur, vos participations, tickets, candidatures ou informations de modération. [Nom du serveur] est responsable de ces traitements et Kotbo intervient comme prestataire sous-traitant.',
+        p3: "La base légale retenue est : [intérêt légitime / contrat / consentement selon la finalité]. Les données sont accessibles à [rôles autorisés] et conservées pendant [durées].",
+        p4a: "Vous pouvez demander l'accès, la rectification, la limitation, l'opposition ou l'effacement de vos données auprès de [contact du serveur]. Vous pouvez également contacter privacy@kotbo.fr ou saisir la CNIL.",
+        p5: 'Politique complète : https://kotbo.fr/privacy',
+      },
+      requiredTitle: 'Points à compléter obligatoirement',
+      required: [
+        'identité et contact du responsable du serveur ;',
+        'finalités, modules et bases légales ;',
+        'destinataires et durées ;',
+        "modalités concrètes d'exercice des droits.",
+      ],
+      footer: {
+        privacy: 'Confidentialité',
+        terms: 'CGU',
+        dpa: 'DPA',
+        legal: 'Mentions légales',
+      },
+    },
+    en: {
+      pageTitle: 'Member Information Template | Kotbo',
+      back: '← Back to Kotbo',
+      h1: 'Member information template',
+      intro: 'This template must be adapted to the modules actually enabled, the retention periods chosen by the server, and the identity of its administrator.',
+      template: {
+        h2: 'Use of the Kotbo bot',
+        p1: '[Server name / administrator] uses Kotbo for: [enabled modules and purposes].',
+        p2a: "Depending on these modules, Kotbo may process your Discord identifier and profile, your activity on the server, your participations, tickets, applications, or moderation information. [Server name] is the data controller for these processing activities, and Kotbo acts as a data processor.",
+        p3: 'The legal basis relied upon is: [legitimate interest / contract / consent, depending on the purpose]. The data is accessible to [authorized roles] and retained for [durations].',
+        p4a: 'You may request access, rectification, restriction, objection, or erasure of your data from [server contact]. You may also contact privacy@kotbo.fr or lodge a complaint with the CNIL.',
+        p5: 'Full policy: https://kotbo.fr/privacy',
+      },
+      requiredTitle: 'Points that must be completed',
+      required: [
+        "the identity and contact details of the server administrator;",
+        'the purposes, modules, and legal bases;',
+        'the recipients and retention periods;',
+        'the concrete arrangements for exercising rights.',
+      ],
+      footer: {
+        privacy: 'Privacy',
+        terms: 'Terms of Use',
+        dpa: 'DPA',
+        legal: 'Legal Notice',
+      },
+    },
+  };
+
+  const t = $derived(TEXT[getLocale()]);
 </script>
 
-<svelte:head><title>Modèle d'information des membres | Kotbo</title></svelte:head>
+<svelte:head><title>{t.pageTitle}</title></svelte:head>
 
 <main class="min-h-screen bg-gray-50 text-gray-800 py-14 px-6">
   <article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-3xl p-7 md:p-12 shadow-sm prose-legal">
-    <a href="{base}/" class="text-sm font-bold text-indigo-700 hover:underline">← Retour à Kotbo</a>
-    <h1>Modèle d'information des membres</h1>
-    <p>Ce modèle doit être adapté aux modules réellement activés, aux durées retenues par le serveur et à l'identité de son administrateur.</p>
+    <a href="{base}/" class="text-sm font-bold text-indigo-700 hover:underline">{t.back}</a>
+    <h1>{t.h1}</h1>
+    <p>{t.intro}</p>
     <div class="template">
-      <h2>Utilisation du bot Kotbo</h2>
-      <p>[Nom du serveur / responsable] utilise Kotbo pour : [modules et finalités activés].</p>
-      <p>Selon ces modules, Kotbo peut traiter votre identifiant et profil Discord, votre activité sur le serveur, vos participations,
-        tickets, candidatures ou informations de modération. [Nom du serveur] est responsable de ces traitements et Kotbo intervient
-        comme prestataire sous-traitant.</p>
-      <p>La base légale retenue est : [intérêt légitime / contrat / consentement selon la finalité]. Les données sont accessibles à
-        [rôles autorisés] et conservées pendant [durées].</p>
-      <p>Vous pouvez demander l'accès, la rectification, la limitation, l'opposition ou l'effacement de vos données auprès de
-        [contact du serveur]. Vous pouvez également contacter privacy@kotbo.fr ou saisir la CNIL.</p>
-      <p>Politique complète : https://kotbo.fr/privacy</p>
+      <h2>{t.template.h2}</h2>
+      <p>{t.template.p1}</p>
+      <p>{t.template.p2a}</p>
+      <p>{t.template.p3}</p>
+      <p>{t.template.p4a}</p>
+      <p>{t.template.p5}</p>
     </div>
-    <h2>Points à compléter obligatoirement</h2>
-    <ul><li>identité et contact du responsable du serveur ;</li><li>finalités, modules et bases légales ;</li><li>destinataires et durées ;</li><li>modalités concrètes d'exercice des droits.</li></ul>
-    <footer><a href="{base}/privacy">Confidentialité</a><a href="{base}/terms">CGU</a><a href="{base}/dpa">DPA</a><a href="{base}/mentions-legales">Mentions légales</a></footer>
+    <h2>{t.requiredTitle}</h2>
+    <ul>{#each t.required as item}<li>{item}</li>{/each}</ul>
+    <footer><a href="{base}/privacy">{t.footer.privacy}</a><a href="{base}/terms">{t.footer.terms}</a><a href="{base}/dpa">{t.footer.dpa}</a><a href="{base}/mentions-legales">{t.footer.legal}</a></footer>
   </article>
 </main>
 

@@ -1,46 +1,97 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
   import { mockAvatar } from '$lib/mockMedia';
+  import { getLocale } from '$lib/i18n/state.svelte';
 
   let activeTab = $state('Membres');
-  const tabs = [
-    { id: 'Membres',      icon: 'users'          },
-    { id: 'Rôles',        icon: 'shield'         },
-    { id: 'Organigramme', icon: 'git-branch'     },
-    { id: 'Avert.',       icon: 'alert-triangle' },
-    { id: 'Sondages',     icon: 'check-square'   },
-    { id: 'Leadership',   icon: 'bar-chart'      },
-  ];
 
-  const members = [
+  const membersData = [
     {
       name: 'Lena', handle: 'lena_adm', seed: 'Lena',
-      grade: 'Responsable', gradeStyle: 'border-rose-200 bg-rose-50 text-rose-600',
-      hierarchy: { name: 'Direction', grade: 'Cheffe', color: '#e11d48' },
+      gradeKey: 'manager', gradeStyle: 'border-rose-200 bg-rose-50 text-rose-600',
+      hierarchyKey: 'chief', hierarchyColor: '#e11d48',
       warns: 0, tutor: false, online: true,
     },
     {
       name: 'Zenox', handle: 'zenox', seed: 'Zenox',
-      grade: 'Administrateur', gradeStyle: 'border-indigo-200 bg-indigo-50 text-indigo-600',
-      hierarchy: { name: 'Direction', grade: 'Admin', color: '#6366f1' },
+      gradeKey: 'admin', gradeStyle: 'border-indigo-200 bg-indigo-50 text-indigo-600',
+      hierarchyKey: 'admin', hierarchyColor: '#6366f1',
       warns: 0, tutor: false, online: true,
     },
     {
       name: 'Aiden', handle: 'aiden_mod', seed: 'Aiden',
-      grade: 'Modérateur', gradeStyle: 'border-emerald-200 bg-emerald-50 text-emerald-600',
-      hierarchy: null, warns: 1, tutor: true, online: true,
+      gradeKey: 'moderator', gradeStyle: 'border-emerald-200 bg-emerald-50 text-emerald-600',
+      hierarchyKey: null, warns: 1, tutor: true, online: true,
     },
     {
       name: 'Kylian', handle: 'kylian_h', seed: 'Kylian',
-      grade: 'Helper', gradeStyle: 'border-amber-200 bg-amber-50 text-amber-600',
-      hierarchy: null, warns: 0, tutor: true, online: false,
+      gradeKey: 'helper', gradeStyle: 'border-amber-200 bg-amber-50 text-amber-600',
+      hierarchyKey: null, warns: 0, tutor: true, online: false,
     },
     {
       name: 'Nora', handle: 'nora_test', seed: 'Nora',
-      grade: 'Helper Test', gradeStyle: 'border-slate-200 bg-slate-50 text-slate-500',
-      hierarchy: null, warns: 0, tutor: false, online: true,
+      gradeKey: 'trialHelper', gradeStyle: 'border-slate-200 bg-slate-50 text-slate-500',
+      hierarchyKey: null, warns: 0, tutor: false, online: true,
     },
   ];
+
+  const TEXT = {
+    fr: {
+      tabs: [
+        { id: 'Membres',      icon: 'users'          },
+        { id: 'Rôles',        icon: 'shield'         },
+        { id: 'Organigramme', icon: 'git-branch'     },
+        { id: 'Avert.',       icon: 'alert-triangle' },
+        { id: 'Sondages',     icon: 'check-square'   },
+        { id: 'Leadership',   icon: 'bar-chart'      },
+      ],
+      headerTitle: 'Gestion du Personnel',
+      headerSubtitle: 'Supervisez votre équipe de modération',
+      addMemberBtn: '+ Ajouter un membre',
+      listTitle: 'Membres du Personnel',
+      listSubtitle: 'Gérez l\'équipe et leurs grades actuels.',
+      memberCount: 'membres',
+      grades: { manager: 'Responsable', admin: 'Administrateur', moderator: 'Modérateur', helper: 'Helper', trialHelper: 'Helper Test' },
+      hierarchyGroups: { direction: 'Direction' },
+      hierarchyGrades: { chief: 'Cheffe', admin: 'Admin' },
+      warnBadge: 'AVERT.',
+      tutorBadge: 'TUTORAT',
+      actions: [['user', 'Profil'], ['chevrons-up', 'Promo'], ['chevrons-down', 'Démo'], ['more-horizontal', 'Plus']],
+    },
+    en: {
+      tabs: [
+        { id: 'Membres',      icon: 'users'          },
+        { id: 'Rôles',        icon: 'shield'         },
+        { id: 'Organigramme', icon: 'git-branch'     },
+        { id: 'Avert.',       icon: 'alert-triangle' },
+        { id: 'Sondages',     icon: 'check-square'   },
+        { id: 'Leadership',   icon: 'bar-chart'      },
+      ],
+      headerTitle: 'Staff Management',
+      headerSubtitle: 'Oversee your moderation team',
+      addMemberBtn: '+ Add Member',
+      listTitle: 'Staff Members',
+      listSubtitle: 'Manage the team and their current ranks.',
+      memberCount: 'members',
+      grades: { manager: 'Manager', admin: 'Administrator', moderator: 'Moderator', helper: 'Helper', trialHelper: 'Trial Helper' },
+      hierarchyGroups: { direction: 'Leadership' },
+      hierarchyGrades: { chief: 'Chief', admin: 'Admin' },
+      warnBadge: 'WARN',
+      tutorBadge: 'MENTOR',
+      actions: [['user', 'Profile'], ['chevrons-up', 'Promote'], ['chevrons-down', 'Demote'], ['more-horizontal', 'More']],
+    },
+  };
+
+  const t = $derived(TEXT[getLocale()]);
+  const tabs = $derived(t.tabs);
+
+  const members = $derived(membersData.map(m => ({
+    ...m,
+    grade: t.grades[m.gradeKey as keyof typeof t.grades],
+    hierarchy: m.hierarchyKey
+      ? { name: t.hierarchyGroups.direction, grade: t.hierarchyGrades[m.hierarchyKey as keyof typeof t.hierarchyGrades], color: m.hierarchyColor }
+      : null,
+  })));
 </script>
 
 <div class="flex h-full flex-col font-body text-on-surface overflow-hidden">
@@ -52,23 +103,23 @@
         <Papicon icon="users" size={16} />
       </div>
       <div>
-        <p class="text-sm font-black leading-tight">Gestion du Personnel</p>
-        <p class="text-[9px] text-on-surface-variant/60">Supervisez votre équipe de modération</p>
+        <p class="text-sm font-black leading-tight">{t.headerTitle}</p>
+        <p class="text-[9px] text-on-surface-variant/60">{t.headerSubtitle}</p>
       </div>
     </div>
     <button class="rounded-lg border border-primary/20 bg-primary/8 px-3 py-2 text-[9px] font-black uppercase tracking-widest text-primary">
-      + Ajouter un membre
+      {t.addMemberBtn}
     </button>
   </div>
 
   <!-- List header -->
   <div class="flex items-center justify-between border-b border-outline-variant/10 bg-surface-container-low/30 px-5 py-3 shrink-0">
     <div>
-      <p class="text-sm font-black">Membres du Personnel</p>
-      <p class="text-[9px] text-on-surface-variant/50">Gérez l'équipe et leurs grades actuels.</p>
+      <p class="text-sm font-black">{t.listTitle}</p>
+      <p class="text-[9px] text-on-surface-variant/50">{t.listSubtitle}</p>
     </div>
     <span class="rounded-lg bg-surface-container px-2.5 py-1.5 text-[9px] font-bold text-on-surface-variant/60">
-      {members.length} membres
+      {members.length} {t.memberCount}
     </span>
   </div>
 
@@ -108,14 +159,14 @@
             <!-- Avertissements -->
             {#if m.warns}
               <span class="rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-[9px] font-black text-amber-700 shrink-0">
-                {m.warns} AVERT.
+                {m.warns} {t.warnBadge}
               </span>
             {/if}
 
             <!-- Tutorat -->
             {#if m.tutor}
               <span class="rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[9px] font-black text-violet-600 shrink-0">
-                TUTORAT
+                {t.tutorBadge}
               </span>
             {/if}
           </div>
@@ -124,7 +175,7 @@
 
         <!-- Actions -->
         <div class="flex shrink-0 gap-1.5">
-          {#each [['user','Profil'],['chevrons-up','Promo'],['chevrons-down','Démo'],['more-horizontal','Plus']] as [icon, label]}
+          {#each t.actions as [icon, label]}
             <button
               title={label}
               class="flex h-8 w-8 items-center justify-center rounded-lg border border-outline-variant/20 bg-surface text-on-surface-variant/60 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"

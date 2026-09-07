@@ -1,12 +1,486 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
   import { mockAvatar, mockBanner } from '$lib/mockMedia';
+  import { getLocale } from '$lib/i18n/state.svelte';
 
   let { user = 'Arka', role = 'Fondateur', avatar = 'Arka' }: {
     user?: string;
     role?: string;
     avatar?: string;
   } = $props();
+
+  const TEXT = {
+    fr: {
+      close: 'Fermer',
+      bot: 'Bot',
+      tutorBadge: 'Tuteur',
+      profileButton: 'Profil',
+      tabs: {
+        resume: 'Résumé',
+        identite: 'Identité',
+        activite: 'Activité',
+        analytics: 'Analytiques',
+        messages: 'Messages',
+        logs: 'Logs',
+        sanctions: 'Sanctions',
+        candidatures: 'Candidats',
+        invites: 'Invitations',
+        notes: 'Notes'
+      },
+      common: {
+        unknown: 'Inconnu'
+      },
+      time: { d: 'j', h: 'h', m: 'm', s: 's' },
+      relative: {
+        never: 'Jamais',
+        justNow: "À l'instant",
+        minutesAgo: (n: number) => `Il y a ${n}m`,
+        hoursAgo: (n: number) => `Il y a ${n}h`,
+        daysAgo: (n: number) => `Il y a ${n}j`
+      },
+      duration: {
+        years: (n: number) => `${n} an${n > 1 ? 's' : ''}`,
+        months: (n: number) => `${n} mois`,
+        today: 'Auj.',
+        daysShort: (n: number) => `${n} j`
+      },
+      presence: {
+        offline: 'Hors ligne',
+        left: 'A quitté le serveur',
+        online: 'En ligne',
+        idle: 'Absent',
+        dnd: 'Ne pas déranger'
+      },
+      altWarning: {
+        title: 'Suspicion de Double Compte',
+        description: 'Ce compte a été identifié comme un potentiel double compte automatique lors de son arrivée.',
+        badge: 'Suspect'
+      },
+      resume: {
+        accountInfo: {
+          sectionLabel: 'Informations Compte',
+          title: 'Identité & Ancienneté',
+          accountAge: 'Âge du compte',
+          createdOn: (date: string) => `Créé le ${date}`,
+          serverPresence: 'Présence Serveur',
+          joinedOn: (date: string) => `Arrivé le ${date}`,
+          invitedBy: 'Invité par',
+          unknownOrigin: 'Origine inconnue',
+          inviteCode: "Code d'invitation"
+        },
+        sanctionsCard: {
+          badge: 'Casier',
+          title: 'Sanctions',
+          total: 'Total',
+          activeCount: (n: number) => `${n} active(s)`
+        },
+        activitySummary: {
+          sectionLabel: 'Activité',
+          title: 'Engagement',
+          messages: 'Messages',
+          voice: 'Vocal',
+          lastSeen: 'Dernier passage'
+        },
+        activityChart: {
+          sectionLabel: 'Statistiques',
+          title: "Tendance d'activité (30j)",
+          messages: 'Messages',
+          voiceTime: 'Temps vocal'
+        },
+        rolesPermissions: {
+          sectionLabel: 'Autorisations',
+          title: 'Rôles & Accès',
+          mainRoles: 'Rôles Principaux',
+          keyPermissions: 'Permissions Clés'
+        },
+        recentActivity: {
+          sectionLabel: 'Timeline',
+          title: 'Activités récentes',
+          viewAllLogs: 'Voir tous les logs',
+          recentMessages: 'Derniers Messages',
+          emptyContent: 'Contenu vide',
+          noRecentMessages: 'Aucun message récent détecté.',
+          recentLogs: 'Derniers Logs'
+        },
+        discordProfile: {
+          sectionLabel: 'Profil Discord',
+          username: "Nom d'utilisateur",
+          unknown: 'Inconnu',
+          globalName: 'Nom global',
+          serverDisplay: 'Affichage serveur',
+          language: 'Langue',
+          unknownLang: 'Inconnue',
+          pronouns: 'Pronoms',
+          notSpecified: 'Non spécifiés'
+        },
+        visuals: {
+          sectionLabel: 'Visuels',
+          customAvatar: 'Avatar personnalisé',
+          profileBanner: 'Bannière profil',
+          bannerAlt: 'Bannière'
+        }
+      },
+      identite: {
+        fullProfile: {
+          sectionLabel: 'Données Compte',
+          title: 'Profil Complet',
+          discordId: 'ID Discord',
+          username: "Nom d'utilisateur",
+          globalName: 'Nom global',
+          serverNickname: 'Surnom Serveur',
+          localeLabel: 'Langue (Locale)',
+          pronouns: 'Pronoms',
+          notSpecified: 'Non spécifiés'
+        },
+        staffStatus: {
+          sectionLabel: 'Administration',
+          title: 'Statut Staff',
+          currentGrade: 'Grade Actuel:',
+          tutorStatus: 'Statut Tuteur:',
+          yesActive: 'Oui (Actif)',
+          no: 'Non'
+        },
+        keyDates: {
+          sectionLabel: 'Chronologie',
+          title: 'Dates Clés',
+          accountCreation: 'Création compte:',
+          serverArrival: 'Arrivée serveur:',
+          lastDeparture: 'Dernier départ:',
+          firstSeen: 'Première observation:',
+          lastSeen: 'Dernière observation:'
+        },
+        roles: {
+          sectionLabel: 'Autorisations',
+          title: (n: number) => `Rôles (${n})`,
+          noRole: 'Aucun rôle attribué'
+        }
+      },
+      activite: {
+        messages: 'Messages',
+        voiceTime: 'Temps vocal',
+        lastActivity: 'Dernière activité',
+        channelBreakdown: 'Répartition par salon',
+        messagesCount: (n: number) => `${n} messages`
+      },
+      analytics: {
+        loading: 'Analyse du comportement...',
+        messageVolume: {
+          sectionLabel: 'Activité',
+          title: 'Volume Messages',
+          last30Days: '30 derniers jours'
+        },
+        voiceActivity: {
+          sectionLabel: 'Engagement',
+          title: 'Activité Vocal',
+          minutesPerDay: 'Minutes / jour'
+        },
+        empty: {
+          title: 'Aucune donnée analytique',
+          description: "Nous n'avons pas encore assez de données d'activité pour générer des graphiques pour ce membre sur les 30 derniers jours."
+        }
+      },
+      messagesTab: {
+        msgCount: (n: number) => `${n} msg`,
+        viewOnDiscord: 'Voir sur Discord',
+        emptyContent: 'Contenu vide',
+        empty: {
+          title: 'Silence radio',
+          description: "Aucun message récent n'a été indexé pour ce membre dans les salons surveillés."
+        }
+      },
+      logsTab: {
+        empty: 'Aucun log disponible'
+      },
+      sanctionsTab: {
+        headers: { date: 'Date', action: 'Action', status: 'Statut', reason: 'Raison', report: 'Rapport' },
+        statusActive: 'Active',
+        statusResolved: 'Résolue',
+        viewMore: 'Voir plus',
+        empty: 'Dossier vierge'
+      },
+      candidaturesTab: {
+        statusAccepted: 'Acceptée',
+        statusRejected: 'Rejetée',
+        oralResult: 'Résultat Oral',
+        empty: 'Aucune candidature archivée'
+      },
+      invitesTab: {
+        source: {
+          sectionLabel: "Source d'invitation",
+          codeUsed: 'Code utilisé:',
+          unknown: 'Inconnu',
+          creator: 'Créateur:',
+          usageDate: "Date d'utilisation:"
+        },
+        movements: {
+          sectionLabel: 'Mouvements Serveur',
+          firstSeen: 'Première observation:',
+          lastArrival: 'Dernière arrivée:',
+          lastDeparture: 'Dernier départ:',
+          none: 'Aucun',
+          lastSeen: 'Dernière observation:'
+        }
+      },
+      notesTab: {
+        sectionLabel: 'Modération',
+        title: 'Notes Modérateur',
+        disclaimer: "Ces notes sont strictement confidentielles et ne sont visibles que par l'équipe d'administration et de modération.",
+        placeholder: 'Ajouter des notes internes sur ce membre...',
+        saving: 'Enregistrement...',
+        save: 'Sauvegarder',
+        savedSuccess: 'Note enregistrée avec succès.'
+      },
+      sanctionReport: {
+        sectionLabel: 'Rapport de Sanction',
+        title: (id: string, type: string) => `Sanction #${id} · ${type}`,
+        incidentDate: "Date de l'incident",
+        referringModerator: 'Modérateur référent',
+        brokenRules: 'Règles enfreintes',
+        ruleText: 'Règle 2.1 - Respect & Courtoisie',
+        detailedReason: 'Raison détaillée',
+        reasonSuffix: '. Comportement inapproprié persistant.',
+        attachments: 'Pièces jointes / Preuves',
+        evidenceFile: 'capture_de_l_abus.png',
+        close: 'Fermer'
+      }
+    },
+    en: {
+      close: 'Close',
+      bot: 'Bot',
+      tutorBadge: 'Tutor',
+      profileButton: 'Profile',
+      tabs: {
+        resume: 'Summary',
+        identite: 'Identity',
+        activite: 'Activity',
+        analytics: 'Analytics',
+        messages: 'Messages',
+        logs: 'Logs',
+        sanctions: 'Sanctions',
+        candidatures: 'Candidates',
+        invites: 'Invites',
+        notes: 'Notes'
+      },
+      common: {
+        unknown: 'Unknown'
+      },
+      time: { d: 'd', h: 'h', m: 'm', s: 's' },
+      relative: {
+        never: 'Never',
+        justNow: 'Just now',
+        minutesAgo: (n: number) => `${n}m ago`,
+        hoursAgo: (n: number) => `${n}h ago`,
+        daysAgo: (n: number) => `${n}d ago`
+      },
+      duration: {
+        years: (n: number) => `${n} year${n > 1 ? 's' : ''}`,
+        months: (n: number) => `${n} month${n > 1 ? 's' : ''}`,
+        today: 'Today',
+        daysShort: (n: number) => `${n}d`
+      },
+      presence: {
+        offline: 'Offline',
+        left: 'Left the server',
+        online: 'Online',
+        idle: 'Away',
+        dnd: 'Do Not Disturb'
+      },
+      altWarning: {
+        title: 'Suspected Duplicate Account',
+        description: 'This account was automatically flagged as a potential duplicate account upon arrival.',
+        badge: 'Suspect'
+      },
+      resume: {
+        accountInfo: {
+          sectionLabel: 'Account Info',
+          title: 'Identity & Tenure',
+          accountAge: 'Account age',
+          createdOn: (date: string) => `Created on ${date}`,
+          serverPresence: 'Server Presence',
+          joinedOn: (date: string) => `Joined on ${date}`,
+          invitedBy: 'Invited by',
+          unknownOrigin: 'Unknown origin',
+          inviteCode: 'Invite code'
+        },
+        sanctionsCard: {
+          badge: 'Record',
+          title: 'Sanctions',
+          total: 'Total',
+          activeCount: (n: number) => `${n} active`
+        },
+        activitySummary: {
+          sectionLabel: 'Activity',
+          title: 'Engagement',
+          messages: 'Messages',
+          voice: 'Voice',
+          lastSeen: 'Last seen'
+        },
+        activityChart: {
+          sectionLabel: 'Stats',
+          title: 'Activity Trend (30d)',
+          messages: 'Messages',
+          voiceTime: 'Voice time'
+        },
+        rolesPermissions: {
+          sectionLabel: 'Permissions',
+          title: 'Roles & Access',
+          mainRoles: 'Main Roles',
+          keyPermissions: 'Key Permissions'
+        },
+        recentActivity: {
+          sectionLabel: 'Timeline',
+          title: 'Recent Activity',
+          viewAllLogs: 'View all logs',
+          recentMessages: 'Latest Messages',
+          emptyContent: 'Empty content',
+          noRecentMessages: 'No recent messages detected.',
+          recentLogs: 'Latest Logs'
+        },
+        discordProfile: {
+          sectionLabel: 'Discord Profile',
+          username: 'Username',
+          unknown: 'Unknown',
+          globalName: 'Global Name',
+          serverDisplay: 'Server display name',
+          language: 'Language',
+          unknownLang: 'Unknown',
+          pronouns: 'Pronouns',
+          notSpecified: 'Not specified'
+        },
+        visuals: {
+          sectionLabel: 'Visuals',
+          customAvatar: 'Custom avatar',
+          profileBanner: 'Profile banner',
+          bannerAlt: 'Banner'
+        }
+      },
+      identite: {
+        fullProfile: {
+          sectionLabel: 'Account Data',
+          title: 'Full Profile',
+          discordId: 'Discord ID',
+          username: 'Username',
+          globalName: 'Global Name',
+          serverNickname: 'Server Nickname',
+          localeLabel: 'Language (Locale)',
+          pronouns: 'Pronouns',
+          notSpecified: 'Not specified'
+        },
+        staffStatus: {
+          sectionLabel: 'Administration',
+          title: 'Staff Status',
+          currentGrade: 'Current Grade:',
+          tutorStatus: 'Tutor Status:',
+          yesActive: 'Yes (Active)',
+          no: 'No'
+        },
+        keyDates: {
+          sectionLabel: 'Timeline',
+          title: 'Key Dates',
+          accountCreation: 'Account creation:',
+          serverArrival: 'Server arrival:',
+          lastDeparture: 'Last departure:',
+          firstSeen: 'First seen:',
+          lastSeen: 'Last seen:'
+        },
+        roles: {
+          sectionLabel: 'Permissions',
+          title: (n: number) => `Roles (${n})`,
+          noRole: 'No roles assigned'
+        }
+      },
+      activite: {
+        messages: 'Messages',
+        voiceTime: 'Voice time',
+        lastActivity: 'Last activity',
+        channelBreakdown: 'Breakdown by channel',
+        messagesCount: (n: number) => `${n} messages`
+      },
+      analytics: {
+        loading: 'Analyzing behavior...',
+        messageVolume: {
+          sectionLabel: 'Activity',
+          title: 'Message Volume',
+          last30Days: 'Last 30 days'
+        },
+        voiceActivity: {
+          sectionLabel: 'Engagement',
+          title: 'Voice Activity',
+          minutesPerDay: 'Minutes / day'
+        },
+        empty: {
+          title: 'No analytics data yet',
+          description: "We don't have enough activity data yet to generate charts for this member over the last 30 days."
+        }
+      },
+      messagesTab: {
+        msgCount: (n: number) => `${n} msg`,
+        viewOnDiscord: 'View on Discord',
+        emptyContent: 'Empty content',
+        empty: {
+          title: 'Radio silence',
+          description: 'No recent messages have been indexed for this member in the monitored channels.'
+        }
+      },
+      logsTab: {
+        empty: 'No logs available'
+      },
+      sanctionsTab: {
+        headers: { date: 'Date', action: 'Action', status: 'Status', reason: 'Reason', report: 'Report' },
+        statusActive: 'Active',
+        statusResolved: 'Resolved',
+        viewMore: 'View more',
+        empty: 'Clean record'
+      },
+      candidaturesTab: {
+        statusAccepted: 'Accepted',
+        statusRejected: 'Rejected',
+        oralResult: 'Interview Result',
+        empty: 'No archived applications'
+      },
+      invitesTab: {
+        source: {
+          sectionLabel: 'Invite Source',
+          codeUsed: 'Code used:',
+          unknown: 'Unknown',
+          creator: 'Creator:',
+          usageDate: 'Date used:'
+        },
+        movements: {
+          sectionLabel: 'Server Movements',
+          firstSeen: 'First seen:',
+          lastArrival: 'Last arrival:',
+          lastDeparture: 'Last departure:',
+          none: 'None',
+          lastSeen: 'Last seen:'
+        }
+      },
+      notesTab: {
+        sectionLabel: 'Moderation',
+        title: 'Moderator Notes',
+        disclaimer: 'These notes are strictly confidential and only visible to the administration and moderation team.',
+        placeholder: 'Add internal notes about this member...',
+        saving: 'Saving...',
+        save: 'Save',
+        savedSuccess: 'Note saved successfully.'
+      },
+      sanctionReport: {
+        sectionLabel: 'Sanction Report',
+        title: (id: string, type: string) => `Sanction #${id} · ${type}`,
+        incidentDate: 'Incident date',
+        referringModerator: 'Referring moderator',
+        brokenRules: 'Rules broken',
+        ruleText: 'Rule 2.1 - Respect & Courtesy',
+        detailedReason: 'Detailed reason',
+        reasonSuffix: '. Persistent inappropriate behavior.',
+        attachments: 'Attachments / Evidence',
+        evidenceFile: 'abuse_screenshot.png',
+        close: 'Close'
+      }
+    }
+  };
+
+  const t = $derived(TEXT[getLocale()]);
 
   let activeInnerTab = $state('resume');
   let viewingReportId = $state<string | null>(null);
@@ -433,45 +907,47 @@
     viewingReportId = null;
   });
 
-  const tabs = [
-    { id: 'resume', label: 'Résumé', icon: 'layout' },
-    { id: 'identite', label: 'Identité', icon: 'user' },
-    { id: 'activite', label: 'Activité', icon: 'trending-up' },
-    { id: 'analytics', label: 'Analytiques', icon: 'bar-chart-2' },
-    { id: 'messages', label: 'Messages', icon: 'message-square' },
-    { id: 'logs', label: 'Logs', icon: 'history' },
-    { id: 'sanctions', label: 'Sanctions', icon: 'hammer' },
-    { id: 'candidatures', label: 'Candidats', icon: 'user-check' },
-    { id: 'invites', label: 'Invitations', icon: 'mail' },
-    { id: 'notes', label: 'Notes', icon: 'edit-3' }
+  const tabDefs = [
+    { id: 'resume', icon: 'layout' },
+    { id: 'identite', icon: 'user' },
+    { id: 'activite', icon: 'trending-up' },
+    { id: 'analytics', icon: 'bar-chart-2' },
+    { id: 'messages', icon: 'message-square' },
+    { id: 'logs', icon: 'history' },
+    { id: 'sanctions', icon: 'hammer' },
+    { id: 'candidatures', icon: 'user-check' },
+    { id: 'invites', icon: 'mail' },
+    { id: 'notes', icon: 'edit-3' }
   ];
 
+  let tabs = $derived(tabDefs.map((td) => ({ ...td, label: t.tabs[td.id as keyof typeof t.tabs] })));
+
   function formatDateTime(value: string | null | undefined) {
-    if (!value) return 'Inconnu';
-    return new Date(value).toLocaleString('fr-FR');
+    if (!value) return t.common.unknown;
+    return new Date(value).toLocaleString(getLocale() === 'en' ? 'en-US' : 'fr-FR');
   }
 
   function formatDateShort(value: string | null | undefined) {
     if (!value) return '';
-    return new Date(value).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+    return new Date(value).toLocaleDateString(getLocale() === 'en' ? 'en-US' : 'fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
   }
 
   function formatDurationFromSeconds(seconds: number | null | undefined) {
-    if (!seconds || seconds <= 0) return '0s';
+    if (!seconds || seconds <= 0) return `0${t.time.s}`;
     const totalSeconds = Math.floor(seconds);
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const parts: string[] = [];
-    if (days) parts.push(`${days}j`);
-    if (hours) parts.push(`${hours}h`);
-    if (minutes) parts.push(`${minutes}m`);
-    if (parts.length === 0) parts.push(`${totalSeconds}s`);
+    if (days) parts.push(`${days}${t.time.d}`);
+    if (hours) parts.push(`${hours}${t.time.h}`);
+    if (minutes) parts.push(`${minutes}${t.time.m}`);
+    if (parts.length === 0) parts.push(`${totalSeconds}${t.time.s}`);
     return parts.join(' ');
   }
 
   function formatRelative(value: string | null | undefined) {
-    if (!value) return 'Jamais';
+    if (!value) return t.relative.never;
     const date = new Date(value);
     const now = new Date("2026-06-14T13:52:26+02:00");
     const diff = now.getTime() - date.getTime();
@@ -480,35 +956,35 @@
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (seconds < 60) return "À l'instant";
-    if (minutes < 60) return `Il y a ${minutes}m`;
-    if (hours < 24) return `Il y a ${hours}h`;
-    if (days < 7) return `Il y a ${days}j`;
-    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    if (seconds < 60) return t.relative.justNow;
+    if (minutes < 60) return t.relative.minutesAgo(minutes);
+    if (hours < 24) return t.relative.hoursAgo(hours);
+    if (days < 7) return t.relative.daysAgo(days);
+    return date.toLocaleDateString(getLocale() === 'en' ? 'en-US' : 'fr-FR', { day: '2-digit', month: 'short' });
   }
 
   function getDurationSince(value: string | null | undefined) {
-    if (!value) return 'Inconnu';
+    if (!value) return t.common.unknown;
     const start = new Date(value);
     const now = new Date("2026-06-14T13:52:26+02:00");
     let years = now.getFullYear() - start.getFullYear();
     let months = now.getMonth() - start.getMonth();
-    
+
     if (months < 0) {
       years--;
       months += 12;
     }
 
     const parts: string[] = [];
-    if (years > 0) parts.push(`${years} an${years > 1 ? 's' : ''}`);
-    if (months > 0) parts.push(`${months} mois`);
-    
+    if (years > 0) parts.push(t.duration.years(years));
+    if (months > 0) parts.push(t.duration.months(months));
+
     if (parts.length === 0) {
        const days = Math.floor((now.getTime() - start.getTime()) / 86400000);
-       if (days <= 0) return "Auj.";
-       return `${days} j`;
+       if (days <= 0) return t.duration.today;
+       return t.duration.daysShort(days);
     }
-    
+
     return parts.join(', ');
   }
 
@@ -523,13 +999,13 @@
   }
 
   function getPresenceLabel(status: string | null | undefined) {
-    if (!status) return 'Hors ligne';
+    if (!status) return t.presence.offline;
     const s = status.toLowerCase();
-    if (s === 'left') return 'A quitté le serveur';
-    if (s === 'online') return 'En ligne';
-    if (s === 'idle') return 'Absent';
-    if (s === 'dnd') return 'Ne pas déranger';
-    return 'Hors ligne';
+    if (s === 'left') return t.presence.left;
+    if (s === 'online') return t.presence.online;
+    if (s === 'idle') return t.presence.idle;
+    if (s === 'dnd') return t.presence.dnd;
+    return t.presence.offline;
   }
 
   function getConnectionIcon(type: string) {
@@ -570,7 +1046,7 @@
   <button
     type="button"
     class="absolute top-4 right-4 z-50 flex h-9 w-9 items-center justify-center rounded-xl bg-black/25 text-white/80 backdrop-blur-lg transition-all hover:bg-black/40 hover:text-white hover:scale-110 active:scale-95 shadow-lg cursor-pointer"
-    aria-label="Fermer"
+    aria-label={t.close}
   >
     <Papicon icon="x" size={18} />
   </button>
@@ -601,7 +1077,7 @@
         <h3 class="text-2xl font-black text-on-surface tracking-tight truncate leading-none font-headline flex items-center gap-2">
           {caseData.profile?.displayName}
           {#if caseData.profile?.isBot}
-            <span class="badge bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 text-xs font-black uppercase">Bot</span>
+            <span class="badge bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 text-xs font-black uppercase">{t.bot}</span>
           {/if}
         </h3>
         <div class="mt-1.5 flex flex-wrap items-center gap-2">
@@ -618,7 +1094,7 @@
           {#if caseData.profile?.isTutor}
             <span class="badge bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 text-xs font-black uppercase flex items-center gap-1">
               <Papicon icon="shield" size={11} />
-              Tuteur
+              {t.tutorBadge}
             </span>
           {/if}
           {#if caseData.profile?.staffGrade}
@@ -636,7 +1112,7 @@
           class="inline-flex items-center gap-1.5 rounded-lg bg-white/15 backdrop-blur-md px-3 py-1.5 text-[10px] font-black text-white/80 uppercase tracking-widest transition-all hover:bg-white/25 hover:text-white hover:scale-[1.02] active:scale-[0.98] shadow-sm md:ml-auto cursor-pointer"
         >
           <Papicon icon="external-link" size={12} />
-          Profil
+          {t.profileButton}
         </button>
       {/if}
     </div>
@@ -695,11 +1171,11 @@
           <Papicon icon="alert-octagon" size={24} />
         </div>
         <div class="min-w-0 flex-1">
-          <h4 class="text-sm font-black text-rose-600 uppercase tracking-widest">Suspicion de Double Compte</h4>
-          <p class="text-xs font-bold text-rose-500/70 mt-1">Ce compte a été identifié comme un potentiel double compte automatique lors de son arrivée.</p>
+          <h4 class="text-sm font-black text-rose-600 uppercase tracking-widest">{t.altWarning.title}</h4>
+          <p class="text-xs font-bold text-rose-500/70 mt-1">{t.altWarning.description}</p>
         </div>
         <div class="flex gap-2">
-          <span class="badge bg-rose-500/10 text-rose-500 border border-rose-500/20 px-2.5 py-1 text-xs uppercase font-black shrink-0">Suspect</span>
+          <span class="badge bg-rose-500/10 text-rose-500 border border-rose-500/20 px-2.5 py-1 text-xs uppercase font-black shrink-0">{t.altWarning.badge}</span>
         </div>
       </div>
     {/if}
@@ -716,25 +1192,25 @@
                  <Papicon icon="user" size={20} />
                </div>
                <div>
-                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Informations Compte</p>
-                 <p class="text-base font-black text-on-surface">Identité & Ancienneté</p>
+                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{t.resume.accountInfo.sectionLabel}</p>
+                 <p class="text-base font-black text-on-surface">{t.resume.accountInfo.title}</p>
                </div>
              </div>
            </div>
 
            <div class="grid grid-cols-2 gap-6">
              <div class="space-y-1">
-               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Âge du compte</p>
+               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">{t.resume.accountInfo.accountAge}</p>
                <p class="text-base font-black text-on-surface">{getDurationSince(caseData.profile?.accountCreatedAt)}</p>
-               <p class="text-[10px] font-bold text-on-surface-variant/60">Créé le {formatDateShort(caseData.profile?.accountCreatedAt)}</p>
+               <p class="text-[10px] font-bold text-on-surface-variant/60">{t.resume.accountInfo.createdOn(formatDateShort(caseData.profile?.accountCreatedAt))}</p>
              </div>
              <div class="space-y-1">
-               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Présence Serveur</p>
+               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">{t.resume.accountInfo.serverPresence}</p>
                <p class="text-base font-black text-on-surface">{getDurationSince(caseData.profile?.guildJoinedAt)}</p>
-               <p class="text-[10px] font-bold text-on-surface-variant/60">Arrivé le {formatDateShort(caseData.profile?.guildJoinedAt)}</p>
+               <p class="text-[10px] font-bold text-on-surface-variant/60">{t.resume.accountInfo.joinedOn(formatDateShort(caseData.profile?.guildJoinedAt))}</p>
              </div>
              <div class="space-y-1">
-               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Invité par</p>
+               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">{t.resume.accountInfo.invitedBy}</p>
                {#if caseData.invite?.inviterTag}
                  <button
                    type="button"
@@ -754,11 +1230,11 @@
                    <p class="text-sm font-black text-on-surface truncate">@{caseData.invite.inviterTag}</p>
                  </button>
                {:else}
-                 <p class="text-sm font-bold text-on-surface-variant/40 italic">Origine inconnue</p>
+                 <p class="text-sm font-bold text-on-surface-variant/40 italic">{t.resume.accountInfo.unknownOrigin}</p>
                {/if}
              </div>
              <div class="space-y-1">
-               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Code d'invitation</p>
+               <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">{t.resume.accountInfo.inviteCode}</p>
                {#if caseData.invite?.code}
                  <button
                    type="button"
@@ -780,21 +1256,21 @@
                <Papicon icon="hammer" size={20} />
              </div>
              <div>
-               <p class="text-[10px] font-black uppercase tracking-[0.2em] {sanctionsList.filter(s => s.status === 'ACTIVE').length > 0 ? 'text-rose-500' : 'text-amber-500'}">Casier</p>
-               <p class="text-base font-black text-on-surface">Sanctions</p>
+               <p class="text-[10px] font-black uppercase tracking-[0.2em] {sanctionsList.filter(s => s.status === 'ACTIVE').length > 0 ? 'text-rose-500' : 'text-amber-500'}">{t.resume.sanctionsCard.badge}</p>
+               <p class="text-base font-black text-on-surface">{t.resume.sanctionsCard.title}</p>
              </div>
            </div>
 
            <div class="space-y-3">
              <div class="flex items-end justify-between">
                 <span class="text-3xl font-black text-on-surface">{sanctionsList.length}</span>
-                <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 pb-0.5">Total</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 pb-0.5">{t.resume.sanctionsCard.total}</span>
              </div>
              <div class="h-2 w-full rounded-full bg-on-surface/5 overflow-hidden">
                 <div class="h-full bg-rose-500 transition-all duration-1000" style="width: {sanctionsList.length > 0 ? (sanctionsList.filter(s => s.status === 'ACTIVE').length / sanctionsList.length) * 100 : 0}%"></div>
              </div>
              <p class="text-xs font-bold {sanctionsList.filter(s => s.status === 'ACTIVE').length > 0 ? 'text-rose-500' : 'text-on-surface-variant/60'}">
-                {sanctionsList.filter(s => s.status === 'ACTIVE').length} active(s)
+                {t.resume.sanctionsCard.activeCount(sanctionsList.filter(s => s.status === 'ACTIVE').length)}
              </p>
            </div>
         </div>
@@ -806,22 +1282,22 @@
                <Papicon icon="activity" size={20} />
              </div>
              <div>
-               <p class="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Activité</p>
-               <p class="text-base font-black text-on-surface">Engagement</p>
+               <p class="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">{t.resume.activitySummary.sectionLabel}</p>
+               <p class="text-base font-black text-on-surface">{t.resume.activitySummary.title}</p>
              </div>
            </div>
 
            <div class="grid grid-cols-1 gap-2.5">
              <div class="flex items-center justify-between text-xs">
-               <span class="font-bold text-on-surface-variant/60">Messages</span>
-               <span class="font-black text-on-surface">{caseData.profile?.messageCount?.toLocaleString('fr-FR') ?? 0}</span>
+               <span class="font-bold text-on-surface-variant/60">{t.resume.activitySummary.messages}</span>
+               <span class="font-black text-on-surface">{caseData.profile?.messageCount?.toLocaleString(getLocale() === 'en' ? 'en-US' : 'fr-FR') ?? 0}</span>
              </div>
              <div class="flex items-center justify-between text-xs">
-               <span class="font-bold text-on-surface-variant/60">Vocal</span>
+               <span class="font-bold text-on-surface-variant/60">{t.resume.activitySummary.voice}</span>
                <span class="font-black text-on-surface">{formatDurationFromSeconds(caseData.profile?.voiceTimeSeconds)}</span>
              </div>
              <div class="flex items-center justify-between text-xs">
-               <span class="font-bold text-on-surface-variant/60">Dernier passage</span>
+               <span class="font-bold text-on-surface-variant/60">{t.resume.activitySummary.lastSeen}</span>
                <span class="font-black text-on-surface">{formatRelative(caseData.profile?.lastSeenAt)}</span>
              </div>
            </div>
@@ -835,19 +1311,19 @@
                  <Papicon icon="trending-up" size={22} />
                </div>
                <div>
-                 <p class="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Statistiques</p>
-                 <h4 class="text-lg font-black text-on-surface font-headline">Tendance d'activité (30j)</h4>
+                 <p class="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{t.resume.activityChart.sectionLabel}</p>
+                 <h4 class="text-lg font-black text-on-surface font-headline">{t.resume.activityChart.title}</h4>
                </div>
              </div>
              <div class="flex gap-4">
                <div class="flex flex-col items-end">
-                 <p class="text-lg font-black text-primary leading-none">{caseData.profile?.messageCount.toLocaleString('fr-FR')}</p>
-                 <p class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/40 mt-1">Messages</p>
+                 <p class="text-lg font-black text-primary leading-none">{caseData.profile?.messageCount.toLocaleString(getLocale() === 'en' ? 'en-US' : 'fr-FR')}</p>
+                 <p class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/40 mt-1">{t.resume.activityChart.messages}</p>
                </div>
                <div class="h-6 w-px bg-outline-variant/20 mx-1"></div>
                <div class="flex flex-col items-end">
                  <p class="text-lg font-black text-secondary leading-none">{Math.round((caseData.profile?.voiceTimeSeconds || 0) / 60)}m</p>
-                 <p class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/40 mt-1">Temps vocal</p>
+                 <p class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/40 mt-1">{t.resume.activityChart.voiceTime}</p>
                </div>
              </div>
           </div>
@@ -901,14 +1377,14 @@
                  <Papicon icon="shield" size={20} />
                </div>
                <div>
-                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">Autorisations</p>
-                 <p class="text-base font-black text-on-surface">Rôles & Accès</p>
+                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">{t.resume.rolesPermissions.sectionLabel}</p>
+                 <p class="text-base font-black text-on-surface">{t.resume.rolesPermissions.title}</p>
                </div>
              </div>
 
              <div class="space-y-4">
                <div>
-                 <p class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-2">Rôles Principaux</p>
+                 <p class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-2">{t.resume.rolesPermissions.mainRoles}</p>
                  <div class="flex flex-wrap gap-1.5">
                    {#each caseData.roles.slice(0, 4) as role}
                      <span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-[10px] font-bold text-on-surface border border-outline-variant/20 flex items-center gap-1.5">
@@ -924,7 +1400,7 @@
                  </div>
                </div>
                <div>
-                 <p class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-2">Permissions Clés</p>
+                 <p class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-2">{t.resume.rolesPermissions.keyPermissions}</p>
                  <div class="flex flex-wrap gap-x-3 gap-y-1">
                    {#each caseData.effectivePermissions.slice(0, 3) as perm}
                      <span class="text-[10px] font-black text-emerald-500 uppercase tracking-tighter flex items-center gap-1">
@@ -945,35 +1421,35 @@
                  <Papicon icon="history" size={22} />
                </div>
                <div>
-                 <p class="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant/40">Timeline</p>
-                 <h4 class="text-lg font-black text-on-surface font-headline">Activités récentes</h4>
+                 <p class="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant/40">{t.resume.recentActivity.sectionLabel}</p>
+                 <h4 class="text-lg font-black text-on-surface font-headline">{t.resume.recentActivity.title}</h4>
                </div>
              </div>
              <button onclick={() => activeInnerTab = 'logs'} class="group/btn inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-black text-on-surface-variant uppercase tracking-widest border border-outline-variant/25 transition-all hover:bg-surface-container/20 hover:text-on-surface cursor-pointer">
-               Voir tous les logs
+               {t.resume.recentActivity.viewAllLogs}
                <Papicon icon="arrow_forward" size={12} class="group-hover/btn:translate-x-0.5 transition-transform" />
              </button>
           </div>
 
           <div class="grid gap-6 md:grid-cols-2">
             <div class="space-y-3">
-               <p class="text-[10px] font-black uppercase tracking-[0.25em] text-primary px-1 mb-2">Derniers Messages</p>
+               <p class="text-[10px] font-black uppercase tracking-[0.25em] text-primary px-1 mb-2">{t.resume.recentActivity.recentMessages}</p>
                {#each caseData.messagesByChannel.slice(0, 3).flatMap((c: { recentMessages: any[] }) => c.recentMessages.slice(0, 1)) as msg}
                  <div class="rounded-2xl bg-surface-container-low/60 p-4 border border-outline-variant/5 transition-all hover:border-primary/20">
                     <div class="flex items-center justify-between mb-1.5 text-[10px]">
                        <span class="font-bold text-primary">#{msg.channelName}</span>
                        <span class="font-bold text-on-surface-variant/40">{formatRelative(msg.dateIso)}</span>
                     </div>
-                    <p class="text-xs text-on-surface leading-relaxed italic">"{msg.content || 'Contenu vide'}"</p>
+                    <p class="text-xs text-on-surface leading-relaxed italic">"{msg.content || t.resume.recentActivity.emptyContent}"</p>
                  </div>
                {/each}
                {#if caseData.messagesByChannel.length === 0}
-                 <p class="text-xs text-on-surface-variant/40 px-1">Aucun message récent détecté.</p>
+                 <p class="text-xs text-on-surface-variant/40 px-1">{t.resume.recentActivity.noRecentMessages}</p>
                {/if}
             </div>
 
             <div class="space-y-3">
-               <p class="text-[10px] font-black uppercase tracking-[0.25em] text-secondary px-1 mb-2">Derniers Logs</p>
+               <p class="text-[10px] font-black uppercase tracking-[0.25em] text-secondary px-1 mb-2">{t.resume.recentActivity.recentLogs}</p>
                <div class="space-y-2 relative pl-4 border-l border-outline-variant/20 ml-2">
                  {#each caseData.logs.slice(0, 3) as log}
                    <div class="relative pb-3 text-xs">
@@ -990,43 +1466,43 @@
         <!-- Profile Details & Visuels Card (Grid Layout at Bottom of Resume Tab) -->
         <div class="md:col-span-4 grid gap-6 md:grid-cols-2">
           <div class="rounded-[2rem] bg-surface-container-low/50 p-6 border border-outline-variant/10">
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-6">Profil Discord</p>
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-6">{t.resume.discordProfile.sectionLabel}</p>
             <dl class="space-y-4">
               <div class="flex items-center justify-between border-b border-outline-variant/5 pb-2">
-                <dt class="text-xs font-bold text-on-surface-variant/60">Nom d'utilisateur</dt>
-                <dd class="text-sm font-black text-on-surface">@{caseData.profile?.username ?? 'Inconnu'}</dd>
+                <dt class="text-xs font-bold text-on-surface-variant/60">{t.resume.discordProfile.username}</dt>
+                <dd class="text-sm font-black text-on-surface">@{caseData.profile?.username ?? t.resume.discordProfile.unknown}</dd>
               </div>
               <div class="flex items-center justify-between border-b border-outline-variant/5 pb-2">
-                <dt class="text-xs font-bold text-on-surface-variant/60">Nom global</dt>
-                <dd class="text-sm font-black text-on-surface">{caseData.profile?.globalName ?? 'Inconnu'}</dd>
+                <dt class="text-xs font-bold text-on-surface-variant/60">{t.resume.discordProfile.globalName}</dt>
+                <dd class="text-sm font-black text-on-surface">{caseData.profile?.globalName ?? t.resume.discordProfile.unknown}</dd>
               </div>
               <div class="flex items-center justify-between border-b border-outline-variant/5 pb-2">
-                <dt class="text-xs font-bold text-on-surface-variant/60">Affichage serveur</dt>
-                <dd class="text-sm font-black text-on-surface">{caseData.profile?.displayName ?? 'Inconnu'}</dd>
+                <dt class="text-xs font-bold text-on-surface-variant/60">{t.resume.discordProfile.serverDisplay}</dt>
+                <dd class="text-sm font-black text-on-surface">{caseData.profile?.displayName ?? t.resume.discordProfile.unknown}</dd>
               </div>
               <div class="flex items-center justify-between border-b border-outline-variant/5 pb-2">
-                <dt class="text-xs font-bold text-on-surface-variant/60">Langue</dt>
-                <dd class="text-sm font-black text-on-surface uppercase tracking-widest">{caseData.profile?.locale ?? 'Inconnue'}</dd>
+                <dt class="text-xs font-bold text-on-surface-variant/60">{t.resume.discordProfile.language}</dt>
+                <dd class="text-sm font-black text-on-surface uppercase tracking-widest">{caseData.profile?.locale ?? t.resume.discordProfile.unknownLang}</dd>
               </div>
               <div class="flex items-center justify-between pb-1">
-                <dt class="text-xs font-bold text-on-surface-variant/60">Pronoms</dt>
-                <dd class="text-sm font-black text-on-surface">{caseData.profile?.pronouns ?? 'Non spécifiés'}</dd>
+                <dt class="text-xs font-bold text-on-surface-variant/60">{t.resume.discordProfile.pronouns}</dt>
+                <dd class="text-sm font-black text-on-surface">{caseData.profile?.pronouns ?? t.resume.discordProfile.notSpecified}</dd>
               </div>
             </dl>
           </div>
-          
+
           <div class="rounded-[2rem] bg-surface-container-low/50 p-6 border border-outline-variant/10 space-y-6">
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-4">Visuels</p>
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-4">{t.resume.visuals.sectionLabel}</p>
             {#if caseData.profile?.avatarUrl}
               <div class="flex items-center gap-4">
                 <img src={caseData.profile?.avatarUrl} alt="Avatar" class="h-16 w-16 rounded-2xl object-cover shadow-lg border-2 border-surface-container-lowest" />
-                <span class="text-xs font-bold text-on-surface-variant/60">Avatar personnalisé</span>
+                <span class="text-xs font-bold text-on-surface-variant/60">{t.resume.visuals.customAvatar}</span>
               </div>
             {/if}
             {#if caseData.profile?.bannerUrl}
               <div class="space-y-2">
-                <span class="text-xs font-bold text-on-surface-variant/60 block">Bannière profil</span>
-                <img src={caseData.profile?.bannerUrl} alt="Bannière" class="w-full h-24 rounded-2xl object-cover border border-outline-variant/10 shadow-xs" />
+                <span class="text-xs font-bold text-on-surface-variant/60 block">{t.resume.visuals.profileBanner}</span>
+                <img src={caseData.profile?.bannerUrl} alt={t.resume.visuals.bannerAlt} class="w-full h-24 rounded-2xl object-cover border border-outline-variant/10 shadow-xs" />
               </div>
             {/if}
           </div>
@@ -1045,35 +1521,35 @@
               <Papicon icon="user" size={20} />
             </div>
             <div>
-              <p class="text-[10px] font-black uppercase tracking-wider text-primary leading-none">Données Compte</p>
-              <h4 class="text-base font-black text-on-surface mt-1">Profil Complet</h4>
+              <p class="text-[10px] font-black uppercase tracking-wider text-primary leading-none">{t.identite.fullProfile.sectionLabel}</p>
+              <h4 class="text-base font-black text-on-surface mt-1">{t.identite.fullProfile.title}</h4>
             </div>
           </div>
-          
+
           <div class="grid grid-cols-2 gap-4 text-xs md:text-sm">
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">ID Discord</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">{t.identite.fullProfile.discordId}</p>
               <p class="font-black text-on-surface mt-1.5 font-mono select-all">{caseData.profile?.userId}</p>
             </div>
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">Nom d'utilisateur</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">{t.identite.fullProfile.username}</p>
               <p class="font-black text-on-surface mt-1.5">@{caseData.profile?.username}</p>
             </div>
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">Nom global</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">{t.identite.fullProfile.globalName}</p>
               <p class="font-black text-on-surface mt-1.5">{caseData.profile?.globalName}</p>
             </div>
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">Surnom Serveur</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">{t.identite.fullProfile.serverNickname}</p>
               <p class="font-black text-on-surface mt-1.5">{caseData.profile?.displayName}</p>
             </div>
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">Langue (Locale)</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">{t.identite.fullProfile.localeLabel}</p>
               <p class="font-black text-on-surface mt-1.5 uppercase">{caseData.profile?.locale || 'fr'}</p>
             </div>
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">Pronoms</p>
-              <p class="font-black text-on-surface mt-1.5">{caseData.profile?.pronouns || 'Non spécifiés'}</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-black uppercase leading-none">{t.identite.fullProfile.pronouns}</p>
+              <p class="font-black text-on-surface mt-1.5">{caseData.profile?.pronouns || t.identite.fullProfile.notSpecified}</p>
             </div>
           </div>
         </div>
@@ -1088,18 +1564,18 @@
                   <Papicon icon="star" size={20} />
                 </div>
                 <div>
-                  <p class="text-[10px] font-black uppercase tracking-wider text-amber-500 leading-none">Administration</p>
-                  <h4 class="text-base font-black text-on-surface mt-1">Statut Staff</h4>
+                  <p class="text-[10px] font-black uppercase tracking-wider text-amber-500 leading-none">{t.identite.staffStatus.sectionLabel}</p>
+                  <h4 class="text-base font-black text-on-surface mt-1">{t.identite.staffStatus.title}</h4>
                 </div>
               </div>
               <div class="space-y-2.5 text-xs">
                 <div class="flex justify-between border-b border-outline-variant/5 pb-2">
-                  <span class="text-on-surface-variant/50 font-bold">Grade Actuel:</span>
+                  <span class="text-on-surface-variant/50 font-bold">{t.identite.staffStatus.currentGrade}</span>
                   <span class="font-black text-on-surface">{caseData.profile.staffGrade}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-on-surface-variant/50 font-bold">Statut Tuteur:</span>
-                  <span class="font-black text-on-surface">{caseData.profile.isTutor ? "Oui (Actif)" : "Non"}</span>
+                  <span class="text-on-surface-variant/50 font-bold">{t.identite.staffStatus.tutorStatus}</span>
+                  <span class="font-black text-on-surface">{caseData.profile.isTutor ? t.identite.staffStatus.yesActive : t.identite.staffStatus.no}</span>
                 </div>
               </div>
             </div>
@@ -1112,31 +1588,31 @@
                 <Papicon icon="calendar" size={20} />
               </div>
               <div>
-                <p class="text-[10px] font-black uppercase tracking-wider text-secondary leading-none">Chronologie</p>
-                <h4 class="text-base font-black text-on-surface mt-1">Dates Clés</h4>
+                <p class="text-[10px] font-black uppercase tracking-wider text-secondary leading-none">{t.identite.keyDates.sectionLabel}</p>
+                <h4 class="text-base font-black text-on-surface mt-1">{t.identite.keyDates.title}</h4>
               </div>
             </div>
             <div class="space-y-2.5 text-xs">
               <div class="flex justify-between border-b border-outline-variant/5 pb-1.5">
-                <span class="text-on-surface-variant/50">Création compte:</span>
+                <span class="text-on-surface-variant/50">{t.identite.keyDates.accountCreation}</span>
                 <span class="font-bold text-on-surface">{formatDateShort(caseData.profile?.accountCreatedAt)}</span>
               </div>
               <div class="flex justify-between border-b border-outline-variant/5 pb-1.5">
-                <span class="text-on-surface-variant/50">Arrivée serveur:</span>
+                <span class="text-on-surface-variant/50">{t.identite.keyDates.serverArrival}</span>
                 <span class="font-bold text-on-surface">{formatDateShort(caseData.profile?.guildJoinedAt)}</span>
               </div>
               {#if caseData.profile?.guildLeftAt}
                 <div class="flex justify-between border-b border-outline-variant/5 pb-1.5 text-rose-500 font-bold">
-                  <span>Dernier départ:</span>
+                  <span>{t.identite.keyDates.lastDeparture}</span>
                   <span>{formatDateShort(caseData.profile.guildLeftAt)}</span>
                 </div>
               {/if}
               <div class="flex justify-between border-b border-outline-variant/5 pb-1.5">
-                <span class="text-on-surface-variant/50">Première observation:</span>
+                <span class="text-on-surface-variant/50">{t.identite.keyDates.firstSeen}</span>
                 <span class="font-bold text-on-surface">{formatDateShort(caseData.profile?.firstSeenAt)}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-on-surface-variant/50">Dernière observation:</span>
+                <span class="text-on-surface-variant/50">{t.identite.keyDates.lastSeen}</span>
                 <span class="font-bold text-on-surface">{formatDateShort(caseData.profile?.lastSeenAt)}</span>
               </div>
             </div>
@@ -1149,8 +1625,8 @@
                 <Papicon icon="shield" size={20} />
               </div>
               <div>
-                <p class="text-[10px] font-black uppercase tracking-wider text-emerald-500 leading-none">Autorisations</p>
-                <h4 class="text-base font-black text-on-surface mt-1">Rôles ({caseData.roles.length})</h4>
+                <p class="text-[10px] font-black uppercase tracking-wider text-emerald-500 leading-none">{t.identite.roles.sectionLabel}</p>
+                <h4 class="text-base font-black text-on-surface mt-1">{t.identite.roles.title(caseData.roles.length)}</h4>
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -1163,7 +1639,7 @@
                 </span>
               {/each}
               {#if caseData.roles.length === 0}
-                <p class="text-xs text-on-surface-variant/40 italic">Aucun rôle attribué</p>
+                <p class="text-xs text-on-surface-variant/40 italic">{t.identite.roles.noRole}</p>
               {/if}
             </div>
           </div>
@@ -1180,33 +1656,33 @@
               <Papicon icon="message-square" size={20} />
             </div>
             <p class="text-2xl font-black text-on-surface">{caseData.profile?.messageCount ?? 0}</p>
-            <p class="text-[9px] font-black uppercase tracking-widest text-primary/60 mt-1">Messages</p>
+            <p class="text-[9px] font-black uppercase tracking-widest text-primary/60 mt-1">{t.activite.messages}</p>
           </div>
           <div class="rounded-4xl bg-secondary/5 p-6 border border-secondary/10 text-center">
             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 text-secondary mx-auto mb-4">
               <Papicon icon="mic" size={20} />
             </div>
             <p class="text-2xl font-black text-on-surface">{formatDurationFromSeconds(caseData.profile?.voiceTimeSeconds)}</p>
-            <p class="text-[9px] font-black uppercase tracking-widest text-secondary/60 mt-1">Temps vocal</p>
+            <p class="text-[9px] font-black uppercase tracking-widest text-secondary/60 mt-1">{t.activite.voiceTime}</p>
           </div>
           <div class="rounded-4xl bg-emerald-500/5 p-6 border border-emerald-500/10 text-center">
             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 mx-auto mb-4">
               <Papicon icon="eye" size={20} />
             </div>
             <p class="text-lg font-black text-on-surface">{formatDateShort(caseData.profile?.lastSeenAt)}</p>
-            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-500/60 mt-1">Dernière activité</p>
+            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-500/60 mt-1">{t.activite.lastActivity}</p>
           </div>
         </div>
 
         <div class="rounded-[2.5rem] bg-surface-container-low/50 p-8 border border-outline-variant/10">
-          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-8 px-2">Répartition par salon</p>
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-8 px-2">{t.activite.channelBreakdown}</p>
           <div class="space-y-6">
             {#each caseData.messagesByChannel || [] as channel}
               {@const max = Math.max(...(caseData.messagesByChannel || []).map((c: { count: number }) => c.count), 1)}
               <div class="space-y-2">
                 <div class="flex items-center justify-between px-1">
                   <span class="text-sm font-black text-on-surface">#{channel.channelName}</span>
-                  <span class="text-xs font-bold text-on-surface-variant/60">{channel.count} messages</span>
+                  <span class="text-xs font-bold text-on-surface-variant/60">{t.activite.messagesCount(channel.count)}</span>
                 </div>
                 <div class="h-2 w-full rounded-full bg-surface-container-high overflow-hidden">
                   <div class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000" style="width: {(channel.count / max) * 100}%"></div>
@@ -1226,17 +1702,17 @@
               <div class="absolute -inset-4 rounded-full bg-primary/10 blur-xl animate-pulse"></div>
               <Papicon icon="loader" size={48} class="animate-spin text-primary" />
             </div>
-            <p class="text-xs font-black uppercase tracking-[0.3em] text-on-surface-variant/60">Analyse du comportement...</p>
+            <p class="text-xs font-black uppercase tracking-[0.3em] text-on-surface-variant/60">{t.analytics.loading}</p>
           </div>
         {:else if dailyTrend && dailyTrend.length > 0 && (caseData.profile?.messageCount > 0 || caseData.profile?.voiceTimeSeconds > 0)}
           <div class="grid gap-6 lg:grid-cols-2">
              <div class="rounded-[2.5rem] bg-surface-container-low/50 p-8 border border-outline-variant/10 shadow-sm group">
                <div class="flex items-center justify-between mb-8">
                   <div>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Activité</p>
-                    <h4 class="text-sm font-black text-on-surface uppercase tracking-widest font-headline">Volume Messages</h4>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{t.analytics.messageVolume.sectionLabel}</p>
+                    <h4 class="text-sm font-black text-on-surface uppercase tracking-widest font-headline">{t.analytics.messageVolume.title}</h4>
                   </div>
-                  <span class="text-[10px] font-bold text-on-surface-variant/40 bg-surface-container-high px-3 py-1 rounded-lg">30 derniers jours</span>
+                  <span class="text-[10px] font-bold text-on-surface-variant/40 bg-surface-container-high px-3 py-1 rounded-lg">{t.analytics.messageVolume.last30Days}</span>
                </div>
                <div class="h-[180px] w-full relative">
                  <svg class="w-full h-full" viewBox="0 0 360 180" preserveAspectRatio="none">
@@ -1264,10 +1740,10 @@
              <div class="rounded-[2.5rem] bg-surface-container-low/50 p-8 border border-outline-variant/10 shadow-sm group">
                <div class="flex items-center justify-between mb-8">
                   <div>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-secondary mb-1">Engagement</p>
-                    <h4 class="text-sm font-black text-on-surface uppercase tracking-widest font-headline">Activité Vocal</h4>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-secondary mb-1">{t.analytics.voiceActivity.sectionLabel}</p>
+                    <h4 class="text-sm font-black text-on-surface uppercase tracking-widest font-headline">{t.analytics.voiceActivity.title}</h4>
                   </div>
-                  <span class="text-[10px] font-bold text-on-surface-variant/40 bg-surface-container-high px-3 py-1 rounded-lg">Minutes / jour</span>
+                  <span class="text-[10px] font-bold text-on-surface-variant/40 bg-surface-container-high px-3 py-1 rounded-lg">{t.analytics.voiceActivity.minutesPerDay}</span>
                </div>
                <div class="h-[180px] w-full relative">
                  <svg class="w-full h-full" viewBox="0 0 360 180" preserveAspectRatio="none">
@@ -1297,9 +1773,9 @@
             <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-surface-container-high text-on-surface-variant/20 mb-8">
               <Papicon icon="bar-chart-2" size={40} />
             </div>
-            <h3 class="text-2xl font-black text-on-surface-variant font-headline">Aucune donnée analytique</h3>
+            <h3 class="text-2xl font-black text-on-surface-variant font-headline">{t.analytics.empty.title}</h3>
             <p class="mt-2 text-sm text-on-surface-variant/60 max-w-sm mx-auto px-6">
-              Nous n'avons pas encore assez de données d'activité pour générer des graphiques pour ce membre sur les 30 derniers jours.
+              {t.analytics.empty.description}
             </p>
           </div>
         {/if}
@@ -1322,7 +1798,7 @@
                 {channel.channelName}
                 <Papicon icon="external-link" size={12} class="opacity-30" />
               </a>
-              <span class="ml-auto text-[10px] font-black bg-primary/5 text-primary px-3 py-1 rounded-full uppercase tracking-widest">{channel.count} msg</span>
+              <span class="ml-auto text-[10px] font-black bg-primary/5 text-primary px-3 py-1 rounded-full uppercase tracking-widest">{t.messagesTab.msgCount(channel.count)}</span>
             </div>
             <div class="space-y-3">
               {#each channel.recentMessages as msg}
@@ -1330,11 +1806,11 @@
                   <div class="flex items-center justify-between mb-2">
                      <span class="text-[10px] font-bold text-on-surface-variant/40">{formatDateTime(msg.dateIso)}</span>
                      <a href="https://discord.com/channels/123456789012345678/{channel.channelId}/{msg.id}" target="_blank" class="text-[9px] font-black text-primary hover:underline uppercase tracking-widest flex items-center gap-1">
-                       Voir sur Discord
+                       {t.messagesTab.viewOnDiscord}
                        <Papicon icon="arrow-up-right" size={10} />
                      </a>
                   </div>
-                  <p class="text-sm text-on-surface leading-relaxed">{@html msg.content || 'Contenu vide'}</p>
+                  <p class="text-sm text-on-surface leading-relaxed">{@html msg.content || t.messagesTab.emptyContent}</p>
                 </div>
               {/each}
             </div>
@@ -1345,9 +1821,9 @@
             <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-surface-container-high text-on-surface-variant/20 mb-8">
               <Papicon icon="message-square" size={40} />
             </div>
-            <h3 class="text-2xl font-black text-on-surface-variant font-headline">Silence radio</h3>
+            <h3 class="text-2xl font-black text-on-surface-variant font-headline">{t.messagesTab.empty.title}</h3>
             <p class="mt-2 text-sm text-on-surface-variant/60 max-w-sm mx-auto px-6">
-              Aucun message récent n'a été indexé pour ce membre dans les salons surveillés.
+              {t.messagesTab.empty.description}
             </p>
           </div>
         {/if}
@@ -1376,7 +1852,7 @@
             {#if caseData.logs.length === 0}
               <div class="flex flex-col items-center justify-center py-10 text-on-surface-variant/20">
                  <Papicon icon="history" size={48} />
-                 <p class="mt-4 text-sm font-black uppercase tracking-widest">Aucun log disponible</p>
+                 <p class="mt-4 text-sm font-black uppercase tracking-widest">{t.logsTab.empty}</p>
               </div>
             {/if}
           </div>
@@ -1390,11 +1866,11 @@
           <table class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="bg-surface-container-high/30 border-b border-outline-variant/10 text-[10px] font-black uppercase text-on-surface-variant/40">
-                <th class="p-4">Date</th>
-                <th class="p-4">Action</th>
-                <th class="p-4">Statut</th>
-                <th class="p-4">Raison</th>
-                <th class="p-4 text-right">Rapport</th>
+                <th class="p-4">{t.sanctionsTab.headers.date}</th>
+                <th class="p-4">{t.sanctionsTab.headers.action}</th>
+                <th class="p-4">{t.sanctionsTab.headers.status}</th>
+                <th class="p-4">{t.sanctionsTab.headers.reason}</th>
+                <th class="p-4 text-right">{t.sanctionsTab.headers.report}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-outline-variant/10">
@@ -1407,7 +1883,7 @@
                   </td>
                   <td class="p-4">
                     <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase {s.status === 'ACTIVE' ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-500'}">
-                      {s.status === 'ACTIVE' ? 'Active' : 'Résolue'}
+                      {s.status === 'ACTIVE' ? t.sanctionsTab.statusActive : t.sanctionsTab.statusResolved}
                     </span>
                   </td>
                   <td class="p-4 text-on-surface-variant truncate max-w-[120px]">{s.reason}</td>
@@ -1417,7 +1893,7 @@
                       onclick={() => viewingReportId = s.id}
                       class="bg-primary text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-lg hover:bg-primary/95 transition-colors cursor-pointer flex items-center gap-1.5 ml-auto"
                     >
-                      <Papicon icon="file-text" size={10} /> Voir plus
+                      <Papicon icon="file-text" size={10} /> {t.sanctionsTab.viewMore}
                     </button>
                   </td>
                 </tr>
@@ -1427,7 +1903,7 @@
           {#if sanctionsList.length === 0}
             <div class="p-8 text-center text-on-surface-variant/30 flex flex-col items-center justify-center">
               <Papicon icon="check-circle" size={32} class="text-on-surface-variant/20" />
-              <p class="text-[10px] font-black uppercase tracking-wider mt-2.5">Dossier vierge</p>
+              <p class="text-[10px] font-black uppercase tracking-wider mt-2.5">{t.sanctionsTab.empty}</p>
             </div>
           {/if}
         </div>
@@ -1442,12 +1918,12 @@
               <div>
                 <span class="text-[10px] font-black text-on-surface-variant/40 uppercase block leading-none mb-1">{formatDateShort(cand.createdAt)}</span>
                 <span class="px-2.5 py-0.5 rounded-lg text-xs font-black uppercase {cand.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border border-rose-500/20'}">
-                  {cand.status === 'APPROVED' ? 'Acceptée' : 'Rejetée'}
+                  {cand.status === 'APPROVED' ? t.candidaturesTab.statusAccepted : t.candidaturesTab.statusRejected}
                 </span>
               </div>
               {#if cand.oralResult}
                 <div class="text-right">
-                  <span class="text-[10px] text-on-surface-variant/40 font-bold uppercase block leading-none mb-1">Résultat Oral</span>
+                  <span class="text-[10px] text-on-surface-variant/40 font-bold uppercase block leading-none mb-1">{t.candidaturesTab.oralResult}</span>
                   <span class="font-black text-on-surface text-xs md:text-sm">{cand.oralResult}</span>
                 </div>
               {/if}
@@ -1460,7 +1936,7 @@
         {#if caseData.candidatures.length === 0}
           <div class="p-8 text-center text-on-surface-variant/30 flex flex-col items-center justify-center">
             <Papicon icon="user-check" size={32} class="text-on-surface-variant/20" />
-            <p class="text-[10px] font-black uppercase tracking-wider mt-2.5">Aucune candidature archivée</p>
+            <p class="text-[10px] font-black uppercase tracking-wider mt-2.5">{t.candidaturesTab.empty}</p>
           </div>
         {/if}
       </div>
@@ -1471,10 +1947,10 @@
         
         <!-- Source d'invitation Card -->
         <div class="rounded-[2rem] bg-surface-container-low/50 p-5 border border-outline-variant/10 shadow-sm space-y-3">
-          <p class="text-[10px] font-black uppercase tracking-wider text-primary">Source d'invitation</p>
+          <p class="text-[10px] font-black uppercase tracking-wider text-primary">{t.invitesTab.source.sectionLabel}</p>
           <div class="space-y-2 text-xs">
             <div class="flex justify-between items-center">
-              <span class="text-on-surface-variant/50 font-bold">Code utilisé:</span>
+              <span class="text-on-surface-variant/50 font-bold">{t.invitesTab.source.codeUsed}</span>
               {#if caseData.invite.code}
                 <button
                   type="button"
@@ -1483,11 +1959,11 @@
                   {caseData.invite.code}
                 </button>
               {:else}
-                <span class="font-bold text-on-surface-variant/40">Inconnu</span>
+                <span class="font-bold text-on-surface-variant/40">{t.invitesTab.source.unknown}</span>
               {/if}
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-on-surface-variant/50 font-bold">Créateur:</span>
+              <span class="text-on-surface-variant/50 font-bold">{t.invitesTab.source.creator}</span>
               {#if caseData.invite.inviterTag}
                 <button
                   type="button"
@@ -1499,11 +1975,11 @@
                   <span class="font-black text-on-surface">@{caseData.invite.inviterTag}</span>
                 </button>
               {:else}
-                <span class="font-bold text-on-surface-variant/40">Inconnu</span>
+                <span class="font-bold text-on-surface-variant/40">{t.invitesTab.source.unknown}</span>
               {/if}
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-on-surface-variant/50">Date d'utilisation:</span>
+              <span class="text-on-surface-variant/50">{t.invitesTab.source.usageDate}</span>
               <span class="font-bold text-on-surface">{formatDateTime(caseData.invite.joinedAt)}</span>
             </div>
           </div>
@@ -1511,22 +1987,22 @@
 
         <!-- Mouvements Serveur Card -->
         <div class="rounded-[2rem] bg-surface-container-low/50 p-5 border border-outline-variant/10 shadow-sm space-y-3">
-          <p class="text-[10px] font-black uppercase tracking-wider text-secondary">Mouvements Serveur</p>
+          <p class="text-[10px] font-black uppercase tracking-wider text-secondary">{t.invitesTab.movements.sectionLabel}</p>
           <div class="space-y-2 text-xs">
             <div class="flex justify-between">
-              <span class="text-on-surface-variant/50">Première observation:</span>
+              <span class="text-on-surface-variant/50">{t.invitesTab.movements.firstSeen}</span>
               <span class="font-bold text-on-surface">{formatDateTime(caseData.profile?.firstSeenAt)}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-on-surface-variant/50 font-bold">Dernière arrivée:</span>
+              <span class="text-on-surface-variant/50 font-bold">{t.invitesTab.movements.lastArrival}</span>
               <span class="font-bold text-on-surface">{formatDateShort(caseData.profile?.guildJoinedAt)}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-on-surface-variant/50 font-bold">Dernier départ:</span>
-              <span class="font-bold text-on-surface">{caseData.profile?.guildLeftAt ? formatDateShort(caseData.profile.guildLeftAt) : 'Aucun'}</span>
+              <span class="text-on-surface-variant/50 font-bold">{t.invitesTab.movements.lastDeparture}</span>
+              <span class="font-bold text-on-surface">{caseData.profile?.guildLeftAt ? formatDateShort(caseData.profile.guildLeftAt) : t.invitesTab.movements.none}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-on-surface-variant/50">Dernière observation:</span>
+              <span class="text-on-surface-variant/50">{t.invitesTab.movements.lastSeen}</span>
               <span class="font-bold text-on-surface">{formatDateTime(caseData.profile?.lastSeenAt)}</span>
             </div>
           </div>
@@ -1541,20 +2017,20 @@
             <Papicon icon="edit-3" size={16} />
           </div>
           <div>
-            <p class="text-[10px] font-black uppercase text-primary leading-none">Modération</p>
-            <h4 class="text-xs font-black text-on-surface mt-1">Notes Modérateur</h4>
+            <p class="text-[10px] font-black uppercase text-primary leading-none">{t.notesTab.sectionLabel}</p>
+            <h4 class="text-xs font-black text-on-surface mt-1">{t.notesTab.title}</h4>
           </div>
         </div>
-        
+
         <p class="text-xs text-on-surface-variant/65">
-          Ces notes sont strictement confidentielles et ne sont visibles que par l'équipe d'administration et de modération.
+          {t.notesTab.disclaimer}
         </p>
 
         <div class="relative">
           <textarea 
             id="moderator-note-textarea"
             bind:value={moderatorNoteInput}
-            placeholder="Ajouter des notes internes sur ce membre..."
+            placeholder={t.notesTab.placeholder}
             rows="4"
             class="w-full rounded-xl bg-surface-container-high/60 p-4 text-xs text-on-surface border border-outline-variant/10 focus:border-primary/50 outline-hidden resize-none leading-relaxed"
           ></textarea>
@@ -1570,13 +2046,13 @@
               noteFeedback = '';
               await new Promise(r => setTimeout(r, 400));
               noteBusy = false;
-              noteFeedback = 'Note enregistrée avec succès.';
+              noteFeedback = t.notesTab.savedSuccess;
             }}
             class="bg-primary text-white text-xs font-black uppercase px-4 py-2 rounded-lg hover:bg-primary/95 transition-colors cursor-pointer flex items-center gap-1.5"
             disabled={noteBusy}
           >
             <Papicon icon="check_circle" size={12} />
-            {noteBusy ? 'Enregistrement...' : 'Sauvegarder'}
+            {noteBusy ? t.notesTab.saving : t.notesTab.save}
           </button>
         </div>
       </div>
@@ -1604,50 +2080,50 @@
               <Papicon icon="hammer" size={20} />
             </div>
             <div>
-              <p class="text-[10px] font-black uppercase tracking-wider text-rose-500">Rapport de Sanction</p>
-              <h4 class="text-base font-black text-on-surface">Sanction #{selectedSanction.id} · {selectedSanction.type}</h4>
+              <p class="text-[10px] font-black uppercase tracking-wider text-rose-500">{t.sanctionReport.sectionLabel}</p>
+              <h4 class="text-base font-black text-on-surface">{t.sanctionReport.title(selectedSanction.id, selectedSanction.type)}</h4>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">Date de l'incident</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">{t.sanctionReport.incidentDate}</p>
               <p class="font-black mt-1.5">{formatDateTime(selectedSanction.createdAt)}</p>
             </div>
             <div>
-              <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">Modérateur référent</p>
+              <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">{t.sanctionReport.referringModerator}</p>
               <p class="font-black mt-1.5">@{selectedSanction.moderatorTag}</p>
             </div>
           </div>
-          
+
           <div class="space-y-1">
-            <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">Règles enfreintes</p>
-            <span class="inline-block bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-lg px-2.5 py-0.5 text-xs font-bold font-sans">Règle 2.1 - Respect & Courtoisie</span>
+            <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">{t.sanctionReport.brokenRules}</p>
+            <span class="inline-block bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-lg px-2.5 py-0.5 text-xs font-bold font-sans">{t.sanctionReport.ruleText}</span>
           </div>
 
           <div class="space-y-1">
-            <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">Raison détaillée</p>
+            <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">{t.sanctionReport.detailedReason}</p>
             <div class="bg-surface-container-high/40 rounded-xl p-4 italic text-on-surface-variant border border-outline-variant/5">
-              "{selectedSanction.reason}. Comportement inapproprié persistant."
+              "{selectedSanction.reason}{t.sanctionReport.reasonSuffix}"
             </div>
           </div>
 
           <div class="space-y-1">
-            <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">Pièces jointes / Preuves</p>
+            <p class="text-[10px] text-on-surface-variant/40 font-bold uppercase leading-none">{t.sanctionReport.attachments}</p>
             <div class="flex gap-2">
               <span class="inline-flex items-center gap-1.5 bg-surface-container rounded-lg px-3 py-1 text-xs font-bold text-primary border border-outline-variant/10">
-                <Papicon icon="link" size={10} /> capture_de_l_abus.png
+                <Papicon icon="link" size={10} /> {t.sanctionReport.evidenceFile}
               </span>
             </div>
           </div>
-          
+
           <div class="flex justify-end gap-3 pt-2">
-            <button 
+            <button
               type="button"
               onclick={() => viewingReportId = null}
               class="px-4 py-2 bg-surface-container text-on-surface hover:bg-surface-container-high rounded-lg font-bold transition-colors cursor-pointer"
             >
-              Fermer
+              {t.sanctionReport.close}
             </button>
           </div>
         </div>

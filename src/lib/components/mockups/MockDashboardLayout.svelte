@@ -1,18 +1,34 @@
 <script lang="ts">
   import Papicon from '../Papicon.svelte';
   import { base } from '$app/paths';
+  import { getLocale } from '$lib/i18n/state.svelte';
 
-  let { children, activeTab = $bindable('overview'), onTabChange }: { 
-    children?: import('svelte').Snippet, 
+  let { children, activeTab = $bindable('overview'), onTabChange }: {
+    children?: import('svelte').Snippet,
     activeTab?: string,
     onTabChange?: (tab: string) => void
   } = $props();
 
-  const groups = [
-    { label: 'Général', items: [['overview', 'home', 'Vue d’ensemble'], ['profile', 'user', 'Mon Profil']] },
-    { label: 'Modération', items: [['sanction', 'shieldwarning', 'Sanctions'], ['logs', 'scroll-text', 'Logs']] },
-    { label: 'Staff', items: [['tickets', 'message-square', 'Tickets'], ['staff', 'briefcase', 'Gestion du staff']] }
-  ];
+  const TEXT = {
+    fr: {
+      groups: [
+        { label: 'Général', items: [['overview', 'home', 'Vue d’ensemble'], ['profile', 'user', 'Mon Profil']] },
+        { label: 'Modération', items: [['sanction', 'shieldwarning', 'Sanctions'], ['logs', 'scroll-text', 'Logs']] },
+        { label: 'Staff', items: [['tickets', 'message-square', 'Tickets'], ['staff', 'briefcase', 'Gestion du staff']] }
+      ],
+      role: 'Gérant',
+    },
+    en: {
+      groups: [
+        { label: 'General', items: [['overview', 'home', 'Overview'], ['profile', 'user', 'My Profile']] },
+        { label: 'Moderation', items: [['sanction', 'shieldwarning', 'Sanctions'], ['logs', 'scroll-text', 'Logs']] },
+        { label: 'Staff', items: [['tickets', 'message-square', 'Tickets'], ['staff', 'briefcase', 'Staff Management']] }
+      ],
+      role: 'Manager',
+    },
+  };
+
+  const t = $derived(TEXT[getLocale()]);
 
   function handleTabClick(tab: string) {
     activeTab = tab;
@@ -41,7 +57,7 @@
       <Papicon icon="chevron-down" size={11} class="ml-auto text-on-surface-variant/50 hidden md:block" />
     </button>
     <nav class="flex-1 space-y-4 overflow-hidden px-2 md:px-3 py-4">
-      {#each groups as group}
+      {#each t.groups as group}
         <div>
           <p class="mb-1.5 px-2 text-[8px] font-black uppercase tracking-[0.18em] text-on-surface-variant/35 hidden md:block">{group.label}</p>
           <div class="space-y-0.5">
@@ -78,7 +94,7 @@
         >
           <div class="hidden sm:block">
             <p class="text-[10px] font-black text-on-surface">Arka</p>
-            <p class="text-[7px] font-bold uppercase text-on-surface-variant/40">Gérant</p>
+            <p class="text-[7px] font-bold uppercase text-on-surface-variant/40">{t.role}</p>
           </div>
           <div class="flex size-8 items-center justify-center rounded-xl bg-primary text-[10px] font-black text-white shadow-sm shadow-primary/20 shrink-0">A</div>
         </button>

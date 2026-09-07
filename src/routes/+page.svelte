@@ -4,6 +4,8 @@
   import PostIt from "$lib/components/ui/PostIt.svelte";
   import MarkerCircle from "$lib/components/ui/MarkerCircle.svelte";
   import HandDrawnArrow from "$lib/components/ui/HandDrawnArrow.svelte";
+  import LanguageSwitcher from "$lib/components/ui/LanguageSwitcher.svelte";
+  import { getLocale } from '$lib/i18n/state.svelte';
   import { reveal } from '$lib/actions/reveal';
   import { mockAvatar } from '$lib/mockMedia';
 
@@ -21,6 +23,287 @@
 
   const demoUrl = 'https://pros.kotbo.fr/rdv';
   const contactEmail = 'contact@kotbo.fr';
+
+  /**
+   * Textes de la page, par langue. Le site est prérendu en français ; la bascule
+   * vers l'anglais se fait côté client selon la langue du navigateur (voir
+   * `$lib/i18n/state.svelte.ts`), d'où ce dictionnaire plutôt qu'un système de
+   * routes localisées.
+   */
+  const TEXT = {
+    fr: {
+      nav: {
+        features: 'Fonctions',
+        modules: 'Modules',
+        flow: 'Flow',
+        trust: 'Communautés',
+        comparatif: 'Comparatif',
+        pricing: 'Tarifs',
+        cta: 'Ajouter le bot',
+      },
+      hero: {
+        titleLine1: 'Le centre de contrôle de ta',
+        titleHighlight: 'communauté',
+        subtitle: "Modération, staff, tickets, candidatures, statistiques. Kotbo est l'ERP et bot Discord tout-en-un qui remplace tes tableurs et centralise l'organisation de ton serveur.",
+        ctaPrimary: 'Ajouter le bot à mon serveur',
+        ctaSecondary: 'Demander une démo',
+        installNote: "Installation guidée · 15 jours d'essai · sans carte pour commencer",
+        postItProfile: "Regarde ça, c'est le profil d'un mec",
+        chipTicket: {
+          label: 'Ticket #147',
+          urgent: 'Urgent',
+          title: 'Joueur toxique en vocal',
+          meta: '@Maxou · il y a 2 min',
+        },
+        chipSanction: {
+          label: 'Sanction',
+          badge: 'BAN',
+          title: '@ToxicoBoy',
+          meta: 'Admin_Lena · Permanent',
+        },
+        chipStaff: {
+          count: '3 modérateurs',
+          status: 'En ligne',
+        },
+        chipMessages: {
+          label: "Messages aujourd'hui",
+          value: '1 247',
+          delta: '+18 %',
+        },
+        chipPromo: {
+          label: 'Promotion',
+          badge: 'Staff',
+          title: '@Aiden promu',
+          meta: 'Modérateur Senior · par Lena',
+        },
+        mockWindowTitle: 'dashboard.kotbo.fr • Fiche Membre : Arka',
+      },
+      problem: {
+        titleLine1: 'Gérer une grosse communauté,',
+        titleLine2: 'ça devient vite',
+        titleHighlight: 'le bazar',
+        subtitle: "Entre les signalements perdus, les sanctions non documentées et les tableurs à remplir à la main, l'organisation s'effondre.",
+        postIt1: 'Un joueur signale un abus en vocal',
+        postIt2: "Qui s'en occupe ? Le salon d'aide est submergé...",
+        postIt3: 'Sanction appliquée à la hâte, sans screen archivé',
+        postIt4: 'Tableur Excel des bannis obsolète depuis 3 mois',
+      },
+      features: {
+        kicker: 'Stop au chaos',
+        titleLine1: 'Kotbo regroupe tout dans un',
+        titleLine2: 'seul système organisé.',
+        subtitle: "Visualisez les vrais écrans d'administration du bot ci-dessous.",
+        staff: {
+          postIt: 'Les vrais grades, stats et actions du staff',
+          title: 'Une équipe maîtrisée',
+          description: "Fini les incertitudes sur qui fait quoi. Kotbo regroupe les membres du staff, leurs grades, leur activité et leurs avertissements dans la même vue.",
+          point1: 'Historique des actions staff',
+          point2: 'Gestion fine des permissions',
+          point3: 'Périodes de test et avertissements',
+        },
+        sanctions: {
+          title: 'Modération chirurgicale',
+          description: "Chaque sanction est documentée. Les preuves (screens, transcripts) sont attachées au rapport. Plus de \"pourquoi il a été ban ?\" 6 mois plus tard.",
+          point1: 'Rapports détaillés avec preuves',
+          point2: 'Historique infaillible par profil',
+          point3: 'Automodération intelligente',
+          postIt: 'Chaque sanction garde son rapport',
+        },
+      },
+      workflow: {
+        title: 'Dans la vraie vie, ça donne quoi ?',
+        step1: {
+          title: '1. Un membre ouvre un ticket',
+          description: 'Le joueur toxique est signalé. Le ticket atterrit directement dans le centre de tri de Kotbo avec priorité haute.',
+          cardBadge: 'Urgent',
+          cardTitle: 'Joueur toxique en vocal',
+          cardMeta: 'Ticket #102 • Par Maxou',
+        },
+        step2: {
+          title: '2. Modération et rapport',
+          description: 'Le staff intervient, applique la sanction, et Kotbo génère le rapport avec les screens en pièce jointe.',
+          postIt: 'Dossier bouclé et archivé',
+        },
+        step3: {
+          title: '3. Profil mis à jour',
+          description: "L'historique du membre garde la trace indélébile de la sanction. Le reste du staff est au courant.",
+          cardBadge: 'BAN (7 JOURS)',
+          cardTitle: 'Insultes répétées',
+        },
+      },
+      trust: {
+        kicker: "Des chiffres qui parlent d'eux-mêmes",
+        titleStart: 'Ils nous font',
+        titleHighlight: 'confiance',
+        titleEnd: 'au quotidien',
+        subtitle: 'Kotbo propulse la gestion et la modération des plus grandes communautés Discord au quotidien.',
+        guildsLabel: 'Communautés gérées',
+        membersLabel: 'Membres',
+        serversHeading: 'Quelques communautés équipées',
+        serversSubtitle: 'Des serveurs Discord de toutes tailles qui font confiance à Kotbo.',
+        serverCard: {
+          iconAltSuffix: 'icône',
+          membersLabel: 'Membres',
+        },
+        botFleet: {
+          headingSingle: "L'instance en service",
+          headingPlural: (n: number) => `Les ${n} instances en service`,
+          subtitle: "L'instance publique et les bots personnalisés que les serveurs font tourner sous leur propre nom.",
+          selfHosted: 'auto-hébergé',
+          countLine: (guilds: number, users: string) => `${guilds} serveur${guilds > 1 ? 's' : ''} · ${users} membres`,
+        },
+      },
+      footer: {
+        tagline: '© 2026 Kotbo. Le centre de contrôle Discord.',
+        discord: 'Discord',
+        documentation: 'Documentation',
+        status: 'Services Status',
+        privacy: 'Confidentialité',
+        terms: 'CGU',
+        salesTerms: 'CGV',
+        cookies: 'Cookies',
+        dpa: 'DPA',
+        legalNotice: 'Mentions légales',
+      },
+    },
+    en: {
+      nav: {
+        features: 'Features',
+        modules: 'Modules',
+        flow: 'Flow',
+        trust: 'Communities',
+        comparatif: 'Comparison',
+        pricing: 'Pricing',
+        cta: 'Add the bot',
+      },
+      hero: {
+        titleLine1: 'The control center for your',
+        titleHighlight: 'community',
+        subtitle: "Moderation, staff, tickets, applications, statistics. Kotbo is the all-in-one Discord ERP and bot that replaces your spreadsheets and centralizes your server's organization.",
+        ctaPrimary: 'Add the bot to my server',
+        ctaSecondary: 'Request a demo',
+        installNote: 'Guided setup · 15-day trial · no card required to start',
+        postItProfile: "Check this out, it's a member's profile",
+        chipTicket: {
+          label: 'Ticket #147',
+          urgent: 'Urgent',
+          title: 'Toxic player in voice chat',
+          meta: '@Maxou · 2 min ago',
+        },
+        chipSanction: {
+          label: 'Sanction',
+          badge: 'BAN',
+          title: '@ToxicoBoy',
+          meta: 'Admin_Lena · Permanent',
+        },
+        chipStaff: {
+          count: '3 moderators',
+          status: 'Online',
+        },
+        chipMessages: {
+          label: 'Messages today',
+          value: '1,247',
+          delta: '+18%',
+        },
+        chipPromo: {
+          label: 'Promotion',
+          badge: 'Staff',
+          title: '@Aiden promoted',
+          meta: 'Senior Moderator · by Lena',
+        },
+        mockWindowTitle: 'dashboard.kotbo.fr • Member Profile: Arka',
+      },
+      problem: {
+        titleLine1: 'Running a large community,',
+        titleLine2: 'can quickly turn into',
+        titleHighlight: 'total chaos',
+        subtitle: 'Between lost reports, undocumented sanctions, and spreadsheets to fill in by hand, organization falls apart.',
+        postIt1: 'A player reports abuse in voice chat',
+        postIt2: "Who's handling this? The help channel is swamped...",
+        postIt3: 'Sanction applied in a rush, no screenshot on file',
+        postIt4: 'Excel spreadsheet of banned users, 3 months out of date',
+      },
+      features: {
+        kicker: 'Stop the chaos',
+        titleLine1: 'Kotbo brings it all together in',
+        titleLine2: 'one organized system.',
+        subtitle: "See the bot's real admin screens below.",
+        staff: {
+          postIt: 'Real staff ranks, stats, and actions',
+          title: 'A team under control',
+          description: 'No more guessing who does what. Kotbo brings staff members, their ranks, activity, and warnings together in one view.',
+          point1: 'Full staff action history',
+          point2: 'Fine-grained permission management',
+          point3: 'Trial periods and warnings',
+        },
+        sanctions: {
+          title: 'Surgical moderation',
+          description: 'Every sanction is documented. Evidence (screenshots, transcripts) is attached to the report. No more "why was he banned?" six months later.',
+          point1: 'Detailed reports with evidence',
+          point2: 'Foolproof history for every profile',
+          point3: 'Smart auto-moderation',
+          postIt: 'Every sanction keeps its report',
+        },
+      },
+      workflow: {
+        title: 'What does this look like in real life?',
+        step1: {
+          title: '1. A member opens a ticket',
+          description: "The toxic player gets reported. The ticket lands straight in Kotbo's triage center with high priority.",
+          cardBadge: 'Urgent',
+          cardTitle: 'Toxic player in voice chat',
+          cardMeta: 'Ticket #102 • By Maxou',
+        },
+        step2: {
+          title: '2. Moderation and reporting',
+          description: 'Staff steps in, applies the sanction, and Kotbo generates the report with screenshots attached.',
+          postIt: 'Case closed and archived',
+        },
+        step3: {
+          title: '3. Profile updated',
+          description: "The member's history keeps a permanent record of the sanction. The rest of the staff is kept in the loop.",
+          cardBadge: 'BAN (7 DAYS)',
+          cardTitle: 'Repeated insults',
+        },
+      },
+      trust: {
+        kicker: 'Numbers that speak for themselves',
+        titleStart: 'They',
+        titleHighlight: 'trust',
+        titleEnd: 'us every day',
+        subtitle: 'Kotbo powers the management and moderation of the largest Discord communities, every day.',
+        guildsLabel: 'Communities managed',
+        membersLabel: 'Members',
+        serversHeading: 'A few communities on board',
+        serversSubtitle: 'Discord servers of every size trust Kotbo.',
+        serverCard: {
+          iconAltSuffix: 'icon',
+          membersLabel: 'Members',
+        },
+        botFleet: {
+          headingSingle: 'The instance in service',
+          headingPlural: (n: number) => `${n} instances in service`,
+          subtitle: 'The public instance and the custom bots that servers run under their own name.',
+          selfHosted: 'self-hosted',
+          countLine: (guilds: number, users: string) => `${guilds} server${guilds > 1 ? 's' : ''} · ${users} members`,
+        },
+      },
+      footer: {
+        tagline: '© 2026 Kotbo. The Discord control center.',
+        discord: 'Discord',
+        documentation: 'Documentation',
+        status: 'Service Status',
+        privacy: 'Privacy',
+        terms: 'Terms',
+        salesTerms: 'Sales Terms',
+        cookies: 'Cookies',
+        dpa: 'DPA',
+        legalNotice: 'Legal Notice',
+      },
+    },
+  };
+
+  const t = $derived(TEXT[getLocale()]);
 
   /**
    * Entree du tunnel d'acquisition. Passe par l'API du bot plutot que par une
@@ -248,16 +531,19 @@
       <!-- Les ancres suivent l'ordre de la page : un menu qui remonte quand on
            descend donne l'impression de s'etre perdu. -->
       <div class="hidden md:flex gap-8 font-bold text-sm text-gray-600">
-        <a href="#features" class="hover:text-indigo-600 transition-colors">Fonctions</a>
-        <a href="#modules" class="hover:text-indigo-600 transition-colors">Modules</a>
-        <a href="#workflow" class="hover:text-indigo-600 transition-colors">Flow</a>
-        <a href="#trust" class="hover:text-indigo-600 transition-colors">Communautés</a>
-        <a href="#comparatif" class="hover:text-indigo-600 transition-colors">Comparatif</a>
-        <a href="#pricing" class="hover:text-indigo-600 transition-colors">Tarifs</a>
+        <a href="#features" class="hover:text-indigo-600 transition-colors">{t.nav.features}</a>
+        <a href="#modules" class="hover:text-indigo-600 transition-colors">{t.nav.modules}</a>
+        <a href="#workflow" class="hover:text-indigo-600 transition-colors">{t.nav.flow}</a>
+        <a href="#trust" class="hover:text-indigo-600 transition-colors">{t.nav.trust}</a>
+        <a href="#comparatif" class="hover:text-indigo-600 transition-colors">{t.nav.comparatif}</a>
+        <a href="#pricing" class="hover:text-indigo-600 transition-colors">{t.nav.pricing}</a>
       </div>
-      <a href={invite('header')} onclick={() => track('invite_clicked', { content: 'header' })} class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
-        Ajouter le bot
-      </a>
+      <div class="flex items-center gap-4">
+        <LanguageSwitcher />
+        <a href={invite('header')} onclick={() => track('invite_clicked', { content: 'header' })} class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+          {t.nav.cta}
+        </a>
+      </div>
     </nav>
   </div>
 
@@ -270,24 +556,23 @@
     <!-- Hero texte  entrance en cascade -->
     <div class="max-w-4xl mx-auto text-center mb-12 relative z-20">
       <h1 class="text-4xl md:text-6xl font-black tracking-tighter leading-[1.05] mb-8 text-gray-900 hero-enter">
-        Le centre de contrôle de ta <br class="hidden md:inline"/> <MarkerCircle color="blue" class="text-indigo-600" animated>communauté</MarkerCircle>.
+        {t.hero.titleLine1} <br class="hidden md:inline"/> <MarkerCircle color="blue" class="text-indigo-600" animated>{t.hero.titleHighlight}</MarkerCircle>.
       </h1>
       <p class="text-lg text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto font-bold hero-enter hero-delay-2">
-        Modération, staff, tickets, candidatures, statistiques.
-        Kotbo est l'ERP et bot Discord tout-en-un qui remplace tes tableurs et centralise l'organisation de ton serveur.
+        {t.hero.subtitle}
       </p>
       <div class="flex flex-wrap justify-center gap-4 hero-enter hero-delay-3">
         <a href={invite('hero')} onclick={() => track('invite_clicked', { content: 'hero' })} class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1 text-center">
-          Ajouter le bot à mon serveur
+          {t.hero.ctaPrimary}
         </a>
         <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:border-gray-300 hover:bg-gray-50 transition-all">
-          Demander une démo
+          {t.hero.ctaSecondary}
         </a>
       </div>
       <a href={`mailto:${contactEmail}`} class="mt-4 inline-block text-sm text-gray-500 font-bold hover:text-indigo-600 transition-colors hero-enter hero-delay-3">
         {contactEmail}
       </a>
-      <p class="mt-5 text-sm text-gray-400 font-bold hero-enter hero-delay-3">Installation guidée · 15 jours d'essai · sans carte pour commencer</p>
+      <p class="mt-5 text-sm text-gray-400 font-bold hero-enter hero-delay-3">{t.hero.installNote}</p>
     </div>
 
     <!-- Hero mockup  parallaxe souris multicouche -->
@@ -296,7 +581,7 @@
 
         <!-- Post-it -->
         <div class="absolute -left-8 xl:-left-16 2xl:-left-32 -top-28 pointer-events-none hidden xl:block z-25 w-60">
-          <PostIt text="Regarde ça, c'est le profil d'un mec" color="yellow" rotation={-8} class="w-60 py-4 px-5 shadow-2xl" textSize="text-xl" />
+          <PostIt text={t.hero.postItProfile} color="yellow" rotation={-8} class="w-60 py-4 px-5 shadow-2xl" textSize="text-xl" />
           <div class="absolute left-44 top-20">
             <HandDrawnArrow direction="down-right" class="w-24 undefined4 text-indigo-600 drop-shadow-md" />
           </div>
@@ -313,13 +598,13 @@
               <div class="h-[3px] bg-red-500"></div>
               <div class="px-4 py-3.5">
                 <div class="flex items-center justify-between mb-2.5">
-                  <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Ticket #147</span>
-                  <span class="text-[8px] font-black text-red-500 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">Urgent</span>
+                  <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">{t.hero.chipTicket.label}</span>
+                  <span class="text-[8px] font-black text-red-500 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">{t.hero.chipTicket.urgent}</span>
                 </div>
-                <p class="text-[12px] font-black text-gray-900 leading-snug mb-2.5">Joueur toxique en vocal</p>
+                <p class="text-[12px] font-black text-gray-900 leading-snug mb-2.5">{t.hero.chipTicket.title}</p>
                 <div class="flex items-center gap-2">
                   <img src={mockAvatar('Maxou')} alt="" class="w-5 undefined rounded-full bg-gray-100 shrink-0" />
-                  <p class="text-[9px] text-gray-400 font-semibold">@Maxou · il y a 2 min</p>
+                  <p class="text-[9px] text-gray-400 font-semibold">{t.hero.chipTicket.meta}</p>
                 </div>
               </div>
             </div>
@@ -333,11 +618,11 @@
               <div class="h-[3px] bg-amber-400"></div>
               <div class="px-4 py-3.5">
                 <div class="flex items-center justify-between mb-2.5">
-                  <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Sanction</span>
-                  <span class="text-[8px] font-black text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full">BAN</span>
+                  <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">{t.hero.chipSanction.label}</span>
+                  <span class="text-[8px] font-black text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full">{t.hero.chipSanction.badge}</span>
                 </div>
-                <p class="text-[12px] font-black text-gray-900 leading-snug mb-1">@ToxicoBoy</p>
-                <p class="text-[9px] text-gray-400 font-semibold">Admin_Lena · Permanent</p>
+                <p class="text-[12px] font-black text-gray-900 leading-snug mb-1">{t.hero.chipSanction.title}</p>
+                <p class="text-[9px] text-gray-400 font-semibold">{t.hero.chipSanction.meta}</p>
               </div>
             </div>
           </div>
@@ -353,8 +638,8 @@
                 <img src={mockAvatar('Aiden')} alt="" class="w-7 h-7 rounded-full border-[2.5px] border-gray-950 bg-gray-800" />
               </div>
               <div>
-                <p class="text-[11px] font-black text-white leading-tight">3 modérateurs</p>
-                <p class="text-[9px] text-gray-500 font-medium">En ligne</p>
+                <p class="text-[11px] font-black text-white leading-tight">{t.hero.chipStaff.count}</p>
+                <p class="text-[9px] text-gray-500 font-medium">{t.hero.chipStaff.status}</p>
               </div>
               <div class="relative ml-1 shrink-0">
                 <div class="w-2 undefined rounded-full bg-emerald-400"></div>
@@ -368,10 +653,10 @@
         <div class="absolute -left-3 lg:-left-8 xl:-left-14 top-[38%] z-20 pointer-events-none hidden lg:block chip-float-d">
           <div style="transform: translate({mx * 28 + rD.rx}px, {my * 18 + rD.ry}px); opacity: {rD.op}; transition: transform 0.22s cubic-bezier(0.22, 0.1, 0.36, 1), opacity 0.22s ease;">
             <div class="bg-white rounded-2xl border border-gray-100 px-4 py-3.5 -rotate-[1deg]" style="box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);">
-              <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-2">Messages aujourd'hui</p>
+              <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-2">{t.hero.chipMessages.label}</p>
               <div class="flex items-baseline gap-2">
-                <span class="text-[22px] font-black text-gray-900 leading-none tracking-tight">1 247</span>
-                <span class="text-[10px] font-black text-emerald-500">+18 %</span>
+                <span class="text-[22px] font-black text-gray-900 leading-none tracking-tight">{t.hero.chipMessages.value}</span>
+                <span class="text-[10px] font-black text-emerald-500">{t.hero.chipMessages.delta}</span>
               </div>
             </div>
           </div>
@@ -384,11 +669,11 @@
               <div class="h-[3px] bg-indigo-500"></div>
               <div class="px-4 py-3.5">
                 <div class="flex items-center justify-between mb-2.5">
-                  <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Promotion</span>
-                  <span class="text-[8px] font-black text-indigo-500 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">Staff</span>
+                  <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">{t.hero.chipPromo.label}</span>
+                  <span class="text-[8px] font-black text-indigo-500 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">{t.hero.chipPromo.badge}</span>
                 </div>
-                <p class="text-[12px] font-black text-gray-900 leading-snug mb-1">@Aiden promu</p>
-                <p class="text-[9px] text-gray-400 font-semibold">Modérateur Senior · par Lena</p>
+                <p class="text-[12px] font-black text-gray-900 leading-snug mb-1">{t.hero.chipPromo.title}</p>
+                <p class="text-[9px] text-gray-400 font-semibold">{t.hero.chipPromo.meta}</p>
               </div>
             </div>
           </div>
@@ -406,7 +691,7 @@
               <span class="w-3 h-3 rounded-full bg-green-400 border border-green-500/20"></span>
             </div>
             <div class="mx-auto text-[10px] font-black text-gray-400 font-sans tracking-widest uppercase">
-              dashboard.kotbo.fr • Fiche Membre : Arka
+              {t.hero.mockWindowTitle}
             </div>
             <div class="w-12 shrink-0"></div>
           </div>
@@ -424,31 +709,31 @@
 
     <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
       <div use:reveal={{ direction: 'up' }}>
-        <h2 class="text-3xl md:text-4xl font-black mb-6 tracking-tight text-gray-900 font-headline">Gérer une grosse communauté, <br/>ça devient vite <span class="text-red-500 underline decoration-wavy">le bazar</span>.</h2>
+        <h2 class="text-3xl md:text-4xl font-black mb-6 tracking-tight text-gray-900 font-headline">{t.problem.titleLine1} <br/>{t.problem.titleLine2} <span class="text-red-500 underline decoration-wavy">{t.problem.titleHighlight}</span>.</h2>
         <p class="text-lg text-gray-500 font-bold max-w-xl mx-auto mb-12">
-          Entre les signalements perdus, les sanctions non documentées et les tableurs à remplir à la main, l'organisation s'effondre.
+          {t.problem.subtitle}
         </p>
       </div>
 
       <!-- PostIts en cascade -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto px-4 relative mt-12 pb-12">
         <div use:reveal={{ delay: 0, direction: 'up' }} class="relative flex justify-center">
-          <PostIt text="Un joueur signale un abus en vocal" color="pink" rotation={-5} class="w-full max-w-[220px]" />
+          <PostIt text={t.problem.postIt1} color="pink" rotation={-5} class="w-full max-w-[220px]" />
           <HandDrawnArrow direction="right" stroke="var(--color-marker-red)" class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 hidden md:block z-10 opacity-60" />
         </div>
 
         <div use:reveal={{ delay: 100, direction: 'up' }} class="relative flex justify-center">
-          <PostIt text="Qui s'en occupe ? Le salon d'aide est submergé..." color="yellow" rotation={4} class="w-full max-w-[220px]" />
+          <PostIt text={t.problem.postIt2} color="yellow" rotation={4} class="w-full max-w-[220px]" />
           <HandDrawnArrow direction="right" stroke="var(--color-marker-red)" class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 hidden md:block z-10 opacity-60" />
         </div>
 
         <div use:reveal={{ delay: 200, direction: 'up' }} class="relative flex justify-center">
-          <PostIt text="Sanction appliquée à la hâte, sans screen archivé" color="blue" rotation={-3} class="w-full max-w-[220px]" />
+          <PostIt text={t.problem.postIt3} color="blue" rotation={-3} class="w-full max-w-[220px]" />
           <HandDrawnArrow direction="right" stroke="var(--color-marker-red)" class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 hidden md:block z-10 opacity-60" />
         </div>
 
         <div use:reveal={{ delay: 300, direction: 'up' }} class="relative flex justify-center">
-          <PostIt text="Tableur Excel des bannis obsolète depuis 3 mois" color="pink" rotation={6} class="w-full max-w-[220px]" />
+          <PostIt text={t.problem.postIt4} color="pink" rotation={6} class="w-full max-w-[220px]" />
         </div>
       </div>
     </div>
@@ -459,10 +744,10 @@
     <div class="max-w-[90rem] mx-auto px-8">
       <div use:reveal={{ direction: 'up' }} class="text-center mb-20 relative">
         <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-12">
-          <MarkerCircle color="red" class="text-xl font-bold font-hand text-red-600 px-4 py-1">Stop au chaos</MarkerCircle>
+          <MarkerCircle color="red" class="text-xl font-bold font-hand text-red-600 px-4 py-1">{t.features.kicker}</MarkerCircle>
         </div>
-        <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-6 font-headline">Kotbo regroupe tout dans un <br/>seul système organisé.</h2>
-        <p class="text-lg text-gray-500 font-bold max-w-xl mx-auto">Visualisez les vrais écrans d'administration du bot ci-dessous.</p>
+        <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-6 font-headline">{t.features.titleLine1} <br/>{t.features.titleLine2}</h2>
+        <p class="text-lg text-gray-500 font-bold max-w-xl mx-auto">{t.features.subtitle}</p>
       </div>
 
       <!-- Feature 1: Staff  mockup slide depuis la gauche, texte depuis la droite -->
@@ -471,20 +756,20 @@
           <div class="w-full transform -rotate-2 shadow-[0_25px_50px_rgba(0,0,0,0.08)] rounded-[2rem] border border-outline-variant/10 bg-white p-0 transition-transform duration-500 group-hover:rotate-0 flex flex-col h-[460px] overflow-hidden">
             <MockStaff />
           </div>
-          <PostIt text="Les vrais grades, stats et actions du staff" color="blue" rotation={-5} class="absolute -bottom-10 -right-8 w-56 z-10 hidden xl:block" />
+          <PostIt text={t.features.staff.postIt} color="blue" rotation={-5} class="absolute -bottom-10 -right-8 w-56 z-10 hidden xl:block" />
         </div>
         <div use:reveal={{ direction: 'right', delay: 120 }} class="order-1 lg:order-2 pl-0 lg:pl-10">
           <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
             <Shield size={28} />
           </div>
-          <h3 class="text-3xl font-black tracking-tight mb-6 text-gray-900">Une équipe maîtrisée</h3>
+          <h3 class="text-3xl font-black tracking-tight mb-6 text-gray-900">{t.features.staff.title}</h3>
           <p class="text-gray-600 text-lg mb-8 leading-relaxed font-medium">
-            Fini les incertitudes sur qui fait quoi. Kotbo regroupe les membres du staff, leurs grades, leur activité et leurs avertissements dans la même vue.
+            {t.features.staff.description}
           </p>
           <ul class="space-y-4 font-bold text-gray-700 text-lg">
-            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> Historique des actions staff</li>
-            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> Gestion fine des permissions</li>
-            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> Périodes de test et avertissements</li>
+            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> {t.features.staff.point1}</li>
+            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> {t.features.staff.point2}</li>
+            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> {t.features.staff.point3}</li>
           </ul>
         </div>
       </div>
@@ -495,14 +780,14 @@
           <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6">
             <FileText size={28} />
           </div>
-          <h3 class="text-3xl font-black tracking-tight mb-6 text-gray-900">Modération chirurgicale</h3>
+          <h3 class="text-3xl font-black tracking-tight mb-6 text-gray-900">{t.features.sanctions.title}</h3>
           <p class="text-gray-600 text-lg mb-8 leading-relaxed font-medium">
-            Chaque sanction est documentée. Les preuves (screens, transcripts) sont attachées au rapport. Plus de "pourquoi il a été ban ?" 6 mois plus tard.
+            {t.features.sanctions.description}
           </p>
           <ul class="space-y-4 font-bold text-gray-700 text-lg">
-            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> Rapports détaillés avec preuves</li>
-            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> Historique infaillible par profil</li>
-            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> Automodération intelligente</li>
+            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> {t.features.sanctions.point1}</li>
+            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> {t.features.sanctions.point2}</li>
+            <li class="flex items-center gap-3"><CheckCircle2 size={24} class="text-green-500" /> {t.features.sanctions.point3}</li>
           </ul>
         </div>
         <div use:reveal={{ direction: 'right', delay: 120 }} class="relative group">
@@ -510,7 +795,7 @@
             <MockSanction />
           </div>
           <HandDrawnArrow direction="up-right" class="absolute -top-12 -left-12 w-24 undefined4 hidden xl:block" />
-          <PostIt text="Chaque sanction garde son rapport" color="yellow" rotation={10} class="absolute -top-16 -left-32 w-52 hidden xl:block" />
+          <PostIt text={t.features.sanctions.postIt} color="yellow" rotation={10} class="absolute -top-16 -left-32 w-52 hidden xl:block" />
         </div>
       </div>
 
@@ -524,7 +809,7 @@
   <!-- Dans la vraie vie (Workflow)  timeline se dessine au scroll -->
   <section id="workflow" class="py-24 bg-gray-900 text-white relative">
     <div class="max-w-5xl mx-auto px-6">
-      <h2 use:reveal={{ direction: 'up' }} class="text-3xl md:text-4xl font-black tracking-tight mb-16 text-center font-headline">Dans la vraie vie, ça donne quoi ?</h2>
+      <h2 use:reveal={{ direction: 'up' }} class="text-3xl md:text-4xl font-black tracking-tight mb-16 text-center font-headline">{t.workflow.title}</h2>
 
       <div class="relative pl-8 md:pl-0">
         <!-- Ligne verticale qui se trace -->
@@ -533,15 +818,15 @@
         <!-- Step 1 -->
         <div use:reveal={{ direction: 'up', delay: 0 }} class="relative flex flex-col md:flex-row items-center mb-16">
           <div class="md:w-1/2 md:pr-16 text-left md:text-right w-full ml-8 md:ml-0">
-            <h4 class="text-xl font-black mb-3">1. Un membre ouvre un ticket</h4>
-            <p class="text-gray-400 text-lg font-medium leading-relaxed">Le joueur toxique est signalé. Le ticket atterrit directement dans le centre de tri de Kotbo avec priorité haute.</p>
+            <h4 class="text-xl font-black mb-3">{t.workflow.step1.title}</h4>
+            <p class="text-gray-400 text-lg font-medium leading-relaxed">{t.workflow.step1.description}</p>
           </div>
           <div class="absolute left-0 md:left-1/2 w-6 h-6 bg-indigo-500 rounded-full border-4 border-gray-900 transform -translate-x-[11px] md:-translate-x-1/2"></div>
           <div class="md:w-1/2 md:pl-16 w-full ml-8 md:ml-0 mt-6 md:mt-0">
             <div class="bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 w-full max-w-sm">
-              <span class="text-xs font-black text-red-500 bg-red-500/10 px-3 py-1 rounded-full uppercase tracking-widest border border-red-500/20">Urgent</span>
-              <p class="text-lg font-black mt-4 text-white">Joueur toxique en vocal</p>
-              <p class="text-sm text-gray-500 font-bold mt-2">Ticket #102 • Par Maxou</p>
+              <span class="text-xs font-black text-red-500 bg-red-500/10 px-3 py-1 rounded-full uppercase tracking-widest border border-red-500/20">{t.workflow.step1.cardBadge}</span>
+              <p class="text-lg font-black mt-4 text-white">{t.workflow.step1.cardTitle}</p>
+              <p class="text-sm text-gray-500 font-bold mt-2">{t.workflow.step1.cardMeta}</p>
             </div>
           </div>
         </div>
@@ -549,28 +834,28 @@
         <!-- Step 2 -->
         <div use:reveal={{ direction: 'up', delay: 100 }} class="relative flex flex-col md:flex-row-reverse items-center mb-16">
           <div class="md:w-1/2 md:pl-16 text-left w-full ml-8 md:ml-0">
-            <h4 class="text-xl font-black mb-3">2. Modération et rapport</h4>
-            <p class="text-gray-400 text-lg font-medium leading-relaxed">Le staff intervient, applique la sanction, et Kotbo génère le rapport avec les screens en pièce jointe.</p>
+            <h4 class="text-xl font-black mb-3">{t.workflow.step2.title}</h4>
+            <p class="text-gray-400 text-lg font-medium leading-relaxed">{t.workflow.step2.description}</p>
           </div>
           <div class="absolute left-0 md:left-1/2 w-6 h-6 bg-indigo-500 rounded-full border-4 border-gray-900 transform -translate-x-[11px] md:-translate-x-1/2"></div>
           <div class="md:w-1/2 md:pr-16 w-full ml-8 md:ml-0 mt-6 md:mt-0 flex justify-end">
-            <PostIt text="Dossier bouclé et archivé" color="yellow" rotation={-5} class="w-56 text-gray-900" />
+            <PostIt text={t.workflow.step2.postIt} color="yellow" rotation={-5} class="w-56 text-gray-900" />
           </div>
         </div>
 
         <!-- Step 3 -->
         <div use:reveal={{ direction: 'up', delay: 200 }} class="relative flex flex-col md:flex-row items-center">
           <div class="md:w-1/2 md:pr-16 text-left md:text-right w-full ml-8 md:ml-0">
-            <h4 class="text-xl font-black mb-3">3. Profil mis à jour</h4>
-            <p class="text-gray-400 text-lg font-medium leading-relaxed">L'historique du membre garde la trace indélébile de la sanction. Le reste du staff est au courant.</p>
+            <h4 class="text-xl font-black mb-3">{t.workflow.step3.title}</h4>
+            <p class="text-gray-400 text-lg font-medium leading-relaxed">{t.workflow.step3.description}</p>
           </div>
           <div class="absolute left-0 md:left-1/2 w-6 h-6 bg-indigo-500 rounded-full border-4 border-gray-900 transform -translate-x-[11px] md:-translate-x-1/2"></div>
           <div class="md:w-1/2 md:pl-16 w-full ml-8 md:ml-0 mt-6 md:mt-0">
             <div class="bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 w-full max-w-sm flex gap-4 items-start">
               <Shield size={24} class="text-red-500 mt-1 shrink-0" />
               <div>
-                <span class="text-xs font-black text-red-500 uppercase tracking-widest">BAN (7 JOURS)</span>
-                <p class="text-lg font-bold mt-1 text-white">Insultes répétées</p>
+                <span class="text-xs font-black text-red-500 uppercase tracking-widest">{t.workflow.step3.cardBadge}</span>
+                <p class="text-lg font-bold mt-1 text-white">{t.workflow.step3.cardTitle}</p>
               </div>
             </div>
           </div>
@@ -590,13 +875,13 @@
     <div class="max-w-[85rem] mx-auto px-8 relative z-10">
       <div use:reveal={{ direction: 'up' }} class="text-center mb-14">
         <div class="inline-block border-2 border-indigo-600 rounded-2xl px-6 py-2 mb-6 bg-white shadow-sm">
-          <p class="text-xs font-black text-indigo-600 uppercase tracking-widest">Des chiffres qui parlent d'eux-mêmes</p>
+          <p class="text-xs font-black text-indigo-600 uppercase tracking-widest">{t.trust.kicker}</p>
         </div>
         <h2 class="text-3xl md:text-4xl font-black tracking-tight text-gray-900 font-headline mb-6">
-          Ils nous font <MarkerCircle color="blue" class="text-indigo-600" animated>confiance</MarkerCircle> au quotidien
+          {t.trust.titleStart} <MarkerCircle color="blue" class="text-indigo-600" animated>{t.trust.titleHighlight}</MarkerCircle> {t.trust.titleEnd}
         </h2>
         <p class="text-lg text-gray-500 font-bold max-w-xl mx-auto">
-          Kotbo propulse la gestion et la modération des plus grandes communautés Discord au quotidien.
+          {t.trust.subtitle}
         </p>
       </div>
 
@@ -612,7 +897,7 @@
               <Server size={32} />
             </div>
             <div>
-              <p class="text-xs font-black uppercase tracking-wider text-gray-400">Communautés gérées</p>
+              <p class="text-xs font-black uppercase tracking-wider text-gray-400">{t.trust.guildsLabel}</p>
               {#if statsLoading}
                 <div class="h-12 w-28 bg-gray-200 animate-pulse rounded-lg mt-1"></div>
               {:else}
@@ -634,7 +919,7 @@
               <Users size={32} />
             </div>
             <div>
-              <p class="text-xs font-black uppercase tracking-wider text-gray-400">Membres</p>
+              <p class="text-xs font-black uppercase tracking-wider text-gray-400">{t.trust.membersLabel}</p>
               {#if statsLoading}
                 <div class="h-12 w-36 bg-gray-200 animate-pulse rounded-lg mt-1"></div>
               {:else}
@@ -649,8 +934,8 @@
 
       <!-- Individual servers heading -->
       <div use:reveal={{ direction: 'up', delay: 150 }} class="text-center mb-12">
-        <h3 class="text-xl font-black text-gray-900 font-headline">Quelques communautés équipées</h3>
-        <p class="text-sm text-gray-500 font-bold mt-1">Des serveurs Discord de toutes tailles qui font confiance à Kotbo.</p>
+        <h3 class="text-xl font-black text-gray-900 font-headline">{t.trust.serversHeading}</h3>
+        <p class="text-sm text-gray-500 font-bold mt-1">{t.trust.serversSubtitle}</p>
       </div>
 
       <!-- Servers Grid (2x2 Centered) -->
@@ -686,7 +971,7 @@
                   {#if server.iconUrl}
                     <img
                       src={server.iconUrl}
-                      alt="{server.name} icon"
+                      alt="{server.name} {t.trust.serverCard.iconAltSuffix}"
                       class="w-14 h-14 rounded-2xl border-2 border-white shadow-md object-cover bg-gray-50 shrink-0"
                       onerror={(e) => {
                         (e.currentTarget as HTMLImageElement).src = `${base}/favicon.svg`;
@@ -709,7 +994,7 @@
               </div>
 
               <div class="border-t border-dashed border-gray-200/80 pt-4 flex justify-between items-center mt-6 relative z-10">
-                <span class="text-xs font-black uppercase tracking-wider text-gray-400">Membres</span>
+                <span class="text-xs font-black uppercase tracking-wider text-gray-400">{t.trust.serverCard.membersLabel}</span>
                 <span class="text-sm font-black text-gray-800 bg-gray-100/80 px-3 py-1 rounded-xl border border-gray-200/50">{server.memberCount.toLocaleString('fr-FR')}</span>
               </div>
             </div>
@@ -726,10 +1011,10 @@
         <div use:reveal={{ direction: 'up', delay: 150 }} class="max-w-4xl mx-auto mt-16">
           <div class="text-center mb-8">
             <h3 class="text-xl font-black text-gray-900 font-headline">
-              {stats.bots.length === 1 ? 'L\'instance en service' : `Les ${stats.bots.length} instances en service`}
+              {stats.bots.length === 1 ? t.trust.botFleet.headingSingle : t.trust.botFleet.headingPlural(stats.bots.length)}
             </h3>
             <p class="text-sm text-gray-500 font-bold mt-1">
-              L'instance publique et les bots personnalisés que les serveurs font tourner sous leur propre nom.
+              {t.trust.botFleet.subtitle}
             </p>
           </div>
 
@@ -748,12 +1033,12 @@
                     {bot.botName}
                     {#if bot.isSelfHosted}
                       <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 border border-gray-200 rounded px-1 py-px shrink-0">
-                        auto-hébergé
+                        {t.trust.botFleet.selfHosted}
                       </span>
                     {/if}
                   </p>
                   <p class="text-xs font-bold text-gray-400 tabular-nums">
-                    {bot.guildCount} serveur{bot.guildCount > 1 ? 's' : ''} · {formatCompact(bot.userCount).replace('+', '')} membres
+                    {t.trust.botFleet.countLine(bot.guildCount, formatCompact(bot.userCount).replace('+', ''))}
                   </p>
                 </div>
               </div>
@@ -787,17 +1072,17 @@
         <img src="{base}/favicon.svg" alt="Kotbo Logo" class="w-8 undefined rounded-lg shadow-sm grayscale opacity-50" />
         <span class="font-black text-lg text-gray-400">Kotbo</span>
       </div>
-      <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
+      <p>{t.footer.tagline}</p>
       <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 uppercase tracking-widest text-[10px] font-black">
-        <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
-        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
-        <a href="https://status.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Services Status</a>
-        <a href="{base}/privacy" class="text-indigo-500 hover:text-indigo-700 transition-colors">Confidentialité</a>
-        <a href="{base}/terms" class="hover:text-gray-900 transition-colors">CGU</a>
-        <a href="{base}/cgv" class="hover:text-gray-900 transition-colors">CGV</a>
-        <a href="{base}/cookies" class="hover:text-gray-900 transition-colors">Cookies</a>
-        <a href="{base}/dpa" class="hover:text-gray-900 transition-colors">DPA</a>
-        <a href="{base}/mentions-legales" class="hover:text-gray-900 transition-colors">Mentions légales</a>
+        <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">{t.footer.discord}</a>
+        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">{t.footer.documentation}</a>
+        <a href="https://status.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">{t.footer.status}</a>
+        <a href="{base}/privacy" class="text-indigo-500 hover:text-indigo-700 transition-colors">{t.footer.privacy}</a>
+        <a href="{base}/terms" class="hover:text-gray-900 transition-colors">{t.footer.terms}</a>
+        <a href="{base}/cgv" class="hover:text-gray-900 transition-colors">{t.footer.salesTerms}</a>
+        <a href="{base}/cookies" class="hover:text-gray-900 transition-colors">{t.footer.cookies}</a>
+        <a href="{base}/dpa" class="hover:text-gray-900 transition-colors">{t.footer.dpa}</a>
+        <a href="{base}/mentions-legales" class="hover:text-gray-900 transition-colors">{t.footer.legalNotice}</a>
       </div>
     </div>
   </footer>

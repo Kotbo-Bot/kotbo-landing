@@ -1,6 +1,8 @@
 <script lang="ts">
   import { base } from '$app/paths';
   import { onMount, type Snippet } from 'svelte';
+  import LanguageSwitcher from '$lib/components/ui/LanguageSwitcher.svelte';
+  import { getLocale } from '$lib/i18n/state.svelte';
 
   type SectionLink = { id: string; label: string };
 
@@ -26,6 +28,41 @@
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   });
+
+  const TEXT = {
+    fr: {
+      back: 'Retour à l\'accueil',
+      toc: 'Sommaire',
+      footerTagline: '© 2026 Kotbo. Le centre de contrôle Discord.',
+      footer: {
+        privacy: 'Confidentialité',
+        terms: 'CGU',
+        cgv: 'CGV',
+        cookies: 'Cookies',
+        dpa: 'DPA',
+        legal: 'Mentions légales',
+        discord: 'Discord',
+        docs: 'Documentation',
+      },
+    },
+    en: {
+      back: 'Back to home',
+      toc: 'Contents',
+      footerTagline: '© 2026 Kotbo. The Discord control center.',
+      footer: {
+        privacy: 'Privacy',
+        terms: 'Terms of Use',
+        cgv: 'Terms of Sale',
+        cookies: 'Cookies',
+        dpa: 'DPA',
+        legal: 'Legal Notice',
+        discord: 'Discord',
+        docs: 'Documentation',
+      },
+    },
+  };
+
+  const t = $derived(TEXT[getLocale()]);
 </script>
 
 <div class="sticky top-0 z-50 transition-all duration-300" class:nav-scrolled={scrolled}>
@@ -34,15 +71,18 @@
       <img src="{base}/favicon.svg" alt="Kotbo Logo" class="w-9 h-9 rounded-xl shadow-md" />
       <span class="font-black text-xl tracking-tight text-gray-900 group-hover:text-indigo-700 transition-colors">Kotbo</span>
     </a>
-    <a
-      href="{base}/"
-      class="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm hover:shadow-md"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-      </svg>
-      Retour à l'accueil
-    </a>
+    <div class="flex items-center gap-4">
+      <LanguageSwitcher />
+      <a
+        href="{base}/"
+        class="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm hover:shadow-md"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        {t.back}
+      </a>
+    </div>
   </nav>
 </div>
 
@@ -56,7 +96,7 @@
 
   <div class="max-w-[82rem] mx-auto px-6 py-14 flex flex-col lg:flex-row gap-10 items-start">
     <aside class="lg:sticky lg:top-24 lg:w-64 shrink-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 self-start">
-      <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Sommaire</p>
+      <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">{t.toc}</p>
       <nav class="flex flex-col gap-1">
         {#each sections as section}
           <a
@@ -78,16 +118,16 @@
         <img src="{base}/favicon.svg" alt="Kotbo Logo" class="w-8 h-8 rounded-lg shadow-sm grayscale opacity-50" />
         <span class="font-black text-lg text-gray-400">Kotbo</span>
       </div>
-      <p>© 2026 Kotbo. Le centre de contrôle Discord.</p>
+      <p>{t.footerTagline}</p>
       <div class="flex flex-wrap justify-center gap-6 uppercase tracking-widest text-[10px] font-black">
-        <a href="{base}/privacy" class:text-indigo-600={activePage === 'privacy'} class="hover:text-gray-900 transition-colors">Confidentialité</a>
-        <a href="{base}/terms" class:text-indigo-600={activePage === 'terms'} class="hover:text-gray-900 transition-colors">CGU</a>
-        <a href="{base}/cgv" class:text-indigo-600={activePage === 'cgv'} class="hover:text-gray-900 transition-colors">CGV</a>
-        <a href="{base}/cookies" class:text-indigo-600={activePage === 'cookies'} class="hover:text-gray-900 transition-colors">Cookies</a>
-        <a href="{base}/dpa" class:text-indigo-600={activePage === 'dpa'} class="hover:text-gray-900 transition-colors">DPA</a>
-        <a href="{base}/mentions-legales" class:text-indigo-600={activePage === 'legal'} class="hover:text-gray-900 transition-colors">Mentions légales</a>
-        <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Discord</a>
-        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">Documentation</a>
+        <a href="{base}/privacy" class:text-indigo-600={activePage === 'privacy'} class="hover:text-gray-900 transition-colors">{t.footer.privacy}</a>
+        <a href="{base}/terms" class:text-indigo-600={activePage === 'terms'} class="hover:text-gray-900 transition-colors">{t.footer.terms}</a>
+        <a href="{base}/cgv" class:text-indigo-600={activePage === 'cgv'} class="hover:text-gray-900 transition-colors">{t.footer.cgv}</a>
+        <a href="{base}/cookies" class:text-indigo-600={activePage === 'cookies'} class="hover:text-gray-900 transition-colors">{t.footer.cookies}</a>
+        <a href="{base}/dpa" class:text-indigo-600={activePage === 'dpa'} class="hover:text-gray-900 transition-colors">{t.footer.dpa}</a>
+        <a href="{base}/mentions-legales" class:text-indigo-600={activePage === 'legal'} class="hover:text-gray-900 transition-colors">{t.footer.legal}</a>
+        <a href="https://nathaan.me/u/discord" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">{t.footer.discord}</a>
+        <a href="https://docs.kotbo.fr" target="_blank" rel="noopener" class="hover:text-gray-900 transition-colors">{t.footer.docs}</a>
       </div>
     </div>
   </footer>
